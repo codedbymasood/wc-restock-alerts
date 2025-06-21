@@ -67,6 +67,7 @@ final class PAW {
 	 * Load required files.
 	 */
 	private function load_dependencies() {
+		require_once PAW_PATH . '/public/class-woocommerce.php';
 	}
 
 	/**

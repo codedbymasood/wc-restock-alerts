@@ -16,6 +16,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// Insert form.
+// Store emails.
+// Notify when restocked.
+
 if ( ! defined( 'PAW_PLUGIN_FILE' ) ) {
 	define( 'PAW_PLUGIN_FILE', __FILE__ );
 }
