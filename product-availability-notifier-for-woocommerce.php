@@ -18,7 +18,12 @@ defined( 'ABSPATH' ) || exit;
 
 // Insert form.
 // Store emails.
+	// Create a list table that store all the details(email, product id, email sent..).
+	// Follow up.
+	// Email template.
 // Notify when restocked.
+// Cronjobs after email sent for follow up emails.
+	// when order completed, stop the follow up and change status to completed.
 
 if ( ! defined( 'PAW_PLUGIN_FILE' ) ) {
 	define( 'PAW_PLUGIN_FILE', __FILE__ );

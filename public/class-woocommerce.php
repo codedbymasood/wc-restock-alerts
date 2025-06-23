@@ -42,11 +42,18 @@ class Woocommerce {
 		add_filter( 'woocommerce_get_stock_html', array( $this, 'append_notify_form' ), 10, 2 );
 	}
 
+	/**
+	 * Append notify form fields after the `out of stock` notice.
+	 *
+	 * @param string $html Notice html.
+	 * @param object $product Product.
+	 * @return string
+	 */
 	public function append_notify_form( $html, $product ) {
 		if ( $html ) {
-			$form  = '<form>';
+			$form  = '<form method="POST">';
 			$form .= '<input type="email" placeholder="' . esc_attr__( 'Enter your email address', 'product-availability-notifier-for-woocommerce' ) . '">';
-			$form .= '<button type="type">' . esc_html__( 'Notify Me', 'product-availability-notifier-for-woocommerce' ) . '</button>';
+			$form .= '<button type="submit">' . esc_html__( 'Notify Me', 'product-availability-notifier-for-woocommerce' ) . '</button>';
 			$form .= '</form>';
 			return $html . $form;
 		}

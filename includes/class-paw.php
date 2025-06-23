@@ -40,6 +40,7 @@ final class PAW {
 	 */
 	private function __construct() {
 		$this->define_constants();
+
 		$this->load_dependencies();
 		$this->init_hooks();
 	}
@@ -67,6 +68,11 @@ final class PAW {
 	 * Load required files.
 	 */
 	private function load_dependencies() {
+
+		if ( is_admin() ) {
+			require_once PAW_PATH . '/admin/class-admin.php';
+			require_once PAW_PATH . '/admin/class-notify-list-table.php';
+		}
 		require_once PAW_PATH . '/public/class-woocommerce.php';
 	}
 
@@ -74,5 +80,40 @@ final class PAW {
 	 * Hook into WordPress.
 	 */
 	private function init_hooks() {
+
+		// Create a table when activate the plugin.
+		register_activation_hook( PAW_PLUGIN_FILE, array( $this, 'create_notify_table' ) );
+	}
+
+	public function create_notify_table() {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'paw_product_notify';
+
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE $table_name (
+			id INT(11) NOT NULL AUTO_INCREMENT,
+			email VARCHAR(255) NOT NULL,
+			product_id INT(11) NOT NULL,
+			status VARCHAR(50) DEFAULT 'pending',
+			email_sent TINYINT(1) DEFAULT 0,
+			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY (id)
+		) $charset_collate;";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+
+		// $wpdb->insert(
+		// 	$wpdb->prefix . 'paw_product_notify',
+		// 	[
+		// 		'email'       => 'customer@example2.com',
+		// 		'product_id' => 123,
+		// 		'status'      => 'subscribed',
+		// 		'email_sent'  => 0
+		// 	],
+		// 	['%s', '%d', '%s', '%d']
+		// );
 	}
 }
