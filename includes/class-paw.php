@@ -73,7 +73,8 @@ final class PAW {
 			require_once PAW_PATH . '/admin/class-admin.php';
 			require_once PAW_PATH . '/admin/class-notify-list-table.php';
 		}
-		require_once PAW_PATH . '/public/class-woocommerce.php';
+
+		require_once PAW_PATH . '/public/class-frontend.php';
 	}
 
 	/**
@@ -92,6 +93,8 @@ final class PAW {
 
 		$charset_collate = $wpdb->get_charset_collate();
 
+		/** Status: pending, subscribed, unsubscribed, on-followup, completed. */
+
 		$sql = "CREATE TABLE $table_name (
 			id INT(11) NOT NULL AUTO_INCREMENT,
 			email VARCHAR(255) NOT NULL,
@@ -104,16 +107,5 @@ final class PAW {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
-
-		// $wpdb->insert(
-		// 	$wpdb->prefix . 'paw_product_notify',
-		// 	[
-		// 		'email'       => 'customer@example2.com',
-		// 		'product_id' => 123,
-		// 		'status'      => 'subscribed',
-		// 		'email_sent'  => 0
-		// 	],
-		// 	['%s', '%d', '%s', '%d']
-		// );
 	}
 }

@@ -2,7 +2,7 @@
 /**
  * Table holds all the notify details.
  *
- * @package product-availability-notifier-for-woocommerce\includes\
+ * @package product-availability-notifier-for-woocommerce\admin\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */
