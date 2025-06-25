@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 
 // Insert form.
 // Store emails.
-	// Create a list table that store all the details(email, product id, email sent..).
+	// Create a list table that store all the details(email, product id, status).
 	// Follow up.
 	// Email template.
 // Notify when restocked.

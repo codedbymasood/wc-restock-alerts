@@ -44,7 +44,6 @@ class Notify_List_Table extends \WP_List_Table {
 			'email'       => 'Email',
 			'product_id' => 'Product ID',
 			'status'      => 'Status',
-			'email_sent'  => 'Email Sent',
 			'created_at'  => 'Created At',
 		);
 	}
@@ -76,10 +75,6 @@ class Notify_List_Table extends \WP_List_Table {
 
 	public function column_product_id( $item ) {
 		return $item['product_id'] ? $item['product_id'] : '';
-	}
-
-	public function column_email_sent( $item ) {
-		return $item['email_sent'] ? 'Yes' : 'No';
 	}
 
 	public function column_created_at( $item ) {

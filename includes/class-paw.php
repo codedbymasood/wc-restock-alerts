@@ -100,7 +100,7 @@ final class PAW {
 			email VARCHAR(255) NOT NULL,
 			product_id INT(11) NOT NULL,
 			status VARCHAR(50) DEFAULT 'pending',
-			email_sent TINYINT(1) DEFAULT 0,
+			token VARCHAR(255) NOT NULL,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (id)
 		) $charset_collate;";

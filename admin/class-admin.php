@@ -44,8 +44,8 @@ class Admin {
 
 	public function admin_menu() {
 		add_menu_page(
-			'Notify List',
-			'Notify Table',
+			esc_html__( 'Notify List', 'product-availability-notifier-for-woocommerce' ),
+			esc_html__( 'Notify Table', 'product-availability-notifier-for-woocommerce' ),
 			'manage_options',
 			'notify-list',
 			array( $this, 'render_notify_list_page' ),
@@ -56,7 +56,7 @@ class Admin {
 
 	public function render_notify_list_page() {
 		echo '<div class="wrap">';
-		echo '<h1>Email Notifications</h1>';
+		echo '<h1>' . esc_html__( 'Email Notifications', 'product-availability-notifier-for-woocommerce' ) . '</h1>';
 		$notify_table = new Notify_List_Table();
 		$notify_table->prepare_items();
 		echo '<form method="post">';

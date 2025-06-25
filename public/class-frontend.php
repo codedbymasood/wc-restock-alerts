@@ -41,6 +41,7 @@ class Frontend {
 	private function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_filter( 'woocommerce_get_stock_html', array( $this, 'append_notify_form' ), 10, 2 );
+		add_action( 'init', array( $this, 'handle_email_verification_link' ) );
 
 		add_action( 'wp_ajax_paw_save_notify_email', array( $this, 'save_notify_email' ) );
 		add_action( 'wp_ajax_nopriv_paw_save_notify_email', array( $this, 'save_notify_email' ) );
@@ -48,6 +49,28 @@ class Frontend {
 
 	public function enqueue_scripts() {
 		wp_enqueue_script( 'paw-main', PAW_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
+	}
+
+	public function handle_email_verification_link() {
+		if ( ! isset( $_GET['verify_email'] ) || ! isset( $_GET['email'] ) || ! isset( $_GET['token'] ) ) {
+			return;
+		}
+
+		global $wpdb;
+		$table = $wpdb->prefix . 'paw_product_notify';
+		$email = sanitize_email( $_GET['email'] );
+		$token = sanitize_text_field( $_GET['token'] );
+
+		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table WHERE email = %s AND token = %s", $email, $token ) );
+
+		if ( $row ) {
+			// Update status to 'subscribed'.
+			$wpdb->update(
+				$table,
+				array( 'status' => 'subscribed' ),
+				array( 'email' => $email )
+			);
+		}
 	}
 
 	public function save_notify_email() {
@@ -59,14 +82,23 @@ class Frontend {
 			$email   = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash( $_POST['email'] ) ) : '';
 			$product = isset( $_POST['product'] ) ? sanitize_text_field( wp_unslash( $_POST['product'] ) ) : '';
 
-			$this->save_data_in_table( $email, $product );
-			// $this->send_verification_email( $email, $product );
+			$token = wp_generate_password( 32, false );
+
+			$this->save_data_in_table( $email, $product, $token );
+
+			/**
+			 * TODO:
+			 * If email is already exist any of the product skip the verification
+			 * email directly change the staus to `subscribed`.
+			 */
+
+			$this->send_verification_email( $email, $product, $token );
 		}
 
 		die();
 	}
 
-	public function save_data_in_table( $email = '', $product = 0 ) {
+	public function save_data_in_table( $email = '', $product = 0, $token = '' ) {
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . 'paw_product_notify';
@@ -87,8 +119,9 @@ class Frontend {
 						'email'      => $email,
 						'product_id' => $product,
 						'status'     => 'pending',
+						'token'      => $token,
 					),
-					array( '%s', '%d', '%s' )
+					array( '%s', '%d', '%s', '%s' )
 				);
 			} else {
 				die( esc_html__( 'Email already added in this product.', 'product-availability-notifier-for-woocommerce' ) );
@@ -98,7 +131,22 @@ class Frontend {
 		}
 	}
 
-	public function send_verification_email( $email = '', $product = 0 ) {
+	public function send_verification_email( $email = '', $product = 0, $token = '' ) {
+		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+		$subject = esc_html__( 'Send verification email', 'product-availability-notifier-for-woocommerce' );
+
+		ob_start();
+		include PAW_PATH . '/template/email/html-verification-email.php';
+		$content = ob_get_contents();
+		ob_end_clean();
+
+		$result = wp_mail( $email, $subject, $content, $headers );
+		if ( ! $result ) {
+			esc_html_e( 'Mail failed to sent.', 'product-availability-notifier-for-woocommerce' );
+		} else {
+			esc_html_e( 'Mail sent successfully.', 'product-availability-notifier-for-woocommerce' );
+		}
+
 		// pass the product id to the email template.
 		// create a verification link.
 		// add cronjobs for expire time.
