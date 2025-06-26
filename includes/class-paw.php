@@ -93,7 +93,7 @@ final class PAW {
 
 		$charset_collate = $wpdb->get_charset_collate();
 
-		/** Status: pending, subscribed, unsubscribed, on-followup, completed. */
+		/** Status: pending, subscribed, unsubscribed, email-sent, on-followup, completed. */
 
 		$sql = "CREATE TABLE $table_name (
 			id INT(11) NOT NULL AUTO_INCREMENT,

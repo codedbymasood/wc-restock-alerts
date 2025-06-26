@@ -1,6 +1,5 @@
 (function($) {
   'use strict';
-
   
   $('#paw-notify-form').on( 'submit', function(e) {
     e.preventDefault();
@@ -26,7 +25,5 @@
         // Print notice here once AJAX request completes.
       }
     });
-
-  }); 
-  
+  });  
 })(jQuery);

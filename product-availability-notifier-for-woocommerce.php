@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 	// Create a list table that store all the details(email, product id, status).
 	// Follow up.
 	// Email template.
-// Notify when restocked.
+// Notify when restocked, change status to `email-sent`
 // Cronjobs after email sent for follow up emails.
 	// when order completed, stop the follow up and change status to completed.
 

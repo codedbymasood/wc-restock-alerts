@@ -146,11 +146,6 @@ class Frontend {
 		} else {
 			esc_html_e( 'Mail sent successfully.', 'product-availability-notifier-for-woocommerce' );
 		}
-
-		// pass the product id to the email template.
-		// create a verification link.
-		// add cronjobs for expire time.
-		// send an email.
 	}
 
 	/**
