@@ -41,6 +41,28 @@ class Admin {
 	private function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'save_post_product', array( $this, 'save_product' ), 10, 3 );
+		add_action( 'woocommerce_order_status_completed', array( $this, 'order_completed' ) );
+	}
+
+	public function order_completed( $order_id = 0 ) {
+		$order = wc_get_order( $order_id );
+
+		foreach ( $order->get_items() as $item ) {
+			$product_id = $item->get_product_id();
+			$customer_email = $order->get_billing_email();
+
+			global $wpdb;
+			$table_name = $wpdb->prefix . 'paw_product_notify';
+
+			$wpdb->update(
+				$table_name,
+				array( 'status' => 'completed' ),
+				array(
+					'email'      => $customer_email,
+					'product_id' => $product_id,
+				)
+			);
+		}
 	}
 
 	public function admin_menu() {
@@ -66,13 +88,9 @@ class Admin {
 	}
 
 	public function save_product( $post_id = 0 ) {
-		if ( 'product' !== get_post_type( $post_id  ) ) {
+		if ( 'product' !== get_post_type( $post_id ) ) {
 			return;
 		}
-
-		// get result
-		// send email
-		// change status to email-sent
 
 		remove_action( 'save_post_product', array( $this, 'save_product' ) );
 
@@ -83,10 +101,10 @@ class Admin {
 			 * Email sending on both conditions( stock-> outstock and outstock->instock, needs to check the condition)
 			 */
 			$this->send_notify_emails( $results );
+			$this->change_status_to_email_sent( $results );
 
 			/**
 			 * TODO:
-			 * Needs to send the status to email-sent
 			 * start cronjobs for followup emails
 			 */
 		}
@@ -137,6 +155,23 @@ class Admin {
 			} else {
 				esc_html_e( 'Mail sent successfully.', 'product-availability-notifier-for-woocommerce' );
 			}
+		}
+	}
+
+	public function change_status_to_email_sent( $results = array() ) {
+		$order = wc_get_order( $order_id );
+
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'paw_product_notify';
+		foreach ( $results as $row ) {
+
+			$wpdb->update(
+				$table_name,
+				array( 'status' => 'email-sent' ),
+				array(
+					'id' => $row['id'],
+				)
+			);
 		}
 	}
 }
