@@ -40,6 +40,10 @@ class Frontend {
 	 */
 	private function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		/**
+		 * TODO:
+		 * Variable product not supported yet, needs to send a variation product ID on email.
+		 */
 		add_filter( 'woocommerce_get_stock_html', array( $this, 'append_notify_form' ), 10, 2 );
 		add_action( 'init', array( $this, 'handle_email_verification_link' ) );
 
