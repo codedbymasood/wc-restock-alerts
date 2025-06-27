@@ -42,6 +42,7 @@ class Admin {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'save_post_product', array( $this, 'save_product' ), 10, 3 );
 		add_action( 'woocommerce_order_status_completed', array( $this, 'order_completed' ) );
+		add_action( 'paw_still_interested_followup_email', array( $this, 'send_still_interested_followup_email' ) );
 	}
 
 	public function order_completed( $order_id = 0 ) {
@@ -100,13 +101,11 @@ class Admin {
 			/**
 			 * Email sending on both conditions( stock-> outstock and outstock->instock, needs to check the condition)
 			 */
-			$this->send_notify_emails( $results );
-			$this->change_status_to_email_sent( $results );
-
-			/**
-			 * TODO:
-			 * start cronjobs for followup emails
-			 */
+			foreach ( $results as $row ) {
+				$this->send_notify_emails( $row );
+				$this->change_status_to_email_sent( $row );
+				$this->create_followup_schedule( $row );
+			}
 		}
 
 		add_action( 'save_post_product', array( $this, 'save_product' ) );
@@ -136,43 +135,72 @@ class Admin {
 		}
 	}
 
-	public function send_notify_emails( $results = array() ) {
-		foreach ( $results as $row ) {
-			$email      = $row['email'];
-			$product_id = $row['product_id'];
+	public function send_notify_emails( $row = array() ) {
+		$email      = $row['email'];
+		$product_id = $row['product_id'];
 
-			$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-			$subject = esc_html__( 'Back in Stock:', 'product-availability-notifier-for-woocommerce' );
+		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+		$subject = esc_html__( 'Back in Stock:', 'product-availability-notifier-for-woocommerce' );
 
-			ob_start();
-			include PAW_PATH . '/template/email/html-back-in-stock-email.php';
-			$content = ob_get_contents();
-			ob_end_clean();
+		ob_start();
+		include PAW_PATH . '/template/email/html-back-in-stock-email.php';
+		$content = ob_get_contents();
+		ob_end_clean();
 
-			$result = wp_mail( $email, $subject, $content, $headers );
-			if ( ! $result ) {
-				esc_html_e( 'Mail failed to sent.', 'product-availability-notifier-for-woocommerce' );
-			} else {
-				esc_html_e( 'Mail sent successfully.', 'product-availability-notifier-for-woocommerce' );
-			}
+		$result = wp_mail( $email, $subject, $content, $headers );
+		if ( ! $result ) {
+			esc_html_e( 'Mail failed to sent.', 'product-availability-notifier-for-woocommerce' );
+		} else {
+			esc_html_e( 'Mail sent successfully.', 'product-availability-notifier-for-woocommerce' );
 		}
 	}
 
-	public function change_status_to_email_sent( $results = array() ) {
-		$order = wc_get_order( $order_id );
-
+	public function change_status_to_email_sent( $row = array() ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'paw_product_notify';
-		foreach ( $results as $row ) {
+		$wpdb->update(
+			$table_name,
+			array( 'status' => 'email-sent' ),
+			array(
+				'id' => $row['id'],
+			)
+		);
+	}
 
-			$wpdb->update(
-				$table_name,
-				array( 'status' => 'email-sent' ),
-				array(
-					'id' => $row['id'],
-				)
-			);
-		}
+	public function create_followup_schedule( $row = array() ) {
+
+		/**
+		 * TODO:
+		 * Create follow up as array
+		 * Needs to create a threshold for followup
+		 */
+		$first_followup  = time() + ( 2 * DAY_IN_SECONDS ); // 2 days later after first email
+		$second_followup = time() + ( 5 * DAY_IN_SECONDS ); // 3 days after first followup
+
+		wp_schedule_single_event(
+			$first_followup,
+			'paw_still_interested_followup_email',
+			array( $row['id'] )
+		);
+
+		wp_schedule_single_event(
+			$second_followup,
+			'paw_urgency_followup_email',
+			array( $row['id'] )
+		);
+
+		/**
+		 * TODO:
+		 * Create a dynamic callback to send a multiple followup, now it is static
+		 */
+	}
+
+	public function send_still_interested_followup_email( $row_id = 0 ) {
+		// send first followup here.
+	}
+
+	public function send_urgency_followup_email( $row_id = 0 ) {
+		// send second followup here.
 	}
 }
 
