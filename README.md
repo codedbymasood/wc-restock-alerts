@@ -24,7 +24,7 @@ A lightweight WooCommerce addon that allows customers to subscribe for notificat
 
 ---
 
-## 🔧 Installation
+## Installation
 
 1. Upload the plugin folder to `/wp-content/plugins/`
 2. Activate the plugin from the WordPress dashboard
