@@ -12,7 +12,7 @@ namespace PAW;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Core plugin loader.
+ * Admin class.
  */
 class Admin {
 
@@ -43,6 +43,7 @@ class Admin {
 		add_action( 'save_post_product', array( $this, 'save_product' ), 10, 3 );
 		add_action( 'woocommerce_order_status_completed', array( $this, 'order_completed' ) );
 		add_action( 'paw_still_interested_followup_email', array( $this, 'send_still_interested_followup_email' ) );
+		
 	}
 
 	public function order_completed( $order_id = 0 ) {
