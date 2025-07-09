@@ -8,3 +8,5 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+
+echo 'Hurry!!!';

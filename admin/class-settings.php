@@ -111,13 +111,13 @@ class Settings {
 			$expected_hook = 'settings_page_' . $this->menu_slug;
 		}
 
-		if ( $expected_hook !== $hook ) {
-			return;
-		}
+		// if ( $expected_hook !== $hook ) {
+		// 	return;
+		// }
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_style( 'settings-style', PAW_URL . 'admin/assets/css/settings.css', array(), '1.0' );
-		wp_enqueue_script( 'settings-script', PAW_URL . 'admin/assets/js/settings.js', array( 'jquery' ), '1.0', true );
+		wp_enqueue_style( 'settings-style', PAW_URL . '/assets/css/settings.css', array(), '1.0.1' );
+		wp_enqueue_script( 'settings-script', PAW_URL . '/assets/js/settings.js', array( 'jquery' ), '1.0', true );
 	}
 
 	/**

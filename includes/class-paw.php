@@ -68,6 +68,8 @@ final class PAW {
 	 * Load required files.
 	 */
 	private function load_dependencies() {
+		require_once PAW_PATH . '/public/class-cron.php';
+		require_once PAW_PATH . '/public/class-frontend.php';
 
 		if ( is_admin() ) {
 			require_once PAW_PATH . '/admin/class-settings.php';
@@ -76,7 +78,6 @@ final class PAW {
 			require_once PAW_PATH . '/admin/class-notify-list-table.php';
 		}
 
-		require_once PAW_PATH . '/public/class-frontend.php';
 	}
 
 	/**

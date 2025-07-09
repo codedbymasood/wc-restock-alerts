@@ -40,10 +40,8 @@ class Admin {
 	 */
 	private function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'save_post_product', array( $this, 'save_product' ), 10, 3 );
+		add_action( 'wp_insert_post', array( $this, 'save_product' ), 99, 3 );
 		add_action( 'woocommerce_order_status_completed', array( $this, 'order_completed' ) );
-		add_action( 'paw_still_interested_followup_email', array( $this, 'send_still_interested_followup_email' ) );
-		
 	}
 
 	public function order_completed( $order_id = 0 ) {
@@ -94,46 +92,42 @@ class Admin {
 			return;
 		}
 
-		remove_action( 'save_post_product', array( $this, 'save_product' ) );
+		$product      = wc_get_product( $post_id );
+		$stock_status = $product->get_stock_status();
+
+		if ( 'outofstock' === $stock_status ) {
+			return;
+		}
+
+		// To prevent call stack.
+		remove_action( 'wp_save_product', array( $this, 'save_product' ) );
 
 		$results = $this->get_emails( $post_id );
 
 		if ( $results ) {
-			/**
-			 * Email sending on both conditions( stock-> outstock and outstock->instock, needs to check the condition)
-			 */
 			foreach ( $results as $row ) {
 				$this->send_notify_emails( $row );
 				$this->change_status_to_email_sent( $row );
-				$this->create_followup_schedule( $row );
+				$this->create_followup_schedule( $row, $product );
 			}
 		}
 
-		add_action( 'save_post_product', array( $this, 'save_product' ) );
+		add_action( 'wp_save_product', array( $this, 'save_product' ) );
 	}
 
 	public function get_emails( $post_id = 0 ) {
-		$old_status = get_post_meta( $post_id, '_stock_status', true );
-		$new_status = isset( $_POST['_stock_status'] ) ? sanitize_text_field( $_POST['_stock_status'] ) : $old_status;
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'paw_product_notify';
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM $table_name WHERE product_id = %d AND status = %s",
+				$post_id,
+				'subscribed'
+			),
+			ARRAY_A
+		);
 
-		$old_stock = (int) get_post_meta( $post_id, '_stock', true );
-		$new_stock = isset( $_POST['_stock'] ) ? (int) sanitize_text_field( $_POST['_stock'] ) : $old_stock;
-
-		if ( ( 'outofstock' === $old_status && 'instock' === $new_status ) || ( 0 === $old_stock && 0 < $new_stock ) ) {
-			global $wpdb;
-			$table_name = $wpdb->prefix . 'paw_product_notify';
-			$results = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT * FROM $table_name WHERE product_id = %d",
-					$post_id
-				),
-				ARRAY_A
-			);
-
-			return $results;
-		} else {
-			return false;
-		}
+		return $results;
 	}
 
 	public function send_notify_emails( $row = array() ) {
@@ -168,40 +162,21 @@ class Admin {
 		);
 	}
 
-	public function create_followup_schedule( $row = array() ) {
-
-		/**
-		 * TODO:
-		 * Create follow up as array
-		 * Needs to create a threshold for followup
-		 */
-		$first_followup  = time() + ( 2 * DAY_IN_SECONDS ); // 2 days later after first email
-		$second_followup = time() + ( 5 * DAY_IN_SECONDS ); // 3 days after first followup
+	public function create_followup_schedule( $row = array(), $product = null ) {
+		$first_followup  = time() + ( 2 * DAY_IN_SECONDS ); // 2 days later
+		$second_followup = $first_followup + ( 3 * DAY_IN_SECONDS ); // 5 days total
 
 		wp_schedule_single_event(
 			$first_followup,
 			'paw_still_interested_followup_email',
-			array( $row['id'] )
+			array( $row, $product )
 		);
 
 		wp_schedule_single_event(
 			$second_followup,
 			'paw_urgency_followup_email',
-			array( $row['id'] )
+			array( $row, $product )
 		);
-
-		/**
-		 * TODO:
-		 * Create a dynamic callback to send a multiple followup, now it is static
-		 */
-	}
-
-	public function send_still_interested_followup_email( $row_id = 0 ) {
-		// send first followup here.
-	}
-
-	public function send_urgency_followup_email( $row_id = 0 ) {
-		// send second followup here.
 	}
 }
 

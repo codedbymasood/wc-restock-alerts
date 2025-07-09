@@ -160,7 +160,10 @@ class Frontend {
 	 * @return string
 	 */
 	public function append_notify_form( $html, $product ) {
-		if ( $html ) {
+
+		$availability = $product->get_availability();
+
+		if ( 'Out of stock' === $availability['availability'] ) {
 			$nonce = wp_create_nonce( 'paw-save-email' );
 
 			$form  = '<form id="paw-notify-form" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
@@ -176,3 +179,7 @@ class Frontend {
 }
 
 \PAW\Frontend::instance();
+
+
+
+
