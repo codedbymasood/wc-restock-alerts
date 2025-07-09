@@ -17,33 +17,47 @@ add_action(
 		$fields = array(
 			esc_html__( 'General', 'product-availability-notifier-for-woocommerce' ) => array(
 				array(
-					'id'    => 'from_address',
+					'id'    => 'paw_from_address',
 					'label' => esc_html__( 'From Address', 'product-availability-notifier-for-woocommerce' ),
 					'type'  => 'text',
 				),
 				array(
-					'id'    => 'enable_followup',
+					'id'    => 'paw_enable_followup',
 					'label' => esc_html__( 'Enable Followup', 'product-availability-notifier-for-woocommerce' ),
 					'type'  => 'checkbox',
 				),
 				array(
-					'id'    => 'first_followup_days',
+					'id'    => 'paw_first_followup_days',
 					'label' => esc_html__( 'First Followup Days', 'product-availability-notifier-for-woocommerce' ),
 					'type'  => 'text',
 				),
 				array(
-					'id'    => 'second_followup_days',
+					'id'    => 'paw_second_followup_days',
 					'label' => esc_html__( 'Second Followup Days', 'product-availability-notifier-for-woocommerce' ),
 					'type'  => 'text',
 				),
 				array(
-					'id'    => 'attach_discount_on_followup',
+					'id'    => 'paw_attach_discount_on_followup',
 					'label' => esc_html__( 'Attach Discount on Followup', 'product-availability-notifier-for-woocommerce' ),
 					'type'  => 'checkbox',
 				),
 				array(
-					'id'    => 'discount_percentage',
-					'label' => esc_html__( 'Discount Percentage', 'product-availability-notifier-for-woocommerce' ),
+					'id'      => 'paw_discount_type',
+					'label'   => esc_html__( 'Discount Type', 'product-availability-notifier-for-woocommerce' ),
+					'type'    => 'select',
+					'options' => array(
+						'percentage' => esc_html__( 'Percentage', 'product-availability-notifier-for-woocommerce' ),
+						'fixed'      => esc_html__( 'Fixed', 'product-availability-notifier-for-woocommerce' ),
+					),
+				),
+				array(
+					'id'    => 'paw_discount_amount',
+					'label' => esc_html__( 'Discount Amount', 'product-availability-notifier-for-woocommerce' ),
+					'type'  => 'text',
+				),
+				array(
+					'id'    => 'paw_coupon_expires_in',
+					'label' => esc_html__( 'Coupon Expires In', 'product-availability-notifier-for-woocommerce' ),
 					'type'  => 'text',
 				),
 			),

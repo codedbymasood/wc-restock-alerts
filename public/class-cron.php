@@ -48,7 +48,7 @@ class Cron {
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = esc_html__( 'Still interested?', 'product-availability-notifier-for-woocommerce' );
+		$subject = esc_html__( 'Just a Quick Reminder', 'product-availability-notifier-for-woocommerce' );
 
 		ob_start();
 		include PAW_PATH . '/template/email/html-still-interested-followup-email.php';
@@ -63,12 +63,12 @@ class Cron {
 		}
 	}
 
-	public function send_urgency_followup_email( $row = array() ) {
+	public function send_urgency_followup_email( $row = array(), $args = array() ) {
 		$email      = $row['email'];
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = esc_html__( 'Hurry!!!', 'product-availability-notifier-for-woocommerce' );
+		$subject = esc_html__( 'Last Chance! 20% Off Ends in 3 Days', 'product-availability-notifier-for-woocommerce' );
 
 		ob_start();
 		include PAW_PATH . '/template/email/html-urgency-followup-email.php';

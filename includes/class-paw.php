@@ -68,6 +68,8 @@ final class PAW {
 	 * Load required files.
 	 */
 	private function load_dependencies() {
+		require_once PAW_PATH . '/includes/class-utils.php';
+
 		require_once PAW_PATH . '/public/class-cron.php';
 		require_once PAW_PATH . '/public/class-frontend.php';
 

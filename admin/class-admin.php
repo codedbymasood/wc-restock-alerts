@@ -105,10 +105,31 @@ class Admin {
 		$results = $this->get_emails( $post_id );
 
 		if ( $results ) {
+			$discount_type        = get_option( 'paw_discount_type', 'percentage' );
+			$amount               = get_option( 'paw_discount_amount', 20 );
+			$first_followup_days  = get_option( 'paw_first_followup_days', 2 );
+			$second_followup_days = get_option( 'paw_second_followup_days', 3 );
+			$coupon_expires_in    = get_option( 'paw_coupon_expires_in', 3 );
+
+			$first_followup  = time() + ( $first_followup_days * DAY_IN_SECONDS ); // 2 days later
+			$second_followup = $first_followup + ( $second_followup_days * DAY_IN_SECONDS ); // 5 days total
+
+			$coupon_expires      = $second_followup + ( $coupon_expires_in * DAY_IN_SECONDS ); // Add 3 days.
+			$coupon_expires_date = gmdate( 'd-m-Y', $coupon_expires );
+
+			$args = array(
+				'product'           => $product,
+				'discount_type'     => $discount_type,
+				'amount'            => $amount,
+				'coupon_expires_in' => $coupon_expires_date,
+			);
+
+			$coupon = Utils::generate_discount( $args );
+
 			foreach ( $results as $row ) {
 				$this->send_notify_emails( $row );
 				$this->change_status_to_email_sent( $row );
-				$this->create_followup_schedule( $row, $product );
+				$this->create_followup_schedule( $row, $args );
 			}
 		}
 
@@ -162,20 +183,17 @@ class Admin {
 		);
 	}
 
-	public function create_followup_schedule( $row = array(), $product = null ) {
-		$first_followup  = time() + ( 2 * DAY_IN_SECONDS ); // 2 days later
-		$second_followup = $first_followup + ( 3 * DAY_IN_SECONDS ); // 5 days total
-
+	public function create_followup_schedule( $row = array(), $args = array() ) {
 		wp_schedule_single_event(
 			$first_followup,
 			'paw_still_interested_followup_email',
-			array( $row, $product )
+			array( $row, $args )
 		);
 
 		wp_schedule_single_event(
 			$second_followup,
 			'paw_urgency_followup_email',
-			array( $row, $product )
+			array( $row, $args )
 		);
 	}
 }
