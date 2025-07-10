@@ -105,6 +105,8 @@ class Admin {
 		$results = $this->get_emails( $post_id );
 
 		if ( $results ) {
+			$enable_followup = get_option( 'paw_enable_followup', '' );
+
 			$discount_type        = get_option( 'paw_discount_type', 'percent' );
 			$amount               = get_option( 'paw_discount_amount', 20 );
 			$first_followup_days  = get_option( 'paw_first_followup_days', 2 );
@@ -137,7 +139,10 @@ class Admin {
 			foreach ( $results as $row ) {
 				$this->send_notify_emails( $row );
 				$this->change_status_to_email_sent( $row );
-				$this->create_followup_schedule( $row, $args );
+
+				if ( ! empty( $enable_followup ) ) {
+					$this->create_followup_schedule( $row, $args );
+				}
 			}
 		}
 
@@ -164,7 +169,7 @@ class Admin {
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = esc_html__( 'Back in Stock:', 'product-availability-notifier-for-woocommerce' );
+		$subject = get_option( 'paw_email_subject', esc_html__( 'Back in Stock:', 'product-availability-notifier-for-woocommerce' ) );
 
 		ob_start();
 		include PAW_PATH . '/template/email/html-back-in-stock-email.php';

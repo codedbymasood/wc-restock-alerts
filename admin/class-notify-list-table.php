@@ -81,12 +81,41 @@ class Notify_List_Table extends \WP_List_Table {
 		return $item['created_at'];
 	}
 
+	/**
+	 * Get bulk actions.
+	 *
+	 * @return array
+	 */
+	protected function get_bulk_actions() {
+		return array(
+			'delete' => esc_html__( 'Delete permanently', 'product-availability-notifier-for-woocommerce' ),
+		);
+	}
+
+	private function process_bulk_actions() {
+		if ( 'delete' === $this->current_action() && ! empty( $_REQUEST['notification'] ) ) {
+			global $wpdb;
+
+			$table_name = $wpdb->prefix . 'paw_product_notify';
+			$ids        = array_map( 'absint', $_REQUEST['notification'] );
+
+			if ( ! empty( $ids ) ) {
+				$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+				$query        = "DELETE FROM $table_name WHERE id IN ($placeholders)";
+
+				$wpdb->query( $wpdb->prepare( $query, ...$ids ) );
+			}
+		}
+	}
+
 	public function prepare_items() {
+		$this->process_bulk_actions();
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . 'paw_product_notify';
-		$per_page = 10;
+		$table_name   = $wpdb->prefix . 'paw_product_notify';
+		$per_page     = 10;
 		$current_page = $this->get_pagenum();
+
 		$offset = ( $current_page - 1 ) * $per_page;
 
 		$orderby = ! empty( $_GET['orderby'] ) ? esc_sql( $_GET['orderby'] ) : 'id';

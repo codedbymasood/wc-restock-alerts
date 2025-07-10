@@ -40,6 +40,10 @@ class Frontend {
 	 */
 	private function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		add_filter( 'wp_mail_from', array( $this, 'mail_from' ) );
+		add_filter( 'wp_mail_from_name', array( $this, 'mail_from_name' ) );
+
 		/**
 		 * TODO:
 		 * Variable product not supported yet, needs to send a variation product ID on email.
@@ -53,6 +57,16 @@ class Frontend {
 
 	public function enqueue_scripts() {
 		wp_enqueue_script( 'paw-main', PAW_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
+	}
+
+	public function mail_from() {
+		$from_address = get_option( 'paw_from_address', '' );
+		return $from_address;
+	}
+
+	public function mail_from_name() {
+		$from_name = get_option( 'paw_from_name', '' );
+		return $from_name;
 	}
 
 	public function handle_email_verification_link() {
