@@ -169,7 +169,7 @@ class Admin {
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = get_option( 'paw_email_subject', esc_html__( 'Back in Stock:', 'product-availability-notifier-for-woocommerce' ) );
+		$subject = get_option( 'paw_email_subject', esc_html__( 'Back in Stock!', 'product-availability-notifier-for-woocommerce' ) );
 
 		ob_start();
 		include PAW_PATH . '/template/email/html-back-in-stock-email.php';

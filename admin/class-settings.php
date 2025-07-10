@@ -127,7 +127,7 @@ class Settings {
 			foreach ( $tab_fields as $field ) {
 				$id    = $field['id'];
 				$type  = isset( $field['type'] ) ? $field['type'] : 'text';
-				$value = isset( $_POST[ $id ] ) ? wp_unslash( $_POST[ $id ] ) : '';
+				$value = isset( $_POST[ $id ] ) ? wp_unslash( $_POST[ $id ] ) : $field['default'];
 
 				switch ( $type ) {
 					case 'checkbox':
@@ -208,6 +208,11 @@ class Settings {
 		$id    = $field['id'];
 		$name  = $id;
 		$value = get_option( $id, '' );
+
+		if ( isset( $field['default'] ) && empty( $value ) ) {
+			$value = $field['default'];
+		}
+
 		$type  = isset( $field['type'] ) ? $field['type'] : 'text';
 		$label = isset( $field['label'] ) ? $field['label'] : '';
 		?>
