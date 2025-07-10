@@ -39,11 +39,11 @@ class Cron {
 	 * Plugin constructor.
 	 */
 	private function __construct() {
-		add_action( 'paw_still_interested_followup_email', array( $this, 'send_still_interested_followup_email' ) );
-		add_action( 'paw_urgency_followup_email', array( $this, 'send_urgency_followup_email' ) );
+		add_action( 'paw_still_interested_followup_email', array( $this, 'send_still_interested_followup_email' ), 10, 2 );
+		add_action( 'paw_urgency_followup_email', array( $this, 'send_urgency_followup_email' ), 10, 2 );
 	}
 
-	public function send_still_interested_followup_email( $row = array() ) {
+	public function send_still_interested_followup_email( $row = array(), $args ) {
 		$email      = $row['email'];
 		$product_id = $row['product_id'];
 

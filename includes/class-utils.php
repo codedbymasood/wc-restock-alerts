@@ -21,16 +21,25 @@ class Utils {
 	 * @return void
 	 */
 	public static function generate_discount( $args = array() ) {
+		$code = self::generate_random_string();
+
+		$product             = isset( $args['product'] ) ? $args['product'] : 0;
+		$discount_type       = isset( $args['discount_type'] ) ? $args['discount_type'] : 'percent';
+		$amount              = isset( $args['amount'] ) ? $args['amount'] : 20;
+		$coupon_expires_date = isset( $args['coupon_expires_date'] ) ? $args['coupon_expires_date'] : '';
+
 		$coupon = new \WC_Coupon();
 
-		$coupon->set_code( self::generate_random_string() );
-		$coupon->set_discount_type( 'percent' );
-		$coupon->set_amount( 20 );
-		$coupon->set_date_expires( '31-12-2027' );
-		$coupon->set_product_ids( array( $product_id ) );
+		$coupon->set_code( $code );
+		$coupon->set_discount_type( $discount_type );
+		$coupon->set_amount( $amount );
+		$coupon->set_date_expires( $coupon_expires_date );
+		$coupon->set_product_ids( array( $product->get_id() ) );
 		$coupon->set_usage_limit_per_user( 1 );
 
 		$coupon->save();
+
+		return $code;
 	}
 
 	/**
