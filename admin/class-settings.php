@@ -103,17 +103,6 @@ class Settings {
 	 * @return void
 	 */
 	public function enqueue_scripts( $hook ) {
-		// Dynamic hook detection based on parent and menu slug.
-		$expected_hook = $this->parent_slug . '_page_' . $this->menu_slug;
-
-		// Handle different parent menu types.
-		if ( 'options-general.php' === $this->parent_slug ) {
-			$expected_hook = 'settings_page_' . $this->menu_slug;
-		}
-
-		// if ( $expected_hook !== $hook ) {
-		// 	return;
-		// }
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_style( 'settings-style', PAW_URL . '/assets/css/settings.css', array(), '1.0.1' );
@@ -171,6 +160,10 @@ class Settings {
 	 */
 	public function render_settings_page() {
 		$tabs = array_keys( $this->fields );
+
+		$admin_url = admin_url( 'admin.php?page=notify-list-settings' );
+
+		$current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html( $this->page_title ); ?></h1>	
@@ -180,14 +173,20 @@ class Settings {
 				</div>
 			<?php endif; ?>	
 			<h2 class="nav-tab-wrapper">
-				<?php foreach ( $tabs as $i => $tab ) : ?>
-					<a href="#" class="nav-tab<?php echo 0 === $i ? ' nav-tab-active' : ''; ?>" data-tab="tab-<?php echo esc_attr( $i ); ?>"><?php echo esc_html( $tab ); ?></a>
+				<?php
+				foreach ( $tabs as $i => $tab ) :
+					$tab_key = Utils::convert_case( $tab );
+					?>
+					<a href="<?php echo esc_url( $admin_url . '&tab=' . $tab_key ); ?>" class="nav-tab<?php echo $tab_key === $current_tab ? ' nav-tab-active' : ''; ?>"><?php echo esc_html( $tab ); ?></a>
 				<?php endforeach; ?>
 			</h2>
 			<form method="post">
 				<?php wp_nonce_field( 'paw_settings_action', 'paw_settings_nonce' ); ?>
-				<?php foreach ( $tabs as $i => $tab ) : ?>
-					<div class="tab-content tab-<?php echo esc_attr( $i ); ?>"<?php echo 0 === $i ? '' : ' style="display:none"'; ?>>
+				<?php
+				foreach ( $tabs as $i => $tab ) :
+					$tab_key = Utils::convert_case( $tab );
+					?>
+					<div class="tab-content tab-<?php echo esc_attr( $i ); ?>"<?php echo $tab_key === $current_tab ? '' : ' style="display:none"'; ?>>
 						<?php foreach ( $this->fields[ $tab ] as $field ) : ?>
 							<?php $this->render_field( $field ); ?>
 						<?php endforeach; ?>
