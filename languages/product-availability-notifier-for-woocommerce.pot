@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: QA for WooCommerce\n"
-"POT-Creation-Date: 2025-07-10 21:52+0530\n"
+"POT-Creation-Date: 2025-07-11 09:36+0530\n"
 "PO-Revision-Date: 2018-09-20 12:16+0530\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -29,8 +29,9 @@ msgstr ""
 msgid "Email Notifications"
 msgstr ""
 
-#: ../admin/class-admin.php:172
-msgid "Back in Stock:"
+#: ../admin/class-admin.php:172 ../admin/view/settings-page.php:33
+#: ../template/email/html-back-in-stock-email.php:16
+msgid "Back in Stock!"
 msgstr ""
 
 #: ../admin/class-admin.php:181 ../public/class-cron.php:60
@@ -43,7 +44,27 @@ msgstr ""
 msgid "Mail sent successfully."
 msgstr ""
 
-#: ../admin/class-notify-list-table.php:91
+#: ../admin/class-notify-list-table.php:39
+msgid "ID"
+msgstr ""
+
+#: ../admin/class-notify-list-table.php:40
+msgid "Email"
+msgstr ""
+
+#: ../admin/class-notify-list-table.php:41
+msgid "Product ID"
+msgstr ""
+
+#: ../admin/class-notify-list-table.php:42
+msgid "Status"
+msgstr ""
+
+#: ../admin/class-notify-list-table.php:43
+msgid "Created At"
+msgstr ""
+
+#: ../admin/class-notify-list-table.php:87
 msgid "Delete permanently"
 msgstr ""
 
@@ -59,60 +80,60 @@ msgstr ""
 msgid "From Address"
 msgstr ""
 
-#: ../admin/view/settings-page.php:36
+#: ../admin/view/settings-page.php:37
 msgid "Enable Followup"
 msgstr ""
 
-#: ../admin/view/settings-page.php:41
+#: ../admin/view/settings-page.php:43
 msgid "First Followup Days"
 msgstr ""
 
-#: ../admin/view/settings-page.php:46
+#: ../admin/view/settings-page.php:49
 msgid "First Followup Email Subject"
 msgstr ""
 
-#: ../admin/view/settings-page.php:51
-msgid "Second Followup Days"
-msgstr ""
-
-#: ../admin/view/settings-page.php:56
-msgid "Second Followup Email Subject"
-msgstr ""
-
-#: ../admin/view/settings-page.php:60
-msgid "Discount"
-msgstr ""
-
-#: ../admin/view/settings-page.php:63
-msgid "Discount Type"
-msgstr ""
-
-#: ../admin/view/settings-page.php:66
-msgid "Percentage discount"
-msgstr ""
-
-#: ../admin/view/settings-page.php:67
-msgid "Fixed cart discount"
-msgstr ""
-
-#: ../admin/view/settings-page.php:72
-msgid "Discount Amount"
-msgstr ""
-
-#: ../admin/view/settings-page.php:77
-msgid "Coupon Expires In"
-msgstr ""
-
-#: ../admin/view/settings-page.php:86 ../admin/view/settings-page.php:87
-msgid "Settings"
-msgstr ""
-
-#: ../public/class-cron.php:51
+#: ../admin/view/settings-page.php:51 ../public/class-cron.php:51
 msgid "Just a Quick Reminder"
 msgstr ""
 
-#: ../public/class-cron.php:71
+#: ../admin/view/settings-page.php:55
+msgid "Second Followup Days"
+msgstr ""
+
+#: ../admin/view/settings-page.php:61
+msgid "Second Followup Email Subject"
+msgstr ""
+
+#: ../admin/view/settings-page.php:63 ../public/class-cron.php:71
 msgid "Last Chance! 20% Off Ends in 3 Days"
+msgstr ""
+
+#: ../admin/view/settings-page.php:66
+msgid "Discount"
+msgstr ""
+
+#: ../admin/view/settings-page.php:69
+msgid "Discount Type"
+msgstr ""
+
+#: ../admin/view/settings-page.php:72
+msgid "Percentage discount"
+msgstr ""
+
+#: ../admin/view/settings-page.php:73
+msgid "Fixed cart discount"
+msgstr ""
+
+#: ../admin/view/settings-page.php:78
+msgid "Discount Amount"
+msgstr ""
+
+#: ../admin/view/settings-page.php:84
+msgid "Coupon Expires In"
+msgstr ""
+
+#: ../admin/view/settings-page.php:94 ../admin/view/settings-page.php:95
+msgid "Settings"
 msgstr ""
 
 #: ../public/class-frontend.php:98
@@ -143,12 +164,16 @@ msgstr ""
 msgid "Good news!"
 msgstr ""
 
-#: ../template/email/html-back-in-stock-email.php:26
+#: ../template/email/html-back-in-stock-email.php:21
+msgid "The product you were waiting for is now back in stock"
+msgstr ""
+
+#: ../template/email/html-back-in-stock-email.php:24
 #: ../template/email/html-urgency-followup-email.php:38
 msgid "Buy Now"
 msgstr ""
 
-#: ../template/email/html-back-in-stock-email.php:29
+#: ../template/email/html-back-in-stock-email.php:27
 msgid "Don't wait too long, popular products sell out quickly!"
 msgstr ""
 
@@ -172,4 +197,33 @@ msgstr ""
 
 #: ../template/email/html-urgency-followup-email.php:40
 msgid "Don't miss out - after this, it's back to full price."
+msgstr ""
+
+#: ../template/email/html-verification-email.php:29
+msgid "Confirm your email"
+msgstr ""
+
+#: ../template/email/html-verification-email.php:30
+msgid "Hi there,"
+msgstr ""
+
+#: ../template/email/html-verification-email.php:31
+msgid ""
+"Thanks for signing up. Please confirm your email address by clicking the "
+"button below:"
+msgstr ""
+
+#: ../template/email/html-verification-email.php:33
+msgid "Verify Email"
+msgstr ""
+
+#: ../template/email/html-verification-email.php:35
+msgid ""
+"If the button doesn't work, copy and paste this link into your browser:"
+msgstr ""
+
+#: ../template/email/html-verification-email.php:39
+msgid ""
+"This verification link will expire soon. If you did not request this, "
+"please ignore this email."
 msgstr ""

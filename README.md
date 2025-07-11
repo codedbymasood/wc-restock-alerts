@@ -1,6 +1,6 @@
-# WooCommerce Back In Stock – Notify Me + Follow-Up
+# Product availability notifier for WooCommerce
 
-A lightweight WooCommerce addon that allows customers to subscribe for notifications when an out-of-stock product is restocked. Includes intelligent follow-up emails and optional dynamic discount codes to recover more sales.
+A lightweight WooCommerce addon that allows customers to subscribe for notifications when an out-of-stock product is restocked. Includes intelligent follow-up emails and include dynamic discount codes to recover more sales.
 
 ---
 
@@ -32,23 +32,10 @@ A lightweight WooCommerce addon that allows customers to subscribe for notificat
 
 ---
 
-## Email Templates
-
-You can override the all the email templates using a child theme.
-
----
-
 ## Cron Info
 
 - Uses **`wp_schedule_single_event()`** to send follow-ups per subscriber
 - Make sure your WP-Cron is running correctly (or set a real cron job for reliability)
-
----
-
-## Security & Privacy
-
-- Emails are stored in a custom table
-- Status is updated per subscriber to avoid duplicates
 
 ---
 
@@ -66,4 +53,4 @@ GPLv2 or later
 
 ## Author
 
-Made with care by [Masood Mohamed](https://github.com/masoodmohamed90/)
+Made with care by [Masood Mohamed](https://github.com/codedbymasood)
