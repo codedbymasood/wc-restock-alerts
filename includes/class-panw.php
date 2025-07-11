@@ -88,6 +88,7 @@ final class PANW {
 
 		// Create a table when activate the plugin.
 		register_activation_hook( PANW_PLUGIN_FILE, array( $this, 'create_notify_table' ) );
+		add_action( 'before_woocommerce_init', array( $this, 'enable_hpos' ) );
 	}
 
 	public function create_notify_table() {
@@ -109,5 +110,15 @@ final class PANW {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
+	}
+
+	public function enable_hpos() {
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+				'custom_order_tables',
+				PANW_PLUGIN_FILE,
+				true
+			);
+		}
 	}
 }

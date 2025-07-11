@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Product availability notifier for WooCommerce
  * Plugin URI: https://github.com/masoodmohamed90/product-availability-notifier-for-woocommerce
- * Description: Add a "Notify Me When Available" button for out-of-stock items. Store owner gets the list, user gets email when back in stock.
+ * Description: Add a "Notify Me" button for out-of-stock products, send back-in-stock alerts and follow-up emails with unique discount codes.
  * Version: 1.0
  * Author: Masood Mohamed
  * Author URI: https://github.com/masoodmohamed90/

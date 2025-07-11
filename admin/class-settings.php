@@ -162,7 +162,7 @@ class Settings {
 
 		$admin_url = admin_url( 'admin.php?page=notify-list-settings' );
 
-		$current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
+		$current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : Utils::convert_case( $tabs[0] );
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html( $this->page_title ); ?></h1>	

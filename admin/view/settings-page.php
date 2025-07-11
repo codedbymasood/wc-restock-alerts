@@ -69,7 +69,7 @@ add_action(
 					'label'   => esc_html__( 'Discount Type', 'product-availability-notifier-for-woocommerce' ),
 					'type'    => 'select',
 					'options' => array(
-						'percentage' => esc_html__( 'Percentage discount', 'product-availability-notifier-for-woocommerce' ),
+						'percent'    => esc_html__( 'Percentage discount', 'product-availability-notifier-for-woocommerce' ),
 						'fixed_cart' => esc_html__( 'Fixed cart discount', 'product-availability-notifier-for-woocommerce' ),
 					),
 				),

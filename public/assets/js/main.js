@@ -1,7 +1,7 @@
 (function($) {
   'use strict';
   
-  $('#paw-notify-form').on( 'submit', function(e) {
+  $('#panw-notify-form').on( 'submit', function(e) {
     e.preventDefault();
     
     const $form = $(this);
@@ -13,7 +13,7 @@
       email,
       product,
       nonce,
-      action : 'paw_save_notify_email'
+      action : 'panw_save_notify_email'
     };
 
     $.ajax({
@@ -21,8 +21,12 @@
       method: 'POST',
       data,
       success: function(data) {
-        // Add loader.
-        // Print notice here once AJAX request completes.
+        $form.find('input[name="email"]').val('');
+        $form.append(`<span class="panw-notice">${data}</span>`);
+        
+        setTimeout( () => {
+          $('.panw-notice').remove();
+        }, 2000 );
       }
     });
   });  
