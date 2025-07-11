@@ -1,48 +1,43 @@
 <?php
 /**
- * Plugin Name: Product availability for WooCommerce
+ * Plugin Name: Product availability notifier for WooCommerce
  * Plugin URI: https://github.com/masoodmohamed90/product-availability-notifier-for-woocommerce
  * Description: Add a "Notify Me When Available" button for out-of-stock items. Store owner gets the list, user gets email when back in stock.
  * Version: 1.0
  * Author: Masood Mohamed
  * Author URI: https://github.com/masoodmohamed90/
  * Text Domain: product-availability-notifier-for-woocommerce
+ * License:     GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * Domain Path: /languages/
  * Requires at least: 6.6
  * Requires PHP: 7.4
+ * WC requires at least: 6.0
+ * WC tested up to: 9.6
  *
- * @package wp-plugin-base
+ * @package product-availability-notifier-for-woocommerce
  */
 
 defined( 'ABSPATH' ) || exit;
 
-// ✓ Insert form.
-// ✓ Store emails.
-	// ✓ Create a list table that store all the details(email, product id, status).
-	// Follow up.
-	// Email template.
-// ✓ Notify when restocked, change status to `email-sent`
-// Cronjobs after email sent for follow up emails.
-	// when order completed, stop the follow up and change status to completed.
-
-if ( ! defined( 'PAW_PLUGIN_FILE' ) ) {
-	define( 'PAW_PLUGIN_FILE', __FILE__ );
+if ( ! defined( 'PANW_PLUGIN_FILE' ) ) {
+	define( 'PANW_PLUGIN_FILE', __FILE__ );
 }
 
 // Include the main class.
-if ( ! class_exists( 'PAW', false ) ) {
-	include_once dirname( PAW_PLUGIN_FILE ) . '/includes/class-paw.php';
+if ( ! class_exists( 'PANW', false ) ) {
+	include_once dirname( PANW_PLUGIN_FILE ) . '/includes/class-panw.php';
 }
 
 /**
- * Returns the main instance of PAW.
+ * Returns the main instance of PANW.
  *
  * @since  1.0
- * @return PAW
+ * @return PANW
  */
-function paw() {
-	return \PAW\PAW::instance();
+function panw() {
+	return \PANW\PANW::instance();
 }
 
 // Global for backwards compatibility.
-$GLOBALS['paw'] = paw();
+$GLOBALS['panw'] = panw();

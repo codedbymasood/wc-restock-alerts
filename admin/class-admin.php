@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PAW;
+namespace PANW;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,14 +19,14 @@ class Admin {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var PAW|null
+	 * @var PANW|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return PAW
+	 * @return PANW
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -52,7 +52,7 @@ class Admin {
 			$customer_email = $order->get_billing_email();
 
 			global $wpdb;
-			$table_name = $wpdb->prefix . 'paw_product_notify';
+			$table_name = $wpdb->prefix . 'panw_product_notify';
 
 			$wpdb->update(
 				$table_name,
@@ -105,13 +105,13 @@ class Admin {
 		$results = $this->get_emails( $post_id );
 
 		if ( $results ) {
-			$enable_followup = get_option( 'paw_enable_followup', '' );
+			$enable_followup = get_option( 'panw_enable_followup', '' );
 
-			$discount_type        = get_option( 'paw_discount_type', 'percent' );
-			$amount               = get_option( 'paw_discount_amount', 20 );
-			$first_followup_days  = get_option( 'paw_first_followup_days', 2 );
-			$second_followup_days = get_option( 'paw_second_followup_days', 3 );
-			$coupon_expires_in    = get_option( 'paw_coupon_expires_in', 3 );
+			$discount_type        = get_option( 'panw_discount_type', 'percent' );
+			$amount               = get_option( 'panw_discount_amount', 20 );
+			$first_followup_days  = get_option( 'panw_first_followup_days', 2 );
+			$second_followup_days = get_option( 'panw_second_followup_days', 3 );
+			$coupon_expires_in    = get_option( 'panw_coupon_expires_in', 3 );
 
 			// $first_followup  = time() + ( $first_followup_days * DAY_IN_SECONDS ); // 2 days later
 			// $second_followup = $first_followup + ( $second_followup_days * DAY_IN_SECONDS ); // 5 days total
@@ -151,7 +151,7 @@ class Admin {
 
 	public function get_emails( $post_id = 0 ) {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'paw_product_notify';
+		$table_name = $wpdb->prefix . 'panw_product_notify';
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM $table_name WHERE product_id = %d AND status = %s",
@@ -169,10 +169,10 @@ class Admin {
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = get_option( 'paw_email_subject', esc_html__( 'Back in Stock!', 'product-availability-notifier-for-woocommerce' ) );
+		$subject = get_option( 'panw_email_subject', esc_html__( 'Back in Stock!', 'product-availability-notifier-for-woocommerce' ) );
 
 		ob_start();
-		include PAW_PATH . '/template/email/html-back-in-stock-email.php';
+		include PANW_PATH . '/template/email/html-back-in-stock-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -186,7 +186,7 @@ class Admin {
 
 	public function change_status_to_email_sent( $row = array() ) {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'paw_product_notify';
+		$table_name = $wpdb->prefix . 'panw_product_notify';
 		$wpdb->update(
 			$table_name,
 			array( 'status' => 'email-sent' ),
@@ -199,16 +199,16 @@ class Admin {
 	public function create_followup_schedule( $row = array(), $args = array() ) {
 		wp_schedule_single_event(
 			$args['first_followup'],
-			'paw_still_interested_followup_email',
+			'panw_still_interested_followup_email',
 			array( $row, $args )
 		);
 
 		wp_schedule_single_event(
 			$args['second_followup'],
-			'paw_urgency_followup_email',
+			'panw_urgency_followup_email',
 			array( $row, $args )
 		);
 	}
 }
 
-\PAW\Admin::instance();
+\PANW\Admin::instance();

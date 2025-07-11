@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PAW;
+namespace PANW;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -105,8 +105,7 @@ class Settings {
 	public function enqueue_scripts( $hook ) {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_style( 'settings-style', PAW_URL . '/assets/css/settings.css', array(), '1.0.1' );
-		wp_enqueue_script( 'settings-script', PAW_URL . '/assets/js/settings.js', array( 'jquery' ), '1.0', true );
+		wp_enqueue_style( 'settings-style', PANW_URL . '/assets/css/settings.css', array(), '1.0' );
 	}
 
 	/**
@@ -115,7 +114,7 @@ class Settings {
 	 * @return void
 	 */
 	public function save_settings() {
-		if ( ! isset( $_POST['paw_settings_nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['paw_settings_nonce'] ), 'paw_settings_action' ) ) {
+		if ( ! isset( $_POST['panw_settings_nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['panw_settings_nonce'] ), 'panw_settings_action' ) ) {
 			return;
 		}
 
@@ -181,7 +180,7 @@ class Settings {
 				<?php endforeach; ?>
 			</h2>
 			<form method="post">
-				<?php wp_nonce_field( 'paw_settings_action', 'paw_settings_nonce' ); ?>
+				<?php wp_nonce_field( 'panw_settings_action', 'panw_settings_nonce' ); ?>
 				<?php
 				foreach ( $tabs as $i => $tab ) :
 					$tab_key = Utils::convert_case( $tab );

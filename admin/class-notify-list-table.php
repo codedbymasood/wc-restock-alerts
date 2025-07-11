@@ -7,21 +7,17 @@
  * @version 1.0
  */
 
-namespace PAW;
+namespace PANW;
 
 defined( 'ABSPATH' ) || exit;
-
-/*
-	** TODO:
-	--------
-	* Bulk select, delete, sort, search
-	* Import/Export
-*/
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
+/**
+ * Table holds all the notify details.
+ */
 class Notify_List_Table extends \WP_List_Table {
 
 	private $data = [];
@@ -39,12 +35,12 @@ class Notify_List_Table extends \WP_List_Table {
 
 	public function get_columns() {
 		return array(
-			'cb'          => '<input type="checkbox" />',
-			'id'          => 'ID',
-			'email'       => 'Email',
-			'product_id' => 'Product ID',
-			'status'      => 'Status',
-			'created_at'  => 'Created At',
+			'cb'         => '<input type="checkbox" />',
+			'id'         => esc_html__( 'ID', 'product-availability-notifier-for-woocommerce' ),
+			'email'      => esc_html__( 'Email', 'product-availability-notifier-for-woocommerce' ),
+			'product_id' => esc_html__( 'Product ID', 'product-availability-notifier-for-woocommerce' ),
+			'status'     => esc_html__( 'Status', 'product-availability-notifier-for-woocommerce' ),
+			'created_at' => esc_html__( 'Created At', 'product-availability-notifier-for-woocommerce' ),
 		);
 	}
 
@@ -96,7 +92,7 @@ class Notify_List_Table extends \WP_List_Table {
 		if ( 'delete' === $this->current_action() && ! empty( $_REQUEST['notification'] ) ) {
 			global $wpdb;
 
-			$table_name = $wpdb->prefix . 'paw_product_notify';
+			$table_name = $wpdb->prefix . 'panw_product_notify';
 			$ids        = array_map( 'absint', $_REQUEST['notification'] );
 
 			if ( ! empty( $ids ) ) {
@@ -112,7 +108,7 @@ class Notify_List_Table extends \WP_List_Table {
 		$this->process_bulk_actions();
 		global $wpdb;
 
-		$table_name   = $wpdb->prefix . 'paw_product_notify';
+		$table_name   = $wpdb->prefix . 'panw_product_notify';
 		$per_page     = 10;
 		$current_page = $this->get_pagenum();
 

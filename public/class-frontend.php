@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PAW;
+namespace PANW;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,14 +19,14 @@ class Frontend {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var PAW|null
+	 * @var PANW|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return PAW
+	 * @return PANW
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -51,21 +51,21 @@ class Frontend {
 		add_filter( 'woocommerce_get_stock_html', array( $this, 'append_notify_form' ), 10, 2 );
 		add_action( 'init', array( $this, 'handle_email_verification_link' ) );
 
-		add_action( 'wp_ajax_paw_save_notify_email', array( $this, 'save_notify_email' ) );
-		add_action( 'wp_ajax_nopriv_paw_save_notify_email', array( $this, 'save_notify_email' ) );
+		add_action( 'wp_ajax_panw_save_notify_email', array( $this, 'save_notify_email' ) );
+		add_action( 'wp_ajax_nopriv_panw_save_notify_email', array( $this, 'save_notify_email' ) );
 	}
 
 	public function enqueue_scripts() {
-		wp_enqueue_script( 'paw-main', PAW_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
+		wp_enqueue_script( 'panw-main', PANW_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
 	}
 
 	public function mail_from() {
-		$from_address = get_option( 'paw_from_address', '' );
+		$from_address = get_option( 'panw_from_address', '' );
 		return $from_address;
 	}
 
 	public function mail_from_name() {
-		$from_name = get_option( 'paw_from_name', '' );
+		$from_name = get_option( 'panw_from_name', '' );
 		return $from_name;
 	}
 
@@ -75,7 +75,7 @@ class Frontend {
 		}
 
 		global $wpdb;
-		$table = $wpdb->prefix . 'paw_product_notify';
+		$table = $wpdb->prefix . 'panw_product_notify';
 		$email = sanitize_email( $_GET['email'] );
 		$token = sanitize_text_field( $_GET['token'] );
 
@@ -94,7 +94,7 @@ class Frontend {
 	public function save_notify_email() {
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
-		if ( ! wp_verify_nonce( $nonce, 'paw-save-email' ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'panw-save-email' ) ) {
 			die( esc_html__( 'Nonce failed.', 'product-availability-notifier-for-woocommerce' ) );
 		} else {
 			$email   = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash( $_POST['email'] ) ) : '';
@@ -119,7 +119,7 @@ class Frontend {
 	public function save_data_in_table( $email = '', $product = 0, $token = '' ) {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . 'paw_product_notify';
+		$table_name = $wpdb->prefix . 'panw_product_notify';
 
 		if ( ! empty( $email ) && ! empty( $product ) ) {
 			$exists = $wpdb->get_var(
@@ -132,7 +132,7 @@ class Frontend {
 
 			if ( ! $exists ) {
 				$wpdb->insert(
-					$wpdb->prefix . 'paw_product_notify',
+					$wpdb->prefix . 'panw_product_notify',
 					array(
 						'email'      => $email,
 						'product_id' => $product,
@@ -154,7 +154,7 @@ class Frontend {
 		$subject = esc_html__( 'Send verification email', 'product-availability-notifier-for-woocommerce' );
 
 		ob_start();
-		include PAW_PATH . '/template/email/html-verification-email.php';
+		include PANW_PATH . '/template/email/html-verification-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -178,9 +178,9 @@ class Frontend {
 		$availability = $product->get_availability();
 
 		if ( 'Out of stock' === $availability['availability'] ) {
-			$nonce = wp_create_nonce( 'paw-save-email' );
+			$nonce = wp_create_nonce( 'panw-save-email' );
 
-			$form  = '<form id="paw-notify-form" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
+			$form  = '<form id="panw-notify-form" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
 			$form .= '<input name="email" type="text" placeholder="' . esc_attr__( 'Enter your email address', 'product-availability-notifier-for-woocommerce' ) . '">';
 			$form .= '<button type="submit">' . esc_html__( 'Notify Me', 'product-availability-notifier-for-woocommerce' ) . '</button>';
 			$form .= '</form>';
@@ -192,7 +192,7 @@ class Frontend {
 
 }
 
-\PAW\Frontend::instance();
+\PANW\Frontend::instance();
 
 
 

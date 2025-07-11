@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * TODO:
- * Instead of home_url() needs to add a shortcode that shown succuessfully added notify notice
+ * Instead of home_url() needs to add a shortcode that shown succuessfully subscribed notify notice
  */
 
 $verify_url = add_query_arg(
@@ -26,17 +26,17 @@ $verify_url = add_query_arg(
 <html>
 	<body>
 		<div class="email-container">
-			<h1>Confirm your email</h1>
-			<p>Hi there,</p>
-			<p>Thanks for signing up. Please confirm your email address by clicking the button below:</p>
+			<h1><?php esc_html_e( 'Confirm your email', 'product-availability-notifier-for-woocommerce' ); ?></h1>
+			<p><?php esc_html_e( 'Hi there,' ); ?></p>
+			<p><?php esc_html_e( 'Thanks for signing up. Please confirm your email address by clicking the button below:', 'product-availability-notifier-for-woocommerce' ); ?></p>
 
-			<a href="<?php echo esc_url( $verify_url ); ?>" class="button">Verify Email</a>
+			<a href="<?php echo esc_url( $verify_url ); ?>" class="button"><?php esc_html_e( 'Verify Email', 'product-availability-notifier-for-woocommerce' ); ?></a>
 
-			<p>If the button doesn't work, copy and paste this link into your browser:</p>
+			<p><?php esc_html_e( 'If the button doesn\'t work, copy and paste this link into your browser:' ); ?></p>
 			<p><a href="<?php echo esc_url( $verify_url ); ?>"><?php echo esc_html( $verify_url ); ?></a></p>
 
 			<div class="footer">
-				<p>This verification link will expire soon. If you did not request this, please ignore this email.</p>
+				<p><?php esc_html_e( 'This verification link will expire soon. If you did not request this, please ignore this email.', 'product-availability-notifier-for-woocommerce' ); ?></p>
 			</div>
 		</div>
 	</body>

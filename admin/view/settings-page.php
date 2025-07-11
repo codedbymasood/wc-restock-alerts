@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PAW;
+namespace PANW;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,47 +17,47 @@ add_action(
 		$fields = array(
 			esc_html__( 'Mail Settings', 'product-availability-notifier-for-woocommerce' ) => array(
 				array(
-					'id'    => 'paw_from_name',
+					'id'    => 'panw_from_name',
 					'label' => esc_html__( 'From Name', 'product-availability-notifier-for-woocommerce' ),
 					'type'  => 'text',
 				),
 				array(
-					'id'    => 'paw_from_address',
+					'id'    => 'panw_from_address',
 					'label' => esc_html__( 'From Address', 'product-availability-notifier-for-woocommerce' ),
 					'type'  => 'text',
 				),
 				array(
-					'id'      => 'paw_email_subject',
+					'id'      => 'panw_email_subject',
 					'label'   => esc_html__( 'From Address', 'product-availability-notifier-for-woocommerce' ),
 					'type'    => 'text',
 					'default' => esc_html__( 'Back in Stock!', 'product-availability-notifier-for-woocommerce' ),
 				),
 				array(
-					'id'      => 'paw_enable_followup',
+					'id'      => 'panw_enable_followup',
 					'label'   => esc_html__( 'Enable Followup', 'product-availability-notifier-for-woocommerce' ),
 					'type'    => 'checkbox',
 					'default' => '1',
 				),
 				array(
-					'id'      => 'paw_first_followup_days',
+					'id'      => 'panw_first_followup_days',
 					'label'   => esc_html__( 'First Followup Days', 'product-availability-notifier-for-woocommerce' ),
 					'type'    => 'text',
 					'default' => 2,
 				),
 				array(
-					'id'      => 'paw_first_followup_email_subject',
+					'id'      => 'panw_first_followup_email_subject',
 					'label'   => esc_html__( 'First Followup Email Subject', 'product-availability-notifier-for-woocommerce' ),
 					'type'    => 'text',
 					'default' => esc_html__( 'Just a Quick Reminder', 'product-availability-notifier-for-woocommerce' ),
 				),
 				array(
-					'id'      => 'paw_second_followup_days',
+					'id'      => 'panw_second_followup_days',
 					'label'   => esc_html__( 'Second Followup Days', 'product-availability-notifier-for-woocommerce' ),
 					'type'    => 'text',
 					'default' => 3,
 				),
 				array(
-					'id'      => 'paw_second_followup_email_subject',
+					'id'      => 'panw_second_followup_email_subject',
 					'label'   => esc_html__( 'Second Followup Email Subject', 'product-availability-notifier-for-woocommerce' ),
 					'type'    => 'text',
 					'default' => esc_html__( 'Last Chance! 20% Off Ends in 3 Days', 'product-availability-notifier-for-woocommerce' ),
@@ -65,7 +65,7 @@ add_action(
 			),
 			esc_html__( 'Discount', 'product-availability-notifier-for-woocommerce' ) => array(
 				array(
-					'id'      => 'paw_discount_type',
+					'id'      => 'panw_discount_type',
 					'label'   => esc_html__( 'Discount Type', 'product-availability-notifier-for-woocommerce' ),
 					'type'    => 'select',
 					'options' => array(
@@ -74,13 +74,13 @@ add_action(
 					),
 				),
 				array(
-					'id'      => 'paw_discount_amount',
+					'id'      => 'panw_discount_amount',
 					'label'   => esc_html__( 'Discount Amount', 'product-availability-notifier-for-woocommerce' ),
 					'type'    => 'text',
 					'default' => 20,
 				),
 				array(
-					'id'      => 'paw_coupon_expires_in',
+					'id'      => 'panw_coupon_expires_in',
 					'label'   => esc_html__( 'Coupon Expires In', 'product-availability-notifier-for-woocommerce' ),
 					'type'    => 'text',
 					'default' => 3,
