@@ -9,6 +9,8 @@
 
 namespace PANW;
 
+use Pelago\Emogrifier\CssInliner;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -176,7 +178,10 @@ class Admin {
 		$content = ob_get_contents();
 		ob_end_clean();
 
-		$result = wp_mail( $email, $subject, $content, $headers );
+		// CssInliner loads from WooCommerce.
+		$html = CssInliner::fromHtml( $content )->inlineCss()->render();
+
+		$result = wp_mail( $email, $subject, $html, $headers );
 		if ( ! $result ) {
 			esc_html_e( 'Mail failed to sent.', 'product-availability-notifier-for-woocommerce' );
 		} else {
