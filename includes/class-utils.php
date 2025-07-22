@@ -42,6 +42,39 @@ class Utils {
 		return $code;
 	}
 
+	public function generate_verification_url( $email ) {
+		// Generate a secure token.
+		$token = bin2hex( random_bytes( 32 ) ); // 64-character hex string
+
+		// Add expiration timestamp for additional security.
+		$expires = time() + ( 7 * 24 * 60 * 60 );
+
+		// Store token in database with expiration.
+		global $wpdb;
+		$table = $wpdb->prefix . 'panw_product_notify';
+
+		$wpdb->update(
+			$table,
+			array(
+				'token'         => $token,
+				'token_expires' => $expires,
+				'status'        => 'pending',
+			),
+			array( 'email' => $email )
+		);
+
+		$verify_url = add_query_arg(
+			array(
+				'verify_email' => 1,
+				'email'        => rawurlencode( $email ),
+				'token'        => $token,
+			),
+			home_url()
+		);
+
+		return $verify_url;
+	}
+
 	/**
 	 * Convert string cases
 	 *

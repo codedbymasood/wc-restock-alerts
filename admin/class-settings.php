@@ -59,6 +59,20 @@ class Settings {
 	private $fields;
 
 	/**
+	 * Nonce name.
+	 *
+	 * @var string
+	 */
+	private $nonce_name;
+
+	/**
+	 * Nonce action.
+	 *
+	 * @var string
+	 */
+	private $nonce_action;
+
+	/**
 	 * Plugin constructor.
 	 *
 	 * @param string $parent_slug Parent slug.
@@ -75,6 +89,10 @@ class Settings {
 		$this->menu_title  = $menu_title;
 		$this->capability  = $capability;
 		$this->fields      = $fields;
+
+		// Make nonce unique per page.
+		$this->nonce_name   = $menu_slug . '_nonce';
+		$this->nonce_action = $menu_slug . '_action';
 
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ), 20 );
 		add_action( 'admin_init', array( $this, 'save_settings' ) );
@@ -96,6 +114,7 @@ class Settings {
 			array( $this, 'render_settings_page' )
 		);
 	}
+
 	/**
 	 * Enqueue scripts.
 	 *
@@ -103,9 +122,17 @@ class Settings {
 	 * @return void
 	 */
 	public function enqueue_scripts( $hook ) {
+		if ( strpos( $hook, $this->menu_slug ) === false ) {
+			return;
+		}
+
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_style( 'settings-style', PANW_URL . '/assets/css/settings.css', array(), '1.0' );
+		wp_enqueue_style( 'settings-style', PANW_URL . '/admin/assets/css/settings.css', array(), '1.0' );
+
+		wp_enqueue_code_editor( array( 'type' => 'text/html' ) );
+		wp_enqueue_code_editor( array( 'type' => 'text/css' ) );
+		wp_enqueue_script( 'rrw-settings', PANW_URL . '/admin/assets/js/settings.js', array( 'jquery', 'code-editor' ), '1.0', true );
 	}
 
 	/**
@@ -114,7 +141,12 @@ class Settings {
 	 * @return void
 	 */
 	public function save_settings() {
-		if ( ! isset( $_POST['panw_settings_nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['panw_settings_nonce'] ), 'panw_settings_action' ) ) {
+		// Check if we're on the current page.
+		if ( ! isset( $_GET['page'] ) || $_GET['page'] !== $this->menu_slug ) {
+			return;
+		}
+
+		if ( ! isset( $_POST[ $this->nonce_name ] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ $this->nonce_name ] ) ), $this->nonce_action ) ) {
 			return;
 		}
 
@@ -126,7 +158,7 @@ class Settings {
 			foreach ( $tab_fields as $field ) {
 				$id    = $field['id'];
 				$type  = isset( $field['type'] ) ? $field['type'] : 'text';
-				$value = isset( $_POST[ $id ] ) ? wp_unslash( $_POST[ $id ] ) : $field['default'];
+				$value = isset( $_POST[ $id ] ) ? sanitize_text_field( wp_unslash( $_POST[ $id ] ) ) : ( isset( $field['default'] ) ? $field['default'] : '' );
 
 				switch ( $type ) {
 					case 'checkbox':
@@ -139,6 +171,9 @@ class Settings {
 					case 'textarea':
 						update_option( $id, sanitize_textarea_field( $value ) );
 						break;
+					case 'richtext_editor':
+						update_option( $id, $value );
+						break;
 					default:
 						update_option( $id, sanitize_text_field( $value ) );
 						break;
@@ -147,7 +182,7 @@ class Settings {
 		}
 
 		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-			wp_safe_redirect( add_query_arg( 'settings-updated', 'true', wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+			wp_safe_redirect( add_query_arg( 'settings-updated', 'true', sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) );
 		}
 		exit;
 	}
@@ -158,11 +193,12 @@ class Settings {
 	 * @return void
 	 */
 	public function render_settings_page() {
+		if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'panw_tab_switch' ) ) {
+			return;
+		}
 		$tabs = array_keys( $this->fields );
 
-		$admin_url = admin_url( 'admin.php?page=notify-list-settings' );
-
-		$current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : Utils::convert_case( $tabs[0] );
+		$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : Utils::convert_case( $tabs[0] );
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html( $this->page_title ); ?></h1>	
@@ -170,17 +206,25 @@ class Settings {
 				<div class="notice notice-success is-dismissible">
 					<p>Settings saved successfully!</p>
 				</div>
-			<?php endif; ?>	
+			<?php endif; ?>
 			<h2 class="nav-tab-wrapper">
 				<?php
 				foreach ( $tabs as $i => $tab ) :
 					$tab_key = Utils::convert_case( $tab );
+					$tab_url = add_query_arg(
+						array(
+							'page'     => $this->menu_slug,
+							'tab'      => $tab_key,
+							'_wpnonce' => wp_create_nonce( 'panw_tab_switch' ),
+						),
+						admin_url( 'admin.php' )
+					);
 					?>
-					<a href="<?php echo esc_url( $admin_url . '&tab=' . $tab_key ); ?>" class="nav-tab<?php echo $tab_key === $current_tab ? ' nav-tab-active' : ''; ?>"><?php echo esc_html( $tab ); ?></a>
+					<a href="<?php echo esc_url( $tab_url ); ?>" class="nav-tab<?php echo $tab_key === $current_tab ? ' nav-tab-active' : ''; ?>"><?php echo esc_html( $tab ); ?></a>
 				<?php endforeach; ?>
 			</h2>
 			<form method="post">
-				<?php wp_nonce_field( 'panw_settings_action', 'panw_settings_nonce' ); ?>
+				<?php wp_nonce_field( $this->nonce_action, $this->nonce_name ); ?>
 				<?php
 				foreach ( $tabs as $i => $tab ) :
 					$tab_key = Utils::convert_case( $tab );
@@ -191,7 +235,7 @@ class Settings {
 						<?php endforeach; ?>
 					</div>
 				<?php endforeach; ?>
-				<?php submit_button(); ?>
+				<?php submit_button( 'Save Settings' ); ?>
 			</form>
 		</div>
 		<?php
@@ -212,8 +256,15 @@ class Settings {
 			$value = $field['default'];
 		}
 
-		$type  = isset( $field['type'] ) ? $field['type'] : 'text';
-		$label = isset( $field['label'] ) ? $field['label'] : '';
+		$type        = isset( $field['type'] ) ? $field['type'] : 'text';
+		$label       = isset( $field['label'] ) ? $field['label'] : '';
+		$description = isset( $field['description'] ) ? $field['description'] : '';
+
+		if ( 'richtext_editor' === $type ) {
+			$default_editor = isset( $field['default_editor'] ) ? $field['default_editor'] : 'html';
+			$html_value     = isset( $value['html'] ) ? $value['html'] : '';
+			$css_value      = isset( $value['css'] ) ? $value['css'] : '';
+		}
 		?>
 		<div class="field-wrap field-<?php echo esc_attr( $type ); ?>">
 			<?php if ( $label ) : ?>
@@ -230,7 +281,7 @@ class Settings {
 					echo '<select id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '">';
 					foreach ( $field['options'] as $opt_val => $opt_label ) {
 						$selected = selected( $value, $opt_val, false );
-						echo '<option value="' . esc_attr( $opt_val ) . '"' . $selected . '>' . esc_html( $opt_label ) . '</option>';
+						echo '<option value="' . esc_attr( $opt_val ) . '"' . esc_attr( $selected ) . '>' . esc_html( $opt_label ) . '</option>';
 					}
 					echo '</select>';
 					break;
@@ -238,7 +289,7 @@ class Settings {
 				case 'radio':
 					foreach ( $field['options'] as $opt_val => $opt_label ) {
 						$checked = checked( $value, $opt_val, false );
-						echo '<label><input type="radio" name="' . esc_attr( $name ) . '" value="' . esc_attr( $opt_val ) . '"' . $checked . '> ' . esc_html( $opt_label ) . '</label><br>';
+						echo '<label><input type="radio" name="' . esc_attr( $name ) . '" value="' . esc_attr( $opt_val ) . '"' . esc_attr( $checked ) . '> ' . esc_html( $opt_label ) . '</label><br>';
 					}
 					break;
 
@@ -254,6 +305,25 @@ class Settings {
 
 				case 'color':
 					echo '<input type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="color-picker">';
+					break;
+
+				case 'richtext_editor':
+					echo '<div class="richtext-editor" data-default-editor="' . esc_attr( $default_editor ) . '">';
+
+					if ( in_array( array( 'html', 'css' ), array( $field['options'] ), true ) ) {
+						echo '<ul class="rrw-tab-nav">';
+							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'product-availability-notifier-for-woocommerce' ) . '</li>';
+							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'product-availability-notifier-for-woocommerce' ) . '</li>';
+						echo '</ul>';
+					}
+
+					echo '<textarea class="html" name="' . esc_attr( $name ) . '[html]">' . esc_textarea( $html_value ) . '</textarea>';
+					echo '<textarea class="css" name="' . esc_attr( $name ) . '[css]" style="display:none;">' . esc_textarea( $css_value ) . '</textarea>';
+
+					if ( $description ) {
+						echo '<p>* ' . esc_html( $description ) . '</p>';
+					}
+					echo '</div>';
 					break;
 
 				case 'text':

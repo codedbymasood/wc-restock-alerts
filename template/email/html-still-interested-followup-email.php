@@ -11,9 +11,11 @@ defined( 'ABSPATH' ) || exit;
 
 $product = isset( $args['product'] ) ? $args['product'] : 0;
 
-// if ( ! $product ) {
-// 	die();
-// }
+$product_id = $product->get_id();
+
+if ( ! $product_id ) {
+	return;
+}
 
 $discount_type     = isset( $args['discount_type'] ) ? $args['discount_type'] : 'percent';
 $amount            = isset( $args['amount'] ) ? $args['amount'] : 20;

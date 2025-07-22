@@ -54,10 +54,9 @@ class Admin {
 			$customer_email = $order->get_billing_email();
 
 			global $wpdb;
-			$table_name = $wpdb->prefix . 'panw_product_notify';
 
 			$wpdb->update(
-				$table_name,
+				$wpdb->prefix . 'panw_product_notify',
 				array( 'status' => 'completed' ),
 				array(
 					'email'      => $customer_email,
@@ -153,10 +152,9 @@ class Admin {
 
 	public function get_emails( $post_id = 0 ) {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'panw_product_notify';
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM $table_name WHERE product_id = %d AND status = %s",
+				"SELECT * FROM $wpdb->prefix . 'panw_product_notify' WHERE product_id = %d AND status = %s",
 				$post_id,
 				'subscribed'
 			),
@@ -191,9 +189,8 @@ class Admin {
 
 	public function change_status_to_email_sent( $row = array() ) {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'panw_product_notify';
 		$wpdb->update(
-			$table_name,
+			$wpdb->prefix . 'panw_product_notify',
 			array( 'status' => 'email-sent' ),
 			array(
 				'id' => $row['id'],

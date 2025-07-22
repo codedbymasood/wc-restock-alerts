@@ -70,24 +70,45 @@ class Frontend {
 	}
 
 	public function handle_email_verification_link() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! isset( $_GET['verify_email'] ) || ! isset( $_GET['email'] ) || ! isset( $_GET['token'] ) ) {
 			return;
 		}
 
 		global $wpdb;
-		$table = $wpdb->prefix . 'panw_product_notify';
-		$email = sanitize_email( $_GET['email'] );
-		$token = sanitize_text_field( $_GET['token'] );
+		$email = sanitize_email( wp_unslash( $_GET['email'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$token = sanitize_text_field( wp_unslash( $_GET['token'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table WHERE email = %s AND token = %s", $email, $token ) );
+		if ( ! is_email( $email ) ) {
+			wp_die( 'Invalid email format.', 'Verification Error', array( 'response' => 400 ) );
+			return;
+		}
+
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM $wpdb->prefix . 'panw_product_notify' WHERE email = %s AND token = %s AND status = 'pending'",
+				$email,
+				$token
+			)
+		);
+
+		if ( ! $row ) {
+			wp_die( 'Invalid or expired verification link.', 'Verification Error', array( 'response' => 400 ) );
+			return;
+		}
 
 		if ( $row ) {
 			// Update status to 'subscribed'.
 			$wpdb->update(
-				$table,
-				array( 'status' => 'subscribed' ),
+				$wpdb->prefix . 'panw_product_notify',
+				array(
+					'status' => 'subscribed',
+					'token'  => null,
+				),
 				array( 'email' => $email )
 			);
+
+			wp_safe_redirect( add_query_arg( 'verification', 'success', home_url() ) );
 		}
 	}
 
@@ -100,9 +121,9 @@ class Frontend {
 			$email   = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash( $_POST['email'] ) ) : '';
 			$product = isset( $_POST['product'] ) ? sanitize_text_field( wp_unslash( $_POST['product'] ) ) : '';
 
-			$token = wp_generate_password( 32, false );
+			$this->save_data_in_table( $email, $product );
 
-			$this->save_data_in_table( $email, $product, $token );
+			$verify_url = Utils::generate_verification_url( $email );
 
 			/**
 			 * TODO:
@@ -110,21 +131,19 @@ class Frontend {
 			 * email directly change the staus to `subscribed`.
 			 */
 
-			$this->send_verification_email( $email, $product, $token );
+			$this->send_verification_email( $email, $product, $verify_url );
 		}
 
 		die();
 	}
 
-	public function save_data_in_table( $email = '', $product = 0, $token = '' ) {
+	public function save_data_in_table( $email = '', $product = 0 ) {
 		global $wpdb;
-
-		$table_name = $wpdb->prefix . 'panw_product_notify';
 
 		if ( ! empty( $email ) && ! empty( $product ) ) {
 			$exists = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM $table_name WHERE email = %s AND product_id = %d",
+					"SELECT COUNT(*) FROM $wpdb->prefix . 'panw_product_notify' WHERE email = %s AND product_id = %d",
 					$email,
 					$product
 				)
@@ -137,9 +156,8 @@ class Frontend {
 						'email'      => $email,
 						'product_id' => $product,
 						'status'     => 'pending',
-						'token'      => $token,
 					),
-					array( '%s', '%d', '%s', '%s' )
+					array( '%s', '%d', '%s' )
 				);
 			} else {
 				die( esc_html__( 'Email already added in this product.', 'product-availability-notifier-for-woocommerce' ) );
@@ -149,7 +167,7 @@ class Frontend {
 		}
 	}
 
-	public function send_verification_email( $email = '', $product = 0, $token = '' ) {
+	public function send_verification_email( $email = '', $product = 0, $verify_url = '' ) {
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 		$subject = esc_html__( 'Send verification email', 'product-availability-notifier-for-woocommerce' );
 

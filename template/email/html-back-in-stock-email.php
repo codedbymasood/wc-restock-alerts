@@ -9,6 +9,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+if ( ! $product_id ) {
+	return;
+}
+
 $product = wc_get_product( $product_id );
 ?>
 <html>

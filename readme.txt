@@ -1,6 +1,6 @@
 === Product availability notifier for WooCommerce ===
 Tags: online store, ecommerce, shop, shopping cart, sell online
-Requires at least: 6.7
+Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
 Stable tag: 1.0

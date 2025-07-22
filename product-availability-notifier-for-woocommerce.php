@@ -1,6 +1,7 @@
 <?php
 /**
  * Plugin Name: Product availability notifier for WooCommerce
+ * Requires Plugins: woocommerce
  * Plugin URI: https://github.com/codedbymasood/wc-stock-notifier
  * Description: Add a "Notify Me" button for out-of-stock products, send back-in-stock alerts and follow-up emails with unique discount codes.
  * Version: 1.0
@@ -39,15 +40,5 @@ function panw() {
 	return \PANW\PANW::instance();
 }
 
-add_action( 
-	'woocommerce_loaded',
-	function () {
-		// Require at least WooCommerce 6.0+.
-		if ( version_compare( wc()->version, '6.0', '<' ) ) {
-			return;
-		}
-
-		// Global for backwards compatibility.
-		$GLOBALS['panw'] = panw();
-	}
-);
+// Global for backwards compatibility.
+$GLOBALS['panw'] = panw();
