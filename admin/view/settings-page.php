@@ -32,6 +32,8 @@ add_action(
 					'type'    => 'text',
 					'default' => esc_html__( 'Back in Stock!', 'product-availability-notifier-for-woocommerce' ),
 				),
+			),
+			esc_html__( 'Followup Email', 'product-availability-notifier-for-woocommerce' ) => array(				
 				array(
 					'id'      => 'panw_enable_followup',
 					'label'   => esc_html__( 'Enable Followup', 'product-availability-notifier-for-woocommerce' ),
@@ -62,8 +64,6 @@ add_action(
 					'type'    => 'text',
 					'default' => esc_html__( 'Last Chance! 20% Off Ends in 3 Days', 'product-availability-notifier-for-woocommerce' ),
 				),
-			),
-			esc_html__( 'Discount', 'product-availability-notifier-for-woocommerce' ) => array(
 				array(
 					'id'      => 'panw_discount_type',
 					'label'   => esc_html__( 'Discount Type', 'product-availability-notifier-for-woocommerce' ),

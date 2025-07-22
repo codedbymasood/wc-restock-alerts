@@ -132,7 +132,7 @@ class Settings {
 
 		wp_enqueue_code_editor( array( 'type' => 'text/html' ) );
 		wp_enqueue_code_editor( array( 'type' => 'text/css' ) );
-		wp_enqueue_script( 'rrw-settings', PANW_URL . '/admin/assets/js/settings.js', array( 'jquery', 'code-editor' ), '1.0', true );
+		wp_enqueue_script( 'panw-settings', PANW_URL . '/admin/assets/js/settings.js', array( 'jquery', 'code-editor' ), '1.0', true );
 	}
 
 	/**
@@ -311,7 +311,7 @@ class Settings {
 					echo '<div class="richtext-editor" data-default-editor="' . esc_attr( $default_editor ) . '">';
 
 					if ( in_array( array( 'html', 'css' ), array( $field['options'] ), true ) ) {
-						echo '<ul class="rrw-tab-nav">';
+						echo '<ul class="panw-tab-nav">';
 							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'product-availability-notifier-for-woocommerce' ) . '</li>';
 							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'product-availability-notifier-for-woocommerce' ) . '</li>';
 						echo '</ul>';
