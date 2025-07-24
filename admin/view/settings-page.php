@@ -17,12 +17,12 @@ add_action(
 		$fields = array(
 			esc_html__( 'Mail Settings', 'product-availability-notifier-for-woocommerce' ) => array(
 				array(
-					'id'    => 'prodavno_from_name',
+					'id'    => 'email_from_name',
 					'label' => esc_html__( 'From Name', 'product-availability-notifier-for-woocommerce' ),
 					'type'  => 'text',
 				),
 				array(
-					'id'    => 'prodavno_from_address',
+					'id'    => 'email_from_address',
 					'label' => esc_html__( 'From Address', 'product-availability-notifier-for-woocommerce' ),
 					'type'  => 'text',
 				),

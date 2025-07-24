@@ -60,12 +60,12 @@ class Frontend {
 	}
 
 	public function mail_from() {
-		$from_address = get_option( 'prodavno_from_address', '' );
+		$from_address = get_option( 'email_from_address', '' );
 		return $from_address;
 	}
 
 	public function mail_from_name() {
-		$from_name = get_option( 'prodavno_from_name', '' );
+		$from_name = get_option( 'email_from_name', '' );
 		return $from_name;
 	}
 
@@ -141,9 +141,11 @@ class Frontend {
 		global $wpdb;
 
 		if ( ! empty( $email ) && ! empty( $product ) ) {
+			$table_name = $wpdb->prefix . 'prodavno_product_notify';
+
 			$exists = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM $wpdb->prefix . 'prodavno_product_notify' WHERE email = %s AND product_id = %d",
+					"SELECT COUNT(*) FROM $table_name WHERE email = %s AND product_id = %d",
 					$email,
 					$product
 				)

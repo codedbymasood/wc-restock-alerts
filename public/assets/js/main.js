@@ -1,7 +1,7 @@
 (function($) {
   'use strict';
   
-  $('#panw-notify-form').on( 'submit', function(e) {
+  $('#prodavno-notify-form').on( 'submit', function(e) {
     e.preventDefault();
     
     const $form = $(this);
@@ -13,7 +13,7 @@
       email,
       product,
       nonce,
-      action : 'panw_save_notify_email'
+      action : 'prodavno_save_notify_email'
     };
 
     $.ajax({
