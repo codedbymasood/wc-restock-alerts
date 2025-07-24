@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PANW;
+namespace PRODAVNO;
 
 use Pelago\Emogrifier\CssInliner;
 
@@ -21,14 +21,14 @@ class Admin {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var PANW|null
+	 * @var PRODAVNO|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return PANW
+	 * @return PRODAVNO
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -56,7 +56,7 @@ class Admin {
 			global $wpdb;
 
 			$wpdb->update(
-				$wpdb->prefix . 'panw_product_notify',
+				$wpdb->prefix . 'prodavno_product_notify',
 				array( 'status' => 'completed' ),
 				array(
 					'email'      => $customer_email,
@@ -106,13 +106,13 @@ class Admin {
 		$results = $this->get_emails( $post_id );
 
 		if ( $results ) {
-			$enable_followup = get_option( 'panw_enable_followup', '' );
+			$enable_followup = get_option( 'prodavno_enable_followup', '' );
 
-			$discount_type        = get_option( 'panw_discount_type', 'percent' );
-			$amount               = get_option( 'panw_discount_amount', 20 );
-			$first_followup_days  = get_option( 'panw_first_followup_days', 2 );
-			$second_followup_days = get_option( 'panw_second_followup_days', 3 );
-			$coupon_expires_in    = get_option( 'panw_coupon_expires_in', 3 );
+			$discount_type        = get_option( 'prodavno_discount_type', 'percent' );
+			$amount               = get_option( 'prodavno_discount_amount', 20 );
+			$first_followup_days  = get_option( 'prodavno_first_followup_days', 2 );
+			$second_followup_days = get_option( 'prodavno_second_followup_days', 3 );
+			$coupon_expires_in    = get_option( 'prodavno_coupon_expires_in', 3 );
 
 			// $first_followup  = time() + ( $first_followup_days * DAY_IN_SECONDS ); // 2 days later
 			// $second_followup = $first_followup + ( $second_followup_days * DAY_IN_SECONDS ); // 5 days total
@@ -154,7 +154,7 @@ class Admin {
 		global $wpdb;
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM $wpdb->prefix . 'panw_product_notify' WHERE product_id = %d AND status = %s",
+				"SELECT * FROM $wpdb->prefix . 'prodavno_product_notify' WHERE product_id = %d AND status = %s",
 				$post_id,
 				'subscribed'
 			),
@@ -169,10 +169,10 @@ class Admin {
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = get_option( 'panw_email_subject', esc_html__( 'Back in Stock!', 'product-availability-notifier-for-woocommerce' ) );
+		$subject = get_option( 'prodavno_email_subject', esc_html__( 'Back in Stock!', 'product-availability-notifier-for-woocommerce' ) );
 
 		ob_start();
-		include PANW_PATH . '/template/email/html-back-in-stock-email.php';
+		include PRODAVNO_PATH . '/template/email/html-back-in-stock-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -190,7 +190,7 @@ class Admin {
 	public function change_status_to_email_sent( $row = array() ) {
 		global $wpdb;
 		$wpdb->update(
-			$wpdb->prefix . 'panw_product_notify',
+			$wpdb->prefix . 'prodavno_product_notify',
 			array( 'status' => 'email-sent' ),
 			array(
 				'id' => $row['id'],
@@ -201,16 +201,16 @@ class Admin {
 	public function create_followup_schedule( $row = array(), $args = array() ) {
 		wp_schedule_single_event(
 			$args['first_followup'],
-			'panw_still_interested_followup_email',
+			'prodavno_still_interested_followup_email',
 			array( $row, $args )
 		);
 
 		wp_schedule_single_event(
 			$args['second_followup'],
-			'panw_urgency_followup_email',
+			'prodavno_urgency_followup_email',
 			array( $row, $args )
 		);
 	}
 }
 
-\PANW\Admin::instance();
+\PRODAVNO\Admin::instance();

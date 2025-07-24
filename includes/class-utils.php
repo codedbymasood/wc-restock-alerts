@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PANW;
+namespace PRODAVNO;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -51,7 +51,7 @@ class Utils {
 
 		// Store token in database with expiration.
 		global $wpdb;
-		$table = $wpdb->prefix . 'panw_product_notify';
+		$table = $wpdb->prefix . 'prodavno_product_notify';
 
 		$wpdb->update(
 			$table,

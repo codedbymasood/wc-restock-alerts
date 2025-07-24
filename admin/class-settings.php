@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PANW;
+namespace PRODAVNO;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -128,11 +128,11 @@ class Settings {
 
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_style( 'settings-style', PANW_URL . '/admin/assets/css/settings.css', array(), '1.0' );
+		wp_enqueue_style( 'settings-style', PRODAVNO_URL . '/admin/assets/css/settings.css', array(), '1.0' );
 
 		wp_enqueue_code_editor( array( 'type' => 'text/html' ) );
 		wp_enqueue_code_editor( array( 'type' => 'text/css' ) );
-		wp_enqueue_script( 'panw-settings', PANW_URL . '/admin/assets/js/settings.js', array( 'jquery', 'code-editor' ), '1.0', true );
+		wp_enqueue_script( 'prodavno-settings', PRODAVNO_URL . '/admin/assets/js/settings.js', array( 'jquery', 'code-editor' ), '1.0', true );
 	}
 
 	/**
@@ -193,7 +193,7 @@ class Settings {
 	 * @return void
 	 */
 	public function render_settings_page() {
-		if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'panw_tab_switch' ) ) {
+		if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'prodavno_tab_switch' ) ) {
 			return;
 		}
 		$tabs = array_keys( $this->fields );
@@ -215,7 +215,7 @@ class Settings {
 						array(
 							'page'     => $this->menu_slug,
 							'tab'      => $tab_key,
-							'_wpnonce' => wp_create_nonce( 'panw_tab_switch' ),
+							'_wpnonce' => wp_create_nonce( 'prodavno_tab_switch' ),
 						),
 						admin_url( 'admin.php' )
 					);
@@ -311,7 +311,7 @@ class Settings {
 					echo '<div class="richtext-editor" data-default-editor="' . esc_attr( $default_editor ) . '">';
 
 					if ( in_array( array( 'html', 'css' ), array( $field['options'] ), true ) ) {
-						echo '<ul class="panw-tab-nav">';
+						echo '<ul class="prodavno-tab-nav">';
 							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'product-availability-notifier-for-woocommerce' ) . '</li>';
 							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'product-availability-notifier-for-woocommerce' ) . '</li>';
 						echo '</ul>';

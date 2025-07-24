@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PANW;
+namespace PRODAVNO;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -93,12 +93,12 @@ class Notify_List_Table extends \WP_List_Table {
 		if ( 'delete' === $this->current_action() && ! empty( $_REQUEST['notification'] ) ) {
 			global $wpdb;
 
-			$table_name = $wpdb->prefix . 'panw_product_notify';
+			$table_name = $wpdb->prefix . 'prodavno_product_notify';
 			$ids        = array_map( 'absint', $_REQUEST['notification'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			if ( ! empty( $ids ) ) {
 				$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
-				$query        = "DELETE FROM $wpdb->prefix . 'panw_product_notify' WHERE id IN ($placeholders)";
+				$query        = "DELETE FROM $wpdb->prefix . 'prodavno_product_notify' WHERE id IN ($placeholders)";
 
 				$wpdb->query( $wpdb->prepare( $query, ...$ids ) );
 			}
@@ -117,11 +117,11 @@ class Notify_List_Table extends \WP_List_Table {
 		$orderby = ! empty( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'id'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$order   = ! empty( $_GET['order'] ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'DESC'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		$this->total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->prefix . 'panw_product_notify'" ); // WPCS: cache ok, db call ok.
+		$this->total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->prefix . 'prodavno_product_notify'" ); // WPCS: cache ok, db call ok.
 
 		$this->data = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM $wpdb->prefix . 'panw_product_notify' ORDER BY $orderby $order LIMIT %d OFFSET %d",
+				"SELECT * FROM $wpdb->prefix . 'prodavno_product_notify' ORDER BY $orderby $order LIMIT %d OFFSET %d",
 				$per_page,
 				$offset
 			),

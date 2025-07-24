@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PANW;
+namespace PRODAVNO;
 
 use Pelago\Emogrifier\CssInliner;
 
@@ -21,14 +21,14 @@ class Cron {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var PANW|null
+	 * @var PRODAVNO|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return PANW
+	 * @return PRODAVNO
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -41,8 +41,8 @@ class Cron {
 	 * Plugin constructor.
 	 */
 	private function __construct() {
-		add_action( 'panw_still_interested_followup_email', array( $this, 'send_still_interested_followup_email' ), 10, 2 );
-		add_action( 'panw_urgency_followup_email', array( $this, 'send_urgency_followup_email' ), 10, 2 );
+		add_action( 'prodavno_still_interested_followup_email', array( $this, 'send_still_interested_followup_email' ), 10, 2 );
+		add_action( 'prodavno_urgency_followup_email', array( $this, 'send_urgency_followup_email' ), 10, 2 );
 	}
 
 	public function send_still_interested_followup_email( $row = array(), $args ) {
@@ -50,10 +50,10 @@ class Cron {
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = get_option( 'panw_first_followup_email_subject', esc_html__( 'Just a Quick Reminder', 'product-availability-notifier-for-woocommerce' ) );
+		$subject = get_option( 'prodavno_first_followup_email_subject', esc_html__( 'Just a Quick Reminder', 'product-availability-notifier-for-woocommerce' ) );
 
 		ob_start();
-		include PANW_PATH . '/template/email/html-still-interested-followup-email.php';
+		include PRODAVNO_PATH . '/template/email/html-still-interested-followup-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -73,10 +73,10 @@ class Cron {
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = get_option( 'panw_second_followup_email_subject', esc_html__( 'Last Chance! 20% Off Ends in 3 Days', 'product-availability-notifier-for-woocommerce' ) );
+		$subject = get_option( 'prodavno_second_followup_email_subject', esc_html__( 'Last Chance! 20% Off Ends in 3 Days', 'product-availability-notifier-for-woocommerce' ) );
 
 		ob_start();
-		include PANW_PATH . '/template/email/html-urgency-followup-email.php';
+		include PRODAVNO_PATH . '/template/email/html-urgency-followup-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -93,7 +93,7 @@ class Cron {
 
 }
 
-\PANW\Cron::instance();
+\PRODAVNO\Cron::instance();
 
 
 

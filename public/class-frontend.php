@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PANW;
+namespace PRODAVNO;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,14 +19,14 @@ class Frontend {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var PANW|null
+	 * @var PRODAVNO|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return PANW
+	 * @return PRODAVNO
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -51,21 +51,21 @@ class Frontend {
 		add_filter( 'woocommerce_get_stock_html', array( $this, 'append_notify_form' ), 10, 2 );
 		add_action( 'init', array( $this, 'handle_email_verification_link' ) );
 
-		add_action( 'wp_ajax_panw_save_notify_email', array( $this, 'save_notify_email' ) );
-		add_action( 'wp_ajax_nopriv_panw_save_notify_email', array( $this, 'save_notify_email' ) );
+		add_action( 'wp_ajax_prodavno_save_notify_email', array( $this, 'save_notify_email' ) );
+		add_action( 'wp_ajax_nopriv_prodavno_save_notify_email', array( $this, 'save_notify_email' ) );
 	}
 
 	public function enqueue_scripts() {
-		wp_enqueue_script( 'panw-main', PANW_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
+		wp_enqueue_script( 'prodavno-main', PRODAVNO_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
 	}
 
 	public function mail_from() {
-		$from_address = get_option( 'panw_from_address', '' );
+		$from_address = get_option( 'prodavno_from_address', '' );
 		return $from_address;
 	}
 
 	public function mail_from_name() {
-		$from_name = get_option( 'panw_from_name', '' );
+		$from_name = get_option( 'prodavno_from_name', '' );
 		return $from_name;
 	}
 
@@ -86,7 +86,7 @@ class Frontend {
 
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT * FROM $wpdb->prefix . 'panw_product_notify' WHERE email = %s AND token = %s AND status = 'pending'",
+				"SELECT * FROM $wpdb->prefix . 'prodavno_product_notify' WHERE email = %s AND token = %s AND status = 'pending'",
 				$email,
 				$token
 			)
@@ -100,7 +100,7 @@ class Frontend {
 		if ( $row ) {
 			// Update status to 'subscribed'.
 			$wpdb->update(
-				$wpdb->prefix . 'panw_product_notify',
+				$wpdb->prefix . 'prodavno_product_notify',
 				array(
 					'status' => 'subscribed',
 					'token'  => null,
@@ -115,7 +115,7 @@ class Frontend {
 	public function save_notify_email() {
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
-		if ( ! wp_verify_nonce( $nonce, 'panw-save-email' ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'prodavno-save-email' ) ) {
 			die( esc_html__( 'Nonce failed.', 'product-availability-notifier-for-woocommerce' ) );
 		} else {
 			$email   = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash( $_POST['email'] ) ) : '';
@@ -143,7 +143,7 @@ class Frontend {
 		if ( ! empty( $email ) && ! empty( $product ) ) {
 			$exists = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM $wpdb->prefix . 'panw_product_notify' WHERE email = %s AND product_id = %d",
+					"SELECT COUNT(*) FROM $wpdb->prefix . 'prodavno_product_notify' WHERE email = %s AND product_id = %d",
 					$email,
 					$product
 				)
@@ -151,7 +151,7 @@ class Frontend {
 
 			if ( ! $exists ) {
 				$wpdb->insert(
-					$wpdb->prefix . 'panw_product_notify',
+					$wpdb->prefix . 'prodavno_product_notify',
 					array(
 						'email'      => $email,
 						'product_id' => $product,
@@ -172,7 +172,7 @@ class Frontend {
 		$subject = esc_html__( 'Send verification email', 'product-availability-notifier-for-woocommerce' );
 
 		ob_start();
-		include PANW_PATH . '/template/email/html-verification-email.php';
+		include PRODAVNO_PATH . '/template/email/html-verification-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -196,9 +196,9 @@ class Frontend {
 		$availability = $product->get_availability();
 
 		if ( 'Out of stock' === $availability['availability'] ) {
-			$nonce = wp_create_nonce( 'panw-save-email' );
+			$nonce = wp_create_nonce( 'prodavno-save-email' );
 
-			$form  = '<form id="panw-notify-form" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
+			$form  = '<form id="prodavno-notify-form" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
 			$form .= '<input name="email" type="text" placeholder="' . esc_attr__( 'Enter your email address', 'product-availability-notifier-for-woocommerce' ) . '">';
 			$form .= '<button type="submit">' . esc_html__( 'Notify Me', 'product-availability-notifier-for-woocommerce' ) . '</button>';
 			$form .= '</form>';
@@ -210,7 +210,7 @@ class Frontend {
 
 }
 
-\PANW\Frontend::instance();
+\PRODAVNO\Frontend::instance();
 
 
 

@@ -21,24 +21,24 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'PANW_PLUGIN_FILE' ) ) {
-	define( 'PANW_PLUGIN_FILE', __FILE__ );
+if ( ! defined( 'PRODAVNO_PLUGIN_FILE' ) ) {
+	define( 'PRODAVNO_PLUGIN_FILE', __FILE__ );
 }
 
 // Include the main class.
-if ( ! class_exists( 'PANW', false ) ) {
-	include_once dirname( PANW_PLUGIN_FILE ) . '/includes/class-panw.php';
+if ( ! class_exists( 'PRODAVNO', false ) ) {
+	include_once dirname( PRODAVNO_PLUGIN_FILE ) . '/includes/class-prodavno.php';
 }
 
 /**
- * Returns the main instance of PANW.
+ * Returns the main instance of PRODAVNO.
  *
  * @since  1.0
- * @return PANW
+ * @return PRODAVNO
  */
-function panw() {
-	return \PANW\PANW::instance();
+function prodavno() {
+	return \PRODAVNO\PRODAVNO::instance();
 }
 
 // Global for backwards compatibility.
-$GLOBALS['panw'] = panw();
+$GLOBALS['prodavno'] = prodavno();

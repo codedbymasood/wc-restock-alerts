@@ -1,9 +1,9 @@
-.panw-tab-nav {
+.prodavno-tab-nav {
   display: flex;
   margin: 0;
 }
 
-.panw-tab-nav li {
+.prodavno-tab-nav li {
   padding: 8px 16px;
   background: #fff;
   margin: 0 10px 10px 0;
@@ -11,7 +11,7 @@
   cursor: pointer;
 }
 
-.panw-tab-nav li.active {
+.prodavno-tab-nav li.active {
   background: #2271b1;
   color: #fff;
 }
