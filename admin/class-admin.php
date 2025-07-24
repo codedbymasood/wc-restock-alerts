@@ -114,11 +114,8 @@ class Admin {
 			$second_followup_days = get_option( 'prodavno_second_followup_days', 3 );
 			$coupon_expires_in    = get_option( 'prodavno_coupon_expires_in', 3 );
 
-			// $first_followup  = time() + ( $first_followup_days * DAY_IN_SECONDS ); // 2 days later
-			// $second_followup = $first_followup + ( $second_followup_days * DAY_IN_SECONDS ); // 5 days total
-
-			$first_followup  = time() + 60; // 2 days later
-			$second_followup = $first_followup + 60; // 5 days total
+			$first_followup  = time() + ( $first_followup_days * DAY_IN_SECONDS ); // 2 days later
+			$second_followup = $first_followup + ( $second_followup_days * DAY_IN_SECONDS ); // 5 days total
 
 			$coupon_expires      = $second_followup + ( $coupon_expires_in * DAY_IN_SECONDS ); // Add 3 days.
 			$coupon_expires_date = gmdate( 'd-m-Y', $coupon_expires );

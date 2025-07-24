@@ -4,7 +4,7 @@ Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
 Stable tag: 1.0
-License: GPLv2
+License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 Everything you need to launch an online store in days and keep it growing for years. From your first sale to millions in revenue, Woo is with you.
@@ -24,3 +24,9 @@ Visit the [WooCommerce server requirements documentation](https://woocommerce.co
 = Manual installation =
 
 Manual installation method requires downloading the WooCommerce plugin and uploading it to your web server via your favorite FTP application. The WordPress codex contains [instructions on how to do this here](https://wordpress.org/support/article/managing-plugins/#manual-plugin-installation).
+
+= Author =
+
+Made with care by [Masood Mohamed](https://github.com/codedbymasood)
+Follow me on [Twitter](https://x.com/masoodmohamed90)
+Connect me on [Linkedin](https://www.linkedin.com/in/masoodmohamed/)
