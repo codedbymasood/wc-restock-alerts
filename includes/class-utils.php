@@ -42,7 +42,7 @@ class Utils {
 		return $code;
 	}
 
-	public function generate_verification_url( $email ) {
+	public static function generate_verification_url( $email ) {
 		// Generate a secure token.
 		$token = bin2hex( random_bytes( 32 ) ); // 64-character hex string
 

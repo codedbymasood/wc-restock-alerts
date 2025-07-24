@@ -116,7 +116,7 @@ final class PRODAVNO {
 			product_id INT(11) NOT NULL,
 			status VARCHAR(50) DEFAULT 'pending',
 			token VARCHAR(255) NOT NULL,
-			token_expires DATETIME NOT NULL,			
+			token_expires TIMESTAMP NOT NULL,			
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (id)
 		) $charset_collate;";

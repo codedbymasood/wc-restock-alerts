@@ -84,9 +84,11 @@ class Frontend {
 			return;
 		}
 
+		$table_name = $wpdb->prefix . 'prodavno_product_notify';
+
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT * FROM $wpdb->prefix . 'prodavno_product_notify' WHERE email = %s AND token = %s AND status = 'pending'",
+				"SELECT * FROM $table_name WHERE email = %s AND token = %s AND status = 'pending'",
 				$email,
 				$token
 			)
