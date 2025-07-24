@@ -152,9 +152,12 @@ class Admin {
 
 	public function get_emails( $post_id = 0 ) {
 		global $wpdb;
+
+		$table = $wpdb->prefix . 'prodavno_product_notify';
+
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM $wpdb->prefix . 'prodavno_product_notify' WHERE product_id = %d AND status = %s",
+				"SELECT * FROM $table WHERE product_id = %d AND status = %s",
 				$post_id,
 				'subscribed'
 			),
@@ -189,8 +192,9 @@ class Admin {
 
 	public function change_status_to_email_sent( $row = array() ) {
 		global $wpdb;
+		$table = $wpdb->prefix . 'prodavno_product_notify';
 		$wpdb->update(
-			$wpdb->prefix . 'prodavno_product_notify',
+			$table,
 			array( 'status' => 'email-sent' ),
 			array(
 				'id' => $row['id'],

@@ -95,10 +95,10 @@ final class PRODAVNO {
 	public function ensure_table_exists() {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . 'prodavno_product_notify';
+		$table = $wpdb->prefix . 'prodavno_product_notify';
 
 		// Check if table exists.
-		if( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) !== $table_name ) {
+		if( $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) !== $table ) {
 			$this->create_notify_table();
 		}
 	}
@@ -106,11 +106,11 @@ final class PRODAVNO {
 	public function create_notify_table() {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . 'prodavno_product_notify';
+		$table = $wpdb->prefix . 'prodavno_product_notify';
 
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$sql = "CREATE TABLE $table_name (
+		$sql = "CREATE TABLE $table (
 			id INT(11) NOT NULL AUTO_INCREMENT,
 			email VARCHAR(255) NOT NULL,
 			product_id INT(11) NOT NULL,

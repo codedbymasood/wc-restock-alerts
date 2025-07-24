@@ -84,11 +84,11 @@ class Frontend {
 			return;
 		}
 
-		$table_name = $wpdb->prefix . 'prodavno_product_notify';
+		$table = $wpdb->prefix . 'prodavno_product_notify';
 
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT * FROM $table_name WHERE email = %s AND token = %s AND status = 'pending'",
+				"SELECT * FROM $table WHERE email = %s AND token = %s AND status = 'pending'",
 				$email,
 				$token
 			)
@@ -102,7 +102,7 @@ class Frontend {
 		if ( $row ) {
 			// Update status to 'subscribed'.
 			$wpdb->update(
-				$wpdb->prefix . 'prodavno_product_notify',
+				$table,
 				array(
 					'status' => 'subscribed',
 					'token'  => null,
@@ -143,11 +143,11 @@ class Frontend {
 		global $wpdb;
 
 		if ( ! empty( $email ) && ! empty( $product ) ) {
-			$table_name = $wpdb->prefix . 'prodavno_product_notify';
+			$table = $wpdb->prefix . 'prodavno_product_notify';
 
 			$exists = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM $table_name WHERE email = %s AND product_id = %d",
+					"SELECT COUNT(*) FROM $table WHERE email = %s AND product_id = %d",
 					$email,
 					$product
 				)
@@ -155,7 +155,7 @@ class Frontend {
 
 			if ( ! $exists ) {
 				$wpdb->insert(
-					$wpdb->prefix . 'prodavno_product_notify',
+					$table,
 					array(
 						'email'      => $email,
 						'product_id' => $product,

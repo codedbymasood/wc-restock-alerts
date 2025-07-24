@@ -93,12 +93,12 @@ class Notify_List_Table extends \WP_List_Table {
 		if ( 'delete' === $this->current_action() && ! empty( $_REQUEST['notification'] ) ) {
 			global $wpdb;
 
-			$table_name = $wpdb->prefix . 'prodavno_product_notify';
-			$ids        = array_map( 'absint', $_REQUEST['notification'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$table = $wpdb->prefix . 'prodavno_product_notify';
+			$ids   = array_map( 'absint', $_REQUEST['notification'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			if ( ! empty( $ids ) ) {
 				$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
-				$query        = "DELETE FROM $table_name WHERE id IN ($placeholders)";
+				$query        = "DELETE FROM $table WHERE id IN ($placeholders)";
 
 				$wpdb->query( $wpdb->prepare( $query, ...$ids ) );
 			}
@@ -109,7 +109,7 @@ class Notify_List_Table extends \WP_List_Table {
 		$this->process_bulk_actions();
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . 'prodavno_product_notify';
+		$table = $wpdb->prefix . 'prodavno_product_notify';
 
 		$per_page     = 10;
 		$current_page = $this->get_pagenum();
@@ -119,11 +119,11 @@ class Notify_List_Table extends \WP_List_Table {
 		$orderby = ! empty( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'id'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$order   = ! empty( $_GET['order'] ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'DESC'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		$this->total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->prefix . 'prodavno_product_notify'" ); // WPCS: cache ok, db call ok.
+		$this->total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $table" ); // WPCS: cache ok, db call ok.
 
 		$this->data = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM $table_name ORDER BY $orderby $order LIMIT %d OFFSET %d",
+				"SELECT * FROM $table ORDER BY $orderby $order LIMIT %d OFFSET %d",
 				$per_page,
 				$offset
 			),
