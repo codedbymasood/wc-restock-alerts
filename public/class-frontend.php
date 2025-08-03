@@ -84,7 +84,7 @@ class Frontend {
 			return;
 		}
 
-		$table = $wpdb->prefix . 'sbk_raw_product_notify';
+		$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
 
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
@@ -143,7 +143,7 @@ class Frontend {
 		global $wpdb;
 
 		if ( ! empty( $email ) && ! empty( $product ) ) {
-			$table = $wpdb->prefix . 'sbk_raw_product_notify';
+			$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
 
 			$exists = $wpdb->get_var(
 				$wpdb->prepare(

@@ -51,7 +51,7 @@ class Utils {
 
 		// Store token in database with expiration.
 		global $wpdb;
-		$table = $wpdb->prefix . 'sbk_raw_product_notify';
+		$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
 
 		$wpdb->update(
 			$table,

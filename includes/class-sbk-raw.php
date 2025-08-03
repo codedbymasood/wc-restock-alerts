@@ -95,7 +95,7 @@ final class SBK_RAW {
 	public function ensure_table_exists() {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'sbk_raw_product_notify';
+		$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
 
 		// Check if table exists.
 		if( $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) !== $table ) {
@@ -106,7 +106,7 @@ final class SBK_RAW {
 	public function create_notify_table() {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'sbk_raw_product_notify';
+		$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
 
 		$charset_collate = $wpdb->get_charset_collate();
 

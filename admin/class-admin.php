@@ -56,7 +56,7 @@ class Admin {
 			global $wpdb;
 
 			$wpdb->update(
-				$wpdb->prefix . 'sbk_raw_product_notify',
+				$wpdb->prefix . 'sbk_raw_restock_alerts',
 				array( 'status' => 'completed' ),
 				array(
 					'email'      => $customer_email,
@@ -150,7 +150,7 @@ class Admin {
 	public function get_emails( $post_id = 0 ) {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'sbk_raw_product_notify';
+		$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
 
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
@@ -189,7 +189,7 @@ class Admin {
 
 	public function change_status_to_email_sent( $row = array() ) {
 		global $wpdb;
-		$table = $wpdb->prefix . 'sbk_raw_product_notify';
+		$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
 		$wpdb->update(
 			$table,
 			array( 'status' => 'email-sent' ),
