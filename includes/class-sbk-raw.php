@@ -3,7 +3,7 @@
  * Plugin initialization class.
  *
  * @package restock-alerts-for-woocommerce\includes\
- * @author Masood Mohamed <iam.masoodmohd@gmail.com>
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 

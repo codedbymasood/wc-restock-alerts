@@ -3,7 +3,7 @@
  * Frontend class.
  *
  * @package restock-alerts-for-woocommerce\public\
- * @author Masood Mohamed <iam.masoodmohd@gmail.com>
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 

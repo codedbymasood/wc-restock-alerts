@@ -3,7 +3,7 @@
  * Verification email template.
  *
  * @package restock-alerts-for-woocommerce\template\email\
- * @author Masood Mohamed <iam.masoodmohd@gmail.com>
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
