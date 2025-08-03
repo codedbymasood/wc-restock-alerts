@@ -1,7 +1,7 @@
 (function($) {
   'use strict';
   
-  $('#prodavno-notify-form').on( 'submit', function(e) {
+  $('#sbk_raw-notify-form').on( 'submit', function(e) {
     e.preventDefault();
     
     const $form = $(this);
@@ -13,7 +13,7 @@
       email,
       product,
       nonce,
-      action : 'prodavno_save_notify_email'
+      action : 'sbk_raw_save_notify_email'
     };
 
     $.ajax({

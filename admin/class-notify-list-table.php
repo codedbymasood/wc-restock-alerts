@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PRODAVNO;
+namespace SBK_RAW;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -93,7 +93,7 @@ class Notify_List_Table extends \WP_List_Table {
 		if ( 'delete' === $this->current_action() && ! empty( $_REQUEST['notification'] ) ) {
 			global $wpdb;
 
-			$table = $wpdb->prefix . 'prodavno_product_notify';
+			$table = $wpdb->prefix . 'sbk_raw_product_notify';
 			$ids   = array_map( 'absint', $_REQUEST['notification'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			if ( ! empty( $ids ) ) {
@@ -109,7 +109,7 @@ class Notify_List_Table extends \WP_List_Table {
 		$this->process_bulk_actions();
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'prodavno_product_notify';
+		$table = $wpdb->prefix . 'sbk_raw_product_notify';
 
 		$per_page     = 10;
 		$current_page = $this->get_pagenum();

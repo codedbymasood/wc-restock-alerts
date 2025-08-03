@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PRODAVNO;
+namespace SBK_RAW;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -51,7 +51,7 @@ class Utils {
 
 		// Store token in database with expiration.
 		global $wpdb;
-		$table = $wpdb->prefix . 'prodavno_product_notify';
+		$table = $wpdb->prefix . 'sbk_raw_product_notify';
 
 		$wpdb->update(
 			$table,

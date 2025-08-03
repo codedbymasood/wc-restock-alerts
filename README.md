@@ -1,4 +1,4 @@
-# Product availability notifier for WooCommerce
+# Restock Alerts for WooCommerce
 
 A lightweight WooCommerce addon that allows customers to subscribe for notifications when an out-of-stock product is restocked. Includes intelligent follow-up emails and include dynamic discount codes to recover more sales.
 

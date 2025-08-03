@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PRODAVNO;
+namespace SBK_RAW;
 
 use Pelago\Emogrifier\CssInliner;
 
@@ -21,14 +21,14 @@ class Admin {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var PRODAVNO|null
+	 * @var SBK_RAW|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return PRODAVNO
+	 * @return SBK_RAW
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -56,7 +56,7 @@ class Admin {
 			global $wpdb;
 
 			$wpdb->update(
-				$wpdb->prefix . 'prodavno_product_notify',
+				$wpdb->prefix . 'sbk_raw_product_notify',
 				array( 'status' => 'completed' ),
 				array(
 					'email'      => $customer_email,
@@ -106,13 +106,13 @@ class Admin {
 		$results = $this->get_emails( $post_id );
 
 		if ( $results ) {
-			$enable_followup = get_option( 'prodavno_enable_followup', '' );
+			$enable_followup = get_option( 'sbk_raw_enable_followup', '' );
 
-			$discount_type        = get_option( 'prodavno_discount_type', 'percent' );
-			$amount               = get_option( 'prodavno_discount_amount', 20 );
-			$first_followup_days  = get_option( 'prodavno_first_followup_days', 2 );
-			$second_followup_days = get_option( 'prodavno_second_followup_days', 3 );
-			$coupon_expires_in    = get_option( 'prodavno_coupon_expires_in', 3 );
+			$discount_type        = get_option( 'sbk_raw_discount_type', 'percent' );
+			$amount               = get_option( 'sbk_raw_discount_amount', 20 );
+			$first_followup_days  = get_option( 'sbk_raw_first_followup_days', 2 );
+			$second_followup_days = get_option( 'sbk_raw_second_followup_days', 3 );
+			$coupon_expires_in    = get_option( 'sbk_raw_coupon_expires_in', 3 );
 
 			$first_followup  = time() + ( $first_followup_days * DAY_IN_SECONDS ); // 2 days later
 			$second_followup = $first_followup + ( $second_followup_days * DAY_IN_SECONDS ); // 5 days total
@@ -150,7 +150,7 @@ class Admin {
 	public function get_emails( $post_id = 0 ) {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'prodavno_product_notify';
+		$table = $wpdb->prefix . 'sbk_raw_product_notify';
 
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
@@ -169,10 +169,10 @@ class Admin {
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = get_option( 'prodavno_email_subject', esc_html__( 'Back in Stock!', 'product-availability-notifier-for-woocommerce' ) );
+		$subject = get_option( 'sbk_raw_email_subject', esc_html__( 'Back in Stock!', 'product-availability-notifier-for-woocommerce' ) );
 
 		ob_start();
-		include PRODAVNO_PATH . '/template/email/html-back-in-stock-email.php';
+		include SBK_RAW_PATH . '/template/email/html-back-in-stock-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -189,7 +189,7 @@ class Admin {
 
 	public function change_status_to_email_sent( $row = array() ) {
 		global $wpdb;
-		$table = $wpdb->prefix . 'prodavno_product_notify';
+		$table = $wpdb->prefix . 'sbk_raw_product_notify';
 		$wpdb->update(
 			$table,
 			array( 'status' => 'email-sent' ),
@@ -202,16 +202,16 @@ class Admin {
 	public function create_followup_schedule( $row = array(), $args = array() ) {
 		wp_schedule_single_event(
 			$args['first_followup'],
-			'prodavno_still_interested_followup_email',
+			'sbk_raw_still_interested_followup_email',
 			array( $row, $args )
 		);
 
 		wp_schedule_single_event(
 			$args['second_followup'],
-			'prodavno_urgency_followup_email',
+			'sbk_raw_urgency_followup_email',
 			array( $row, $args )
 		);
 	}
 }
 
-\PRODAVNO\Admin::instance();
+\SBK_RAW\Admin::instance();

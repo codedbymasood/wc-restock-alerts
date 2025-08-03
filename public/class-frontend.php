@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace PRODAVNO;
+namespace SBK_RAW;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,14 +19,14 @@ class Frontend {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var PRODAVNO|null
+	 * @var SBK_RAW|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return PRODAVNO
+	 * @return SBK_RAW
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -51,12 +51,12 @@ class Frontend {
 		add_filter( 'woocommerce_get_stock_html', array( $this, 'append_notify_form' ), 10, 2 );
 		add_action( 'init', array( $this, 'handle_email_verification_link' ) );
 
-		add_action( 'wp_ajax_prodavno_save_notify_email', array( $this, 'save_notify_email' ) );
-		add_action( 'wp_ajax_nopriv_prodavno_save_notify_email', array( $this, 'save_notify_email' ) );
+		add_action( 'wp_ajax_sbk_raw_save_notify_email', array( $this, 'save_notify_email' ) );
+		add_action( 'wp_ajax_nopriv_sbk_raw_save_notify_email', array( $this, 'save_notify_email' ) );
 	}
 
 	public function enqueue_scripts() {
-		wp_enqueue_script( 'prodavno-main', PRODAVNO_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
+		wp_enqueue_script( 'sbk_raw-main', SBK_RAW_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
 	}
 
 	public function mail_from() {
@@ -84,7 +84,7 @@ class Frontend {
 			return;
 		}
 
-		$table = $wpdb->prefix . 'prodavno_product_notify';
+		$table = $wpdb->prefix . 'sbk_raw_product_notify';
 
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
@@ -117,7 +117,7 @@ class Frontend {
 	public function save_notify_email() {
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
-		if ( ! wp_verify_nonce( $nonce, 'prodavno-save-email' ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'sbk_raw-save-email' ) ) {
 			die( esc_html__( 'Nonce failed.', 'product-availability-notifier-for-woocommerce' ) );
 		} else {
 			$email   = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash( $_POST['email'] ) ) : '';
@@ -143,7 +143,7 @@ class Frontend {
 		global $wpdb;
 
 		if ( ! empty( $email ) && ! empty( $product ) ) {
-			$table = $wpdb->prefix . 'prodavno_product_notify';
+			$table = $wpdb->prefix . 'sbk_raw_product_notify';
 
 			$exists = $wpdb->get_var(
 				$wpdb->prepare(
@@ -176,7 +176,7 @@ class Frontend {
 		$subject = esc_html__( 'Send verification email', 'product-availability-notifier-for-woocommerce' );
 
 		ob_start();
-		include PRODAVNO_PATH . '/template/email/html-verification-email.php';
+		include SBK_RAW_PATH . '/template/email/html-verification-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -200,9 +200,9 @@ class Frontend {
 		$availability = $product->get_availability();
 
 		if ( 'Out of stock' === $availability['availability'] ) {
-			$nonce = wp_create_nonce( 'prodavno-save-email' );
+			$nonce = wp_create_nonce( 'sbk_raw-save-email' );
 
-			$form  = '<form id="prodavno-notify-form" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
+			$form  = '<form id="sbk_raw-notify-form" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
 			$form .= '<input name="email" type="text" placeholder="' . esc_attr__( 'Enter your email address', 'product-availability-notifier-for-woocommerce' ) . '">';
 			$form .= '<button type="submit">' . esc_html__( 'Notify Me', 'product-availability-notifier-for-woocommerce' ) . '</button>';
 			$form .= '</form>';
@@ -214,7 +214,7 @@ class Frontend {
 
 }
 
-\PRODAVNO\Frontend::instance();
+\SBK_RAW\Frontend::instance();
 
 
 
