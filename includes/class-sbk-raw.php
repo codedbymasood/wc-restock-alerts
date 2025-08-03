@@ -2,7 +2,7 @@
 /**
  * Plugin initialization class.
  *
- * @package product-availability-notifier-for-woocommerce\includes\
+ * @package restock-alerts-for-woocommerce\includes\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */

@@ -2,7 +2,7 @@
 /**
  * Frontend class.
  *
- * @package product-availability-notifier-for-woocommerce\public\
+ * @package restock-alerts-for-woocommerce\public\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */
@@ -118,7 +118,7 @@ class Frontend {
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
 		if ( ! wp_verify_nonce( $nonce, 'sbk_raw-save-email' ) ) {
-			die( esc_html__( 'Nonce failed.', 'product-availability-notifier-for-woocommerce' ) );
+			die( esc_html__( 'Nonce failed.', 'restock-alerts-for-woocommerce' ) );
 		} else {
 			$email   = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash( $_POST['email'] ) ) : '';
 			$product = isset( $_POST['product'] ) ? sanitize_text_field( wp_unslash( $_POST['product'] ) ) : '';
@@ -164,16 +164,16 @@ class Frontend {
 					array( '%s', '%d', '%s' )
 				);
 			} else {
-				die( esc_html__( 'Email already added in this product.', 'product-availability-notifier-for-woocommerce' ) );
+				die( esc_html__( 'Email already added in this product.', 'restock-alerts-for-woocommerce' ) );
 			}
 		} else {
-			die( esc_html__( 'Please enter the email address.', 'product-availability-notifier-for-woocommerce' ) );
+			die( esc_html__( 'Please enter the email address.', 'restock-alerts-for-woocommerce' ) );
 		}
 	}
 
 	public function send_verification_email( $email = '', $product = 0, $verify_url = '' ) {
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = esc_html__( 'Send verification email', 'product-availability-notifier-for-woocommerce' );
+		$subject = esc_html__( 'Send verification email', 'restock-alerts-for-woocommerce' );
 
 		ob_start();
 		include SBK_RAW_PATH . '/template/email/html-verification-email.php';
@@ -182,9 +182,9 @@ class Frontend {
 
 		$result = wp_mail( $email, $subject, $content, $headers );
 		if ( ! $result ) {
-			esc_html_e( 'Mail failed to sent.', 'product-availability-notifier-for-woocommerce' );
+			esc_html_e( 'Mail failed to sent.', 'restock-alerts-for-woocommerce' );
 		} else {
-			esc_html_e( 'Mail sent successfully.', 'product-availability-notifier-for-woocommerce' );
+			esc_html_e( 'Mail sent successfully.', 'restock-alerts-for-woocommerce' );
 		}
 	}
 
@@ -203,8 +203,8 @@ class Frontend {
 			$nonce = wp_create_nonce( 'sbk_raw-save-email' );
 
 			$form  = '<form id="sbk_raw-notify-form" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
-			$form .= '<input name="email" type="text" placeholder="' . esc_attr__( 'Enter your email address', 'product-availability-notifier-for-woocommerce' ) . '">';
-			$form .= '<button type="submit">' . esc_html__( 'Notify Me', 'product-availability-notifier-for-woocommerce' ) . '</button>';
+			$form .= '<input name="email" type="text" placeholder="' . esc_attr__( 'Enter your email address', 'restock-alerts-for-woocommerce' ) . '">';
+			$form .= '<button type="submit">' . esc_html__( 'Notify Me', 'restock-alerts-for-woocommerce' ) . '</button>';
 			$form .= '</form>';
 			return $html . $form;
 		}

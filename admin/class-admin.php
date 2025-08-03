@@ -2,7 +2,7 @@
 /**
  * Admin class.
  *
- * @package product-availability-notifier-for-woocommerce\admin\
+ * @package restock-alerts-for-woocommerce\admin\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */
@@ -68,8 +68,8 @@ class Admin {
 
 	public function admin_menu() {
 		add_menu_page(
-			esc_html__( 'Notify List', 'product-availability-notifier-for-woocommerce' ),
-			esc_html__( 'Notify Table', 'product-availability-notifier-for-woocommerce' ),
+			esc_html__( 'Notify List', 'restock-alerts-for-woocommerce' ),
+			esc_html__( 'Notify Table', 'restock-alerts-for-woocommerce' ),
 			'manage_options',
 			'notify-list',
 			array( $this, 'render_notify_list_page' ),
@@ -80,7 +80,7 @@ class Admin {
 
 	public function render_notify_list_page() {
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Email Notifications', 'product-availability-notifier-for-woocommerce' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'Email Notifications', 'restock-alerts-for-woocommerce' ) . '</h1>';
 		$notify_table = new Notify_List_Table();
 		$notify_table->prepare_items();
 		echo '<form method="post">';
@@ -169,7 +169,7 @@ class Admin {
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = get_option( 'sbk_raw_email_subject', esc_html__( 'Back in Stock!', 'product-availability-notifier-for-woocommerce' ) );
+		$subject = get_option( 'sbk_raw_email_subject', esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ) );
 
 		ob_start();
 		include SBK_RAW_PATH . '/template/email/html-back-in-stock-email.php';
@@ -181,9 +181,9 @@ class Admin {
 
 		$result = wp_mail( $email, $subject, $html, $headers );
 		if ( ! $result ) {
-			esc_html_e( 'Mail failed to sent.', 'product-availability-notifier-for-woocommerce' );
+			esc_html_e( 'Mail failed to sent.', 'restock-alerts-for-woocommerce' );
 		} else {
-			esc_html_e( 'Mail sent successfully.', 'product-availability-notifier-for-woocommerce' );
+			esc_html_e( 'Mail sent successfully.', 'restock-alerts-for-woocommerce' );
 		}
 	}
 

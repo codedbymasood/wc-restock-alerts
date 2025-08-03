@@ -2,7 +2,7 @@
 /**
  * Register cronjobs class.
  *
- * @package product-availability-notifier-for-woocommerce\public\
+ * @package restock-alerts-for-woocommerce\public\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */
@@ -50,7 +50,7 @@ class Cron {
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = get_option( 'sbk_raw_first_followup_email_subject', esc_html__( 'Just a Quick Reminder', 'product-availability-notifier-for-woocommerce' ) );
+		$subject = get_option( 'sbk_raw_first_followup_email_subject', esc_html__( 'Just a Quick Reminder', 'restock-alerts-for-woocommerce' ) );
 
 		ob_start();
 		include SBK_RAW_PATH . '/template/email/html-still-interested-followup-email.php';
@@ -62,9 +62,9 @@ class Cron {
 
 		$result = wp_mail( $email, $subject, $html, $headers );
 		if ( ! $result ) {
-			esc_html_e( 'Mail failed to sent.', 'product-availability-notifier-for-woocommerce' );
+			esc_html_e( 'Mail failed to sent.', 'restock-alerts-for-woocommerce' );
 		} else {
-			esc_html_e( 'Mail sent successfully.', 'product-availability-notifier-for-woocommerce' );
+			esc_html_e( 'Mail sent successfully.', 'restock-alerts-for-woocommerce' );
 		}
 	}
 
@@ -73,7 +73,7 @@ class Cron {
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = get_option( 'sbk_raw_second_followup_email_subject', esc_html__( 'Last Chance! 20% Off Ends in 3 Days', 'product-availability-notifier-for-woocommerce' ) );
+		$subject = get_option( 'sbk_raw_second_followup_email_subject', esc_html__( 'Last Chance! 20% Off Ends in 3 Days', 'restock-alerts-for-woocommerce' ) );
 
 		ob_start();
 		include SBK_RAW_PATH . '/template/email/html-urgency-followup-email.php';
@@ -85,9 +85,9 @@ class Cron {
 
 		$result = wp_mail( $email, $subject, $html, $headers );
 		if ( ! $result ) {
-			esc_html_e( 'Mail failed to sent.', 'product-availability-notifier-for-woocommerce' );
+			esc_html_e( 'Mail failed to sent.', 'restock-alerts-for-woocommerce' );
 		} else {
-			esc_html_e( 'Mail sent successfully.', 'product-availability-notifier-for-woocommerce' );
+			esc_html_e( 'Mail sent successfully.', 'restock-alerts-for-woocommerce' );
 		}
 	}
 

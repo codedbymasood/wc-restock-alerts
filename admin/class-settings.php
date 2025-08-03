@@ -2,7 +2,7 @@
 /**
  * Settings class.
  *
- * @package product-availability-notifier-for-woocommerce\admin\
+ * @package restock-alerts-for-woocommerce\admin\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */
@@ -312,8 +312,8 @@ class Settings {
 
 					if ( in_array( array( 'html', 'css' ), array( $field['options'] ), true ) ) {
 						echo '<ul class="sbk_raw-tab-nav">';
-							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'product-availability-notifier-for-woocommerce' ) . '</li>';
-							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'product-availability-notifier-for-woocommerce' ) . '</li>';
+							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'restock-alerts-for-woocommerce' ) . '</li>';
+							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'restock-alerts-for-woocommerce' ) . '</li>';
 						echo '</ul>';
 					}
 

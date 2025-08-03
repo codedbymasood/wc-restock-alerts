@@ -2,7 +2,7 @@
 /**
  * Table holds all the notify details.
  *
- * @package product-availability-notifier-for-woocommerce\admin\
+ * @package restock-alerts-for-woocommerce\admin\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */
@@ -36,11 +36,11 @@ class Notify_List_Table extends \WP_List_Table {
 	public function get_columns() {
 		return array(
 			'cb'         => '<input type="checkbox" />',
-			'id'         => esc_html__( 'ID', 'product-availability-notifier-for-woocommerce' ),
-			'email'      => esc_html__( 'Email', 'product-availability-notifier-for-woocommerce' ),
-			'product_id' => esc_html__( 'Product ID', 'product-availability-notifier-for-woocommerce' ),
-			'status'     => esc_html__( 'Status', 'product-availability-notifier-for-woocommerce' ),
-			'created_at' => esc_html__( 'Created At', 'product-availability-notifier-for-woocommerce' ),
+			'id'         => esc_html__( 'ID', 'restock-alerts-for-woocommerce' ),
+			'email'      => esc_html__( 'Email', 'restock-alerts-for-woocommerce' ),
+			'product_id' => esc_html__( 'Product ID', 'restock-alerts-for-woocommerce' ),
+			'status'     => esc_html__( 'Status', 'restock-alerts-for-woocommerce' ),
+			'created_at' => esc_html__( 'Created At', 'restock-alerts-for-woocommerce' ),
 		);
 	}
 
@@ -84,7 +84,7 @@ class Notify_List_Table extends \WP_List_Table {
 	 */
 	protected function get_bulk_actions() {
 		return array(
-			'delete' => esc_html__( 'Delete permanently', 'product-availability-notifier-for-woocommerce' ),
+			'delete' => esc_html__( 'Delete permanently', 'restock-alerts-for-woocommerce' ),
 		);
 	}
 
