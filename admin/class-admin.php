@@ -44,6 +44,14 @@ class Admin {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'wp_insert_post', array( $this, 'save_product' ), 99, 3 );
 		add_action( 'woocommerce_order_status_completed', array( $this, 'order_completed' ) );
+		add_filter( 'stobokit_product_lists', array( $this, 'add_product' ) );
+	}
+
+	public function add_product( $products = array() ) {
+		$products['restock-alerts-for-woocommerce']['name'] = esc_html__( 'Restock Alerts for WooCommerce', 'restock-alerts-for-woocommerce' );
+		$products['restock-alerts-for-woocommerce']['id']   = 74;
+
+		return $products;
 	}
 
 	public function order_completed( $order_id = 0 ) {

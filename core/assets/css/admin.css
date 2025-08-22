@@ -121,7 +121,6 @@ body[class*="stobokit"] div.error {
 .stobokit-wrapper table tr th,
 .stobokit-wrapper table tr td {
   font-size: 15px;
-  font-weight: 500;
   color: #1a1a1a;
   padding: 10px 0;
   background: #fff;
