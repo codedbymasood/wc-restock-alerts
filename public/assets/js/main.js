@@ -1,7 +1,7 @@
 (function($) {
   'use strict';
   
-  $('#sbk_raw-notify-form').on( 'submit', function(e) {
+  $('#restaler-notify-form').on( 'submit', function(e) {
     e.preventDefault();
     
     const $form = $(this);
@@ -13,7 +13,7 @@
       email,
       product,
       nonce,
-      action : 'sbk_raw_save_notify_email'
+      action : 'restaler_save_notify_email'
     };
 
     $.ajax({

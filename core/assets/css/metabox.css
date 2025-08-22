@@ -1,0 +1,13 @@
+[id^="stobokit-metabox-"] {
+  background: #F8FAFC;
+}
+
+#poststuff [id^="stobokit-metabox-"].postbox .inside,
+#poststuff [id^="stobokit-metabox-"].postbox .inside {
+  margin: 0;
+  padding: 0;
+}
+
+[id^="stobokit-metabox-"] .postbox-header {
+  border-bottom: 1px solid #E2E8F0;
+}

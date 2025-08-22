@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace SBK_RAW;
+namespace RESTALER;
 
 use Pelago\Emogrifier\CssInliner;
 
@@ -21,14 +21,14 @@ class Admin {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var SBK_RAW|null
+	 * @var RESTALER|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return SBK_RAW
+	 * @return RESTALER
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -56,7 +56,7 @@ class Admin {
 			global $wpdb;
 
 			$wpdb->update(
-				$wpdb->prefix . 'sbk_raw_restock_alerts',
+				$wpdb->prefix . 'restaler_restock_alerts',
 				array( 'status' => 'completed' ),
 				array(
 					'email'      => $customer_email,
@@ -68,17 +68,18 @@ class Admin {
 
 	public function admin_menu() {
 		add_menu_page(
-			esc_html__( 'Notify List', 'restock-alerts-for-woocommerce' ),
-			esc_html__( 'Notify Table', 'restock-alerts-for-woocommerce' ),
+			esc_html__( 'Restock Alerts', 'restock-alerts-for-woocommerce' ),
+			esc_html__( 'Restock Alerts', 'restock-alerts-for-woocommerce' ),
 			'manage_options',
-			'notify-list',
+			'stobokit-notify-list',
 			array( $this, 'render_notify_list_page' ),
-			'dashicons-email',
-			26
+			'dashicons-bell',
+			50
 		);
 	}
 
 	public function render_notify_list_page() {
+		echo '<div class="stobokit-wrapper no-spacing">';
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Email Notifications', 'restock-alerts-for-woocommerce' ) . '</h1>';
 		$notify_table = new Notify_List_Table();
@@ -86,6 +87,7 @@ class Admin {
 		echo '<form method="post">';
 		$notify_table->display();
 		echo '</form></div>';
+		echo '</div>';
 	}
 
 	public function save_product( $post_id = 0 ) {
@@ -106,13 +108,13 @@ class Admin {
 		$results = $this->get_emails( $post_id );
 
 		if ( $results ) {
-			$enable_followup = get_option( 'sbk_raw_enable_followup', '' );
+			$enable_followup = get_option( 'restaler_enable_followup', '' );
 
-			$discount_type        = get_option( 'sbk_raw_discount_type', 'percent' );
-			$amount               = get_option( 'sbk_raw_discount_amount', 20 );
-			$first_followup_days  = get_option( 'sbk_raw_first_followup_days', 2 );
-			$second_followup_days = get_option( 'sbk_raw_second_followup_days', 3 );
-			$coupon_expires_in    = get_option( 'sbk_raw_coupon_expires_in', 3 );
+			$discount_type        = get_option( 'restaler_discount_type', 'percent' );
+			$amount               = get_option( 'restaler_discount_amount', 20 );
+			$first_followup_days  = get_option( 'restaler_first_followup_days', 2 );
+			$second_followup_days = get_option( 'restaler_second_followup_days', 3 );
+			$coupon_expires_in    = get_option( 'restaler_coupon_expires_in', 3 );
 
 			$first_followup  = time() + ( $first_followup_days * DAY_IN_SECONDS ); // 2 days later
 			$second_followup = $first_followup + ( $second_followup_days * DAY_IN_SECONDS ); // 5 days total
@@ -150,7 +152,7 @@ class Admin {
 	public function get_emails( $post_id = 0 ) {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
+		$table = $wpdb->prefix . 'restaler_restock_alerts';
 
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
@@ -169,10 +171,10 @@ class Admin {
 		$product_id = $row['product_id'];
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = get_option( 'sbk_raw_email_subject', esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ) );
+		$subject = get_option( 'restaler_email_subject', esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ) );
 
 		ob_start();
-		include SBK_RAW_PATH . '/template/email/html-back-in-stock-email.php';
+		include RESTALER_PATH . '/template/email/html-back-in-stock-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -189,7 +191,7 @@ class Admin {
 
 	public function change_status_to_email_sent( $row = array() ) {
 		global $wpdb;
-		$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
+		$table = $wpdb->prefix . 'restaler_restock_alerts';
 		$wpdb->update(
 			$table,
 			array( 'status' => 'email-sent' ),
@@ -202,16 +204,16 @@ class Admin {
 	public function create_followup_schedule( $row = array(), $args = array() ) {
 		wp_schedule_single_event(
 			$args['first_followup'],
-			'sbk_raw_still_interested_followup_email',
+			'restaler_still_interested_followup_email',
 			array( $row, $args )
 		);
 
 		wp_schedule_single_event(
 			$args['second_followup'],
-			'sbk_raw_urgency_followup_email',
+			'restaler_urgency_followup_email',
 			array( $row, $args )
 		);
 	}
 }
 
-\SBK_RAW\Admin::instance();
+\RESTALER\Admin::instance();

@@ -7,26 +7,26 @@
  * @version 1.0
  */
 
-namespace SBK_RAW;
+namespace RESTALER;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Core plugin loader.
  */
-final class SBK_RAW {
+final class RESTALER {
 
 	/**
 	 * Singleton instance.
 	 *
-	 * @var SBK_RAW|null
+	 * @var RESTALER|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return SBK_RAW
+	 * @return RESTALER
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -59,25 +59,25 @@ final class SBK_RAW {
 	 * Define plugin constants.
 	 */
 	private function define_constants() {
-		define( 'SBK_RAW_VERSION', '1.0.0' );
-		define( 'SBK_RAW_PATH', plugin_dir_path( dirname( __FILE__ ) ) );
-		define( 'SBK_RAW_URL', plugin_dir_url( dirname( __FILE__ ) ) );
+		define( 'RESTALER_VERSION', '1.0.0' );
+		define( 'RESTALER_PATH', plugin_dir_path( dirname( __FILE__ ) ) );
+		define( 'RESTALER_URL', plugin_dir_url( dirname( __FILE__ ) ) );
 	}
 
 	/**
 	 * Load required files.
 	 */
 	private function load_dependencies() {
-		require_once SBK_RAW_PATH . '/includes/class-utils.php';
+		require_once RESTALER_PATH . '/core/init-core.php';
+		require_once RESTALER_PATH . '/includes/class-utils.php';
 
-		require_once SBK_RAW_PATH . '/public/class-cron.php';
-		require_once SBK_RAW_PATH . '/public/class-frontend.php';
+		require_once RESTALER_PATH . '/public/class-cron.php';
+		require_once RESTALER_PATH . '/public/class-frontend.php';
 
 		if ( is_admin() ) {
-			require_once SBK_RAW_PATH . '/admin/class-settings.php';
-			include_once SBK_RAW_PATH . '/admin/view/settings-page.php';
-			require_once SBK_RAW_PATH . '/admin/class-admin.php';
-			require_once SBK_RAW_PATH . '/admin/class-notify-list-table.php';
+			include_once RESTALER_PATH . '/admin/view/settings-page.php';
+			require_once RESTALER_PATH . '/admin/class-admin.php';
+			require_once RESTALER_PATH . '/admin/class-notify-list-table.php';
 		}
 	}
 
@@ -88,14 +88,14 @@ final class SBK_RAW {
 		add_action( 'plugins_loaded', array( $this, 'ensure_table_exists' ) );
 
 		// Create a table when activate the plugin.
-		register_activation_hook( SBK_RAW_PLUGIN_FILE, array( $this, 'create_notify_table' ) );
+		register_activation_hook( RESTALER_PLUGIN_FILE, array( $this, 'create_notify_table' ) );
 		add_action( 'before_woocommerce_init', array( $this, 'enable_hpos' ) );
 	}
 
 	public function ensure_table_exists() {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
+		$table = $wpdb->prefix . 'restaler_restock_alerts';
 
 		// Check if table exists.
 		if( $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) !== $table ) {
@@ -106,7 +106,7 @@ final class SBK_RAW {
 	public function create_notify_table() {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
+		$table = $wpdb->prefix . 'restaler_restock_alerts';
 
 		$charset_collate = $wpdb->get_charset_collate();
 
@@ -129,7 +129,7 @@ final class SBK_RAW {
 		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
 			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
 				'custom_order_tables',
-				SBK_RAW_PLUGIN_FILE,
+				RESTALER_PLUGIN_FILE,
 				true
 			);
 		}

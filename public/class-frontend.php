@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace SBK_RAW;
+namespace RESTALER;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,14 +19,14 @@ class Frontend {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var SBK_RAW|null
+	 * @var RESTALER|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return SBK_RAW
+	 * @return RESTALER
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -51,21 +51,21 @@ class Frontend {
 		add_filter( 'woocommerce_get_stock_html', array( $this, 'append_notify_form' ), 10, 2 );
 		add_action( 'init', array( $this, 'handle_email_verification_link' ) );
 
-		add_action( 'wp_ajax_sbk_raw_save_notify_email', array( $this, 'save_notify_email' ) );
-		add_action( 'wp_ajax_nopriv_sbk_raw_save_notify_email', array( $this, 'save_notify_email' ) );
+		add_action( 'wp_ajax_restaler_save_notify_email', array( $this, 'save_notify_email' ) );
+		add_action( 'wp_ajax_nopriv_restaler_save_notify_email', array( $this, 'save_notify_email' ) );
 	}
 
 	public function enqueue_scripts() {
-		wp_enqueue_script( 'sbk_raw-main', SBK_RAW_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
+		wp_enqueue_script( 'restaler-main', RESTALER_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
 	}
 
 	public function mail_from() {
-		$from_address = get_option( 'email_from_address', '' );
+		$from_address = get_option( 'stobokit_email_from_address', '' );
 		return $from_address;
 	}
 
 	public function mail_from_name() {
-		$from_name = get_option( 'email_from_name', '' );
+		$from_name = get_option( 'stobokit_email_from_name', '' );
 		return $from_name;
 	}
 
@@ -84,7 +84,7 @@ class Frontend {
 			return;
 		}
 
-		$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
+		$table = $wpdb->prefix . 'restaler_restock_alerts';
 
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
@@ -117,7 +117,7 @@ class Frontend {
 	public function save_notify_email() {
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
-		if ( ! wp_verify_nonce( $nonce, 'sbk_raw-save-email' ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'restaler-save-email' ) ) {
 			die( esc_html__( 'Nonce failed.', 'restock-alerts-for-woocommerce' ) );
 		} else {
 			$email   = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash( $_POST['email'] ) ) : '';
@@ -143,7 +143,7 @@ class Frontend {
 		global $wpdb;
 
 		if ( ! empty( $email ) && ! empty( $product ) ) {
-			$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
+			$table = $wpdb->prefix . 'restaler_restock_alerts';
 
 			$exists = $wpdb->get_var(
 				$wpdb->prepare(
@@ -176,7 +176,7 @@ class Frontend {
 		$subject = esc_html__( 'Send verification email', 'restock-alerts-for-woocommerce' );
 
 		ob_start();
-		include SBK_RAW_PATH . '/template/email/html-verification-email.php';
+		include RESTALER_PATH . '/template/email/html-verification-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -200,9 +200,9 @@ class Frontend {
 		$availability = $product->get_availability();
 
 		if ( 'Out of stock' === $availability['availability'] ) {
-			$nonce = wp_create_nonce( 'sbk_raw-save-email' );
+			$nonce = wp_create_nonce( 'restaler-save-email' );
 
-			$form  = '<form id="sbk_raw-notify-form" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
+			$form  = '<form id="restaler-notify-form" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
 			$form .= '<input name="email" type="text" placeholder="' . esc_attr__( 'Enter your email address', 'restock-alerts-for-woocommerce' ) . '">';
 			$form .= '<button type="submit">' . esc_html__( 'Notify Me', 'restock-alerts-for-woocommerce' ) . '</button>';
 			$form .= '</form>';
@@ -214,7 +214,7 @@ class Frontend {
 
 }
 
-\SBK_RAW\Frontend::instance();
+\RESTALER\Frontend::instance();
 
 
 

@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace SBK_RAW;
+namespace RESTALER;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -51,7 +51,7 @@ class Utils {
 
 		// Store token in database with expiration.
 		global $wpdb;
-		$table = $wpdb->prefix . 'sbk_raw_restock_alerts';
+		$table = $wpdb->prefix . 'restaler_restock_alerts';
 
 		$wpdb->update(
 			$table,

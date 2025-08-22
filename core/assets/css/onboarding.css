@@ -1,0 +1,141 @@
+/* ===============================
+   Onboarding Wrapper
+=================================*/
+.stobokit-onboarding {
+  max-width: 940px;
+  margin: 120px auto 0 auto;
+}
+
+.stobokit-onboarding h1 {
+  text-align: center;
+  margin: 0 0 32px 0;
+  font-size: 28px;
+}
+
+/* ===============================
+   Steps & Progress Bar
+=================================*/
+.stobokit-steps {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  gap: 16px;
+  background: #fff;
+  margin: 0 0 2px 0;
+  padding: 12px 32px;
+}
+
+.stobokit-progress-bar-wraper {
+  height: 2px;
+  background: #D1D1FF;
+  max-width: 100%;
+}
+
+.stobokit-progress-bar {
+  height: 2px;
+  background: #6366F1;
+  max-width: 100%;
+}
+
+/* ===============================
+   Step Content
+=================================*/
+.stobokit-step-content {
+  background: #fff;
+  padding: 40px;
+  margin: 0 0 24px 0;
+}
+
+.stobokit-step-content p {
+  font-size: 15px;
+}
+
+.stobokit-step-content h2 {
+  margin: 0 0 24px 0;
+}
+
+.stobokit-step-content .header,
+.stobokit-step-content .footer {
+  text-align: center;
+}
+
+.stobokit-step-content.license-activation {
+  text-align: center;
+}
+
+.stobokit-step-content .section {
+  margin: 40px 0;
+}
+
+.stobokit-step-content .settings {
+  text-align: left;
+}
+
+.stobokit-step-content a {
+  color: #6366F1;
+  text-decoration: none;
+  border-bottom: 1px solid;
+}
+
+.stobokit-step-content form {
+  position: relative;
+}
+
+/* ===============================
+   Tables
+=================================*/
+.stobokit-step-content table {
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+}
+
+.stobokit-step-content table td {
+  display: flex;
+  justify-content: center;
+}
+
+.stobokit-step-content table .btn,
+.stobokit-step-content table .btn:hover {
+  padding: 0 20px;
+  height: 40px;
+  line-height: 40px;
+  background: #10B981;
+}
+
+/* ===============================
+   Inputs & Form Elements
+=================================*/
+.stobokit-step-content table input {
+  border: 1px solid #E2E8F0;
+  width: 320px;
+  min-height: 40px;
+  padding: 0 12px;
+}
+
+.stobokit-step-content table input[type="text"]:focus,
+.stobokit-step-content table input[type="password"]:focus {
+  border-color: #D1D1FF;
+  box-shadow: 0 0 0 1px #D1D1FF;
+  outline: 2px solid transparent;
+}
+
+.stobokit-step-content input[type="number"] {
+  width: 120px;
+}
+
+.stobokit-step-content select {
+  min-width: 180px;
+}
+
+.stobokit-step-content textarea {
+  padding: 12px;
+  min-height: 160px;
+}
+
+/* ===============================
+   Actions
+=================================*/
+.stobokit-step-actions {
+  text-align: right;
+}
