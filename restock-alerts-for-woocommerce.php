@@ -50,7 +50,9 @@ $GLOBALS['restaler'] = restaler();
  */
 
 // Include the onboarding class.
-require_once dirname( RESTALER_PLUGIN_FILE ) . '/core/class-onboarding.php';
+if ( ! class_exists( '\STOBOKIT\Onboarding' ) ) {
+	include_once dirname( RESTALER_PLUGIN_FILE ) . '/core/class-onboarding.php';
+}
 
 register_activation_hook( __FILE__, 'restaler_on_plugin_activation' );
 
