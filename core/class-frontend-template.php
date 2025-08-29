@@ -15,8 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'STOBOKIT\Frontend_Template' ) ) {
 
-	error_log( 'loaded' );
-
 	class Frontend_Template {
 
 		/**
