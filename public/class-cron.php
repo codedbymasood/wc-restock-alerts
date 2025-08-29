@@ -45,7 +45,7 @@ class Cron {
 		add_action( 'restaler_urgency_followup_email', array( $this, 'send_urgency_followup_email' ), 10, 2 );
 	}
 
-	public function send_still_interested_followup_email( $row = array(), $args ) {
+	public function send_still_interested_followup_email( $row = array(), $args = array() ) {
 		$email      = $row['email'];
 		$product_id = $row['product_id'];
 

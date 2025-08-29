@@ -11,7 +11,7 @@ namespace STOBOKIT;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( 'STOBOKIT\Onboarding' ) ) {
+if ( class_exists( '\STOBOKIT\Onboarding' ) ) {
 	return;
 }
 
@@ -115,7 +115,7 @@ class Onboarding {
 	 */
 	public function register_onboarding_page() {
 		add_submenu_page(
-			null,
+			'',
 			esc_html__( 'Onboarding', 'store-boost-kit' ),
 			esc_html__( 'Onboarding', 'store-boost-kit' ),
 			'manage_options',
