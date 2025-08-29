@@ -115,7 +115,7 @@ class Onboarding {
 	 */
 	public function register_onboarding_page() {
 		add_submenu_page(
-			'',
+			'stobokit',
 			esc_html__( 'Onboarding', 'store-boost-kit' ),
 			esc_html__( 'Onboarding', 'store-boost-kit' ),
 			'manage_options',
