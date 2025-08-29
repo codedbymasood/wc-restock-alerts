@@ -257,27 +257,70 @@ class Metabox {
 				break;
 
 			case 'media':
-				$media_url      = '';
-				$media_filename = '';
-				if ( $field_value ) {
-					$attachment = wp_get_attachment_url( $field_value );
-					if ( $attachment ) {
-						$media_url = $attachment;
-						$media_filename = basename( $attachment );
-					}
+				echo '<div class="field-content">';
+				// Get field configuration
+				$multiple = isset($field['multiple']) ? $field['multiple'] : false;
+				$file_type = isset($field['file_type']) ? $field['file_type'] : 'all'; // array or string: ['image', 'video'] or 'image' or 'all'
+				
+				// Handle multiple vs single media
+				if ($multiple) {
+						$media_ids = $field_value ? (array) $field_value : array();
+						echo '<input type="hidden" id="' . esc_attr($field_id) . '" name="' . esc_attr($field_name) . '" value="' . esc_attr(implode(',', $media_ids)) . '" />';
+				} else {
+						echo '<input type="hidden" id="' . esc_attr($field_id) . '" name="' . esc_attr($field_name) . '" value="' . esc_attr($field_value) . '" />';
 				}
-				echo '<input type="hidden" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" />';
-				echo '<button type="button" class="btn upload-media-button">' . esc_html__( 'Select Media', 'store-boost-kit' ) . '</button>';
-				echo '<button type="button" class="btn btn-red remove-media-button">' . esc_html__( 'Remove', 'store-boost-kit' ) . '</button>';
+				
+				// Add data attributes for JavaScript
+				$button_class = 'upload-media-button';
+				$data_multiple = $multiple ? 'true' : 'false';
+				$data_file_type = esc_attr(is_array($file_type) ? wp_json_encode($file_type) : $file_type);
+				
+				echo '<button type="button" class="button ' . esc_attr($button_class) . '" data-multiple="' . $data_multiple . '" data-file-type="' . $data_file_type . '">' . esc_html__('Select Media', 'store-boost-kit') . '</button>';
+				echo '<button type="button" class="button remove-media-button">' . esc_html__('Remove All', 'store-boost-kit') . '</button>';
+				
 				echo '<div class="media-preview">';
-				if ( $media_url ) {
-					$file_type = wp_check_filetype( $media_url );
-					if ( strpos( $file_type['type'], 'image') !== false ) {
-						echo '<img src="' . esc_url( $media_url ) . '" style="max-width: 150px; height: auto;" />';
-					} else {
-						echo '<p>' . esc_html( $media_filename ) . '</p>';
-					}
+				
+				if ($multiple && !empty($media_ids)) {
+						echo '<div class="media-gallery">';
+						foreach ($media_ids as $media_id) {
+								if ($media_id) {
+										$media_url = wp_get_attachment_url($media_id);
+										$media_filename = basename($media_url);
+										$file_type_check = wp_check_filetype($media_url);
+										
+										echo '<div class="media-item" data-id="' . esc_attr($media_id) . '">';
+										echo '<span class="remove-single-media"><span class="dashicons dashicons-no-alt"></span></span>';
+										
+										if (strpos($file_type_check['type'], 'image') !== false) {
+												echo '<img src="' . esc_url($media_url) . '" style="max-width: 100px; height: auto;" />';
+										} elseif (strpos($file_type_check['type'], 'video') !== false) {
+												echo '<video width="100" controls><source src="' . esc_url($media_url) . '" type="' . esc_attr($file_type_check['type']) . '"></video>';
+										} else {
+												echo '<p class="file-name">' . esc_html($media_filename) . '</p>';
+										}
+										echo '</div>';
+								}
+						}
+						echo '</div>';
+				} elseif (!$multiple && $field_value) {
+						$media_url = wp_get_attachment_url($field_value);
+						if ($media_url) {
+								$media_filename = basename($media_url);
+								$file_type_check = wp_check_filetype($media_url);
+								
+								echo '<div class="media-item" data-id="' . esc_attr($media_id) . '">';
+								if (strpos($file_type_check['type'], 'image') !== false) {
+										echo '<img src="' . esc_url($media_url) . '" style="max-width: 150px; height: auto;" />';
+								} elseif (strpos($file_type_check['type'], 'video') !== false) {
+										echo '<video width="150" controls><source src="' . esc_url($media_url) . '" type="' . esc_attr($file_type_check['type']) . '"></video>';
+								} else {
+										echo '<p>' . esc_html($media_filename) . '</p>';
+								}
+								echo '</div>';
+						}
 				}
+				
+				echo '</div>';
 				echo '</div>';
 				break;
 		}
@@ -353,11 +396,66 @@ class Metabox {
 	}
 
 	private function sanitize_field_value( $value ) {
-		if ( is_array( $value ) ) {
-			return array_map( array( $this, 'sanitize_field_value' ), $value );
-		}
+    if (is_array($value)) {
+      return array_map(array($this, 'sanitize_field_value'), $value);
+    }
+    
+    // Handle comma-separated media IDs
+    if (strpos($value, ',') !== false) {
+			$ids = explode(',', $value);
+			$sanitized_ids = array_filter(array_map('absint', $ids));
+			return implode(',', $sanitized_ids);
+    }
+    
+    // Handle single media ID
+    if (is_numeric($value)) {
+        return absint($value);
+    }
+    
+    return sanitize_text_field($value);
+	}
 
-		return sanitize_text_field( $value );
+	public static function get_media_field( $post_id, $field_id, $multiple = false ) {
+    $value = get_post_meta($post_id, $field_id, true);
+    
+    if ($multiple) {
+        if (empty($value)) {
+            return array();
+        }
+        
+        $ids = explode(',', $value);
+        $media_items = array();
+        
+        foreach ($ids as $id) {
+            if ($id) {
+                $url = wp_get_attachment_url($id);
+                if ($url) {
+                    $media_items[] = array(
+                        'id' => $id,
+                        'url' => $url,
+                        'filename' => basename($url),
+                        'type' => wp_check_filetype($url)['type']
+                    );
+                }
+            }
+        }
+        
+        return $media_items;
+    }
+    
+    if ($value) {
+        $url = wp_get_attachment_url($value);
+        if ($url) {
+            return array(
+                'id' => $value,
+                'url' => $url,
+                'filename' => basename($url),
+                'type' => wp_check_filetype($url)['type']
+            );
+        }
+    }
+    
+    return null;
 	}
 
 	public static function get_field( $post_id, $field_id ) {

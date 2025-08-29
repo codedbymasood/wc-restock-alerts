@@ -182,7 +182,7 @@ class Admin {
 		$subject = get_option( 'restaler_email_subject', esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ) );
 
 		ob_start();
-		include RESTALER_PATH . '/template/email/html-back-in-stock-email.php';
+		include RESTALER_PATH . '/templates/email/html-back-in-stock-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 

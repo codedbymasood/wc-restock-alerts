@@ -34,6 +34,13 @@ class Onboarding {
 	protected $steps = array();
 
 	/**
+	 * Plugin path.
+	 *
+	 * @var string
+	 */
+	protected $path;
+
+	/**
 	 * Plugin slug.
 	 *
 	 * @var string

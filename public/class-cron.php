@@ -53,7 +53,7 @@ class Cron {
 		$subject = get_option( 'restaler_first_followup_email_subject', esc_html__( 'Just a Quick Reminder', 'restock-alerts-for-woocommerce' ) );
 
 		ob_start();
-		include RESTALER_PATH . '/template/email/html-still-interested-followup-email.php';
+		include RESTALER_PATH . '/templates/email/html-still-interested-followup-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -76,7 +76,7 @@ class Cron {
 		$subject = get_option( 'restaler_second_followup_email_subject', esc_html__( 'Last Chance! 20% Off Ends in 3 Days', 'restock-alerts-for-woocommerce' ) );
 
 		ob_start();
-		include RESTALER_PATH . '/template/email/html-urgency-followup-email.php';
+		include RESTALER_PATH . '/templates/email/html-urgency-followup-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 

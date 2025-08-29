@@ -39,6 +39,7 @@ class Frontend {
 	 * Plugin constructor.
 	 */
 	private function __construct() {
+
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		add_filter( 'wp_mail_from', array( $this, 'mail_from' ) );
@@ -176,7 +177,7 @@ class Frontend {
 		$subject = esc_html__( 'Send verification email', 'restock-alerts-for-woocommerce' );
 
 		ob_start();
-		include RESTALER_PATH . '/template/email/html-verification-email.php';
+		include RESTALER_PATH . '/templates/email/html-verification-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -196,26 +197,9 @@ class Frontend {
 	 * @return string
 	 */
 	public function append_notify_form( $html, $product ) {
-
-		$availability = $product->get_availability();
-
-		if ( 'Out of stock' === $availability['availability'] ) {
-			$nonce = wp_create_nonce( 'restaler-save-email' );
-
-			$form  = '<form id="restaler-notify-form" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
-			$form .= '<input name="email" type="text" placeholder="' . esc_attr__( 'Enter your email address', 'restock-alerts-for-woocommerce' ) . '">';
-			$form .= '<button type="submit">' . esc_html__( 'Notify Me', 'restock-alerts-for-woocommerce' ) . '</button>';
-			$form .= '</form>';
-			return $html . $form;
-		}
-
-		return $html;
+		return restaler()->templates->get_template( 'notify-form.php', array( 'html' => $html, 'product' => $product ) );
 	}
 
 }
 
 \RESTALER\Frontend::instance();
-
-
-
-

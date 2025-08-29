@@ -16,6 +16,8 @@ defined( 'ABSPATH' ) || exit;
  */
 final class RESTALER {
 
+	public $templates;
+
 	/**
 	 * Singleton instance.
 	 *
@@ -42,18 +44,16 @@ final class RESTALER {
 		$this->define_constants();
 
 		$this->load_dependencies();
+		$this->init_core();
+
+		// Assign template override.
+		$this->templates = \StoboKit\Template_Factory::get_instance(
+			'restock-alerts-for-woocommerce',
+			RESTALER_PLUGIN_FILE
+    );
+
 		$this->init_hooks();
 	}
-
-	/**
-	 * Prevent cloning.
-	 */
-	private function __clone() {}
-
-	/**
-	 * Prevent unserializing.
-	 */
-	private function __wakeup() {}
 
 	/**
 	 * Define plugin constants.
@@ -65,10 +65,16 @@ final class RESTALER {
 	}
 
 	/**
+	 * Load core.
+	 */
+	private function init_core() {
+		require_once RESTALER_PATH . '/core/init-core.php';
+	}
+
+	/**
 	 * Load required files.
 	 */
 	private function load_dependencies() {
-		require_once RESTALER_PATH . '/core/init-core.php';
 		require_once RESTALER_PATH . '/includes/class-utils.php';
 
 		require_once RESTALER_PATH . '/public/class-cron.php';

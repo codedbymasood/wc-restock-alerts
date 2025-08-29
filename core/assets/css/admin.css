@@ -580,6 +580,31 @@ body[class*="stobokit"] div.error {
   color: #1a1a1a;
 }
 
+[class*="stobokit-wrapper"] .media-gallery {
+  display: flex;
+}
+
+[class*="stobokit-wrapper"] .media-item {
+  width: 70px;
+  height: 70px;
+  overflow: hidden;
+  border: 1px solid #E2E8F0;
+  position: relative;
+}
+
+[class*="stobokit-wrapper"] .media-preview {
+  margin: 12px 0 0 0;
+}
+
+[class*="stobokit-wrapper"] .media-item img {
+  width: 100px;
+  height: auto;
+}
+
+[class*="stobokit-wrapper"] .remove-media-button {
+  margin: 0 0 0 12px;
+}
+
 [class*="stobokit-wrapper"] .wp-picker-container .iris-picker {
   border-color: #E2E8F0;
 }
@@ -607,7 +632,8 @@ body[class*="stobokit"] div.error {
   display: inline-block;
 }
 
-[class*="stobokit-wrapper"] .repeater-item .remove-item {
+[class*="stobokit-wrapper"] .repeater-item .remove-item,
+[class*="stobokit-wrapper"] .remove-single-media {
   float: right;
   color: #fff;
   cursor: pointer;
@@ -616,7 +642,8 @@ body[class*="stobokit"] div.error {
   display: none;
 }
 
-[class*="stobokit-wrapper"] .repeater-item:hover .remove-item {
+[class*="stobokit-wrapper"] .repeater-item:hover .remove-item,
+[class*="stobokit-wrapper"] .media-item:hover .remove-single-media {
   display: inline-block;
 }
 
