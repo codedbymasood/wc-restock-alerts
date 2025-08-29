@@ -282,6 +282,10 @@ body[class*="stobokit"] div.error {
   max-width: 680px;
 }
 
+[class*="stobokit-wrapper"] .nav-tab-content-wrapper.full-width > div {
+  max-width: 100%;
+}
+
 [class*="stobokit-wrapper"] .nav-tab-wrapper.vertical .nav-tabs .nav-tab.nav-tab-active {
   background: #fff;
   color: #1a1a1a;
@@ -698,4 +702,34 @@ body[class*="stobokit"] div.error {
   border-right: 1px solid #E2E8F0;
   background-color: #F1F2FD;
   white-space: nowrap;
+}
+
+[class*="stobokit-wrapper"] .log-container {
+  background: #1a1a1a;
+  padding: 16px;
+  width: 90%;
+  border-radius: 4px;
+  margin: 0 0 24px 0;
+}
+
+[class*="stobokit-wrapper"] .log-entry {
+  font-family: Consolas, Monaco, monospace;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 2px 0;
+  color: #fff;
+  font-size: 14px;
+  opacity: 0.7;
+  gap: 12px;
+}
+
+[class*="stobokit-wrapper"] .log-entry * {
+  font-size: 14px;
+  margin: 0;
+}
+
+[class*="stobokit-wrapper"] .log-details {
+  display: flex;
+  gap: 8px;
 }
