@@ -20,8 +20,8 @@ $theme = wp_get_theme();
 <div class="stobokit-wrapper">
 	<div class="nav-tab-wrapper horizontal">
 		<div class="nav-tabs">
-			<a href="<?php echo esc_url( admin_url('admin.php?page=stobokit-status&tab=status') ); ?>" class="nav-tab<?php echo 'status' === $current_tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Status', 'store-boost-kit' ); ?></a>
-			<a href="<?php echo esc_url( admin_url('admin.php?page=stobokit-status&tab=logs') ); ?>" class="nav-tab<?php echo 'logs' === $current_tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Logs', 'store-boost-kit' ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-status&tab=status' ) ); ?>" class="nav-tab<?php echo 'status' === $current_tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Status', 'store-boost-kit' ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-status&tab=logs' ) ); ?>" class="nav-tab<?php echo 'logs' === $current_tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Logs', 'store-boost-kit' ); ?></a>
 		</div>
 	</div>
 
@@ -77,47 +77,48 @@ $theme = wp_get_theme();
 		<div class="nav-tab-content <?php echo 'logs' === $current_tab ? 'active' : ''; ?>">
 			<?php
 			$logger = new Logger();
-			$logs = $logger->getLogs();
 
-			if ( isset( $_POST['action'] ) && $_POST['action'] === 'download' && wp_verify_nonce( $_POST['_wpnonce'], 'download_logs' ) ) {
-        $filename = 'debug-logs-' . date('Y-m-d-H-i-s') . '.txt';
-        $content = $logger->exportAsText();
+			$logs = $logger->get_logs();
 
-				if ( ! empty( $content ) ) {        
+			if ( isset( $_POST['action'] ) && 'download' === $_POST['action'] && wp_verify_nonce( $_POST['_wpnonce'], 'download_logs' ) ) {
+				$filename = 'debug-logs-' . gmdate( 'Y-m-d-H-i-s' ) . '.txt';
+				$content  = $logger->export_as_text();
+
+				if ( ! empty( $content ) ) {
 					// Clean any previous output.
 					if ( ob_get_level() ) {
 						ob_end_clean();
 					}
-					
-					header('Content-Type: text/plain; charset=utf-8');
-					header('Content-Disposition: attachment; filename="' . sanitize_file_name( $filename ) . '"');
-					header('Content-Length: ' . (int) strlen( $content ) );
-					header('Cache-Control: no-cache, no-store, must-revalidate');
-					header('Pragma: no-cache');
-					header('Expires: 0');
-					
+
+					header( 'Content-Type: text/plain; charset=utf-8' );
+					header( 'Content-Disposition: attachment; filename="' . sanitize_file_name( $filename ) . '"' );
+					header( 'Content-Length: ' . (int) strlen( $content ) );
+					header( 'Cache-Control: no-cache, no-store, must-revalidate' );
+					header( 'Pragma: no-cache' );
+					header( 'Expires: 0' );
+
 					echo esc_html( $content );
 					exit;
 				}
-    	}
+			}
 			?>
 
-			<?php if ( empty( $logs ) ): ?>
+			<?php if ( empty( $logs ) ) : ?>
 				<div class="log-container">
 					<div class="log-entry">
 						<p><?php esc_html_e( 'No debug logs have been recorded yet.', 'store-boost-kit' ); ?></p>
 					</div>
 				</div>
-			<?php else: ?>
+			<?php else : ?>
 				<div class="log-container">
-					<?php foreach ($logs as $index => $log): ?>
-						<div class="log-entry log-level-<?php echo strtolower($log['level']); ?>">
+					<?php foreach ( $logs as $index => $log ) : ?>
+						<div class="log-entry log-level-<?php echo esc_attr( strtolower( $log['level'] ) ); ?>">
 							<div class="log-header">
-								<span class="log-time"><?php echo date('M j, Y H:i:s', strtotime($log['timestamp'])); ?></span>
-								<span class="log-level-badge log-<?php echo strtolower($log['level']); ?>">
-										<?php echo $log['level']; ?>
+								<span class="log-time"><?php echo esc_html( gmdate( 'M j, Y H:i:s', strtotime( $log['timestamp'] ) ) ); ?></span>
+								<span class="log-level-badge log-<?php echo esc_attr( strtolower( $log['level'] ) ); ?>">
+										<?php echo esc_html( $log['level'] ); ?>
 								</span>
-								<?php if ($log['file']): ?>
+								<?php if ( $log['file'] ) : ?>
 									<span class="log-source">
 										<?php echo esc_html( $log['file'] ); ?><?php echo $log['line'] ? ':' . esc_html( $log['line'] ) : ''; ?>
 									</span>
@@ -125,30 +126,30 @@ $theme = wp_get_theme();
 							</div>
 							
 							<div class="log-message">
-									<?php echo esc_html($log['message']); ?>
+									<?php echo esc_html( $log['message'] ); ?>
 							</div>
 								
-							<?php if ( ! empty( $log['context'] ) || $log['user_id'] || $log['ip'] ): ?>
+							<?php if ( ! empty( $log['context'] ) || $log['user_id'] || $log['ip'] ) : ?>
 								<div class="log-details">
-									<?php if ( ! empty( $log['context'] ) ): ?>
+									<?php if ( ! empty( $log['context'] ) ) : ?>
 										<div class="log-context">
-											<strong>Context:</strong> <code><?php echo esc_html( json_encode( $log['context'], JSON_PRETTY_PRINT ) ); ?></code>
+											<strong>Context:</strong> <code><?php echo esc_html( wp_json_encode( $log['context'], JSON_PRETTY_PRINT ) ); ?></code>
 										</div>
 									<?php endif; ?>
 										
-									<?php if ($log['user_id']): ?>
+									<?php if ( $log['user_id'] ) : ?>
 										<div class="log-user">
-											<?php $user = get_user_by('ID', $log['user_id']); ?>
+											<?php $user = get_user_by( 'ID', $log['user_id'] ); ?>
 											<strong>User:</strong> 
-											<?php if ( $user ): ?>
+											<?php if ( $user ) : ?>
 												<?php echo esc_html( $user->user_login ); ?> (ID: <?php echo esc_html( $log['user_id'] ); ?>)
-											<?php else: ?>
+											<?php else : ?>
 												User ID: <?php echo esc_html( $log['user_id'] ); ?>
 											<?php endif; ?>
 										</div>
 									<?php endif; ?>
 									
-									<?php if ( $log['ip'] ): ?>
+									<?php if ( $log['ip'] ) : ?>
 										<div class="log-ip">
 											<strong>IP:</strong> <?php echo esc_html( $log['ip'] ); ?>
 										</div>
@@ -161,7 +162,7 @@ $theme = wp_get_theme();
 			<?php endif; ?>
 
 			<form method="post" style="display: inline;">
-				<?php wp_nonce_field('download_logs'); ?>
+				<?php wp_nonce_field( 'download_logs' ); ?>
 				<input type="hidden" name="action" value="download">
 				<button type="submit" class="button button-primary"><?php esc_html_e( 'Download Logs', 'store-boost-kit' ); ?></button>
 			</form>

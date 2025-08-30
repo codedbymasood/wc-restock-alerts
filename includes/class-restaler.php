@@ -16,6 +16,18 @@ defined( 'ABSPATH' ) || exit;
  */
 final class RESTALER {
 
+	/**
+	 * Logger class
+	 *
+	 * @var \StoboKit\Logger
+	 */
+	public $logger;
+
+	/**
+	 * Template override class.
+	 *
+	 * @var \StoboKit\Template_Factory
+	 */
 	public $templates;
 
 	/**
@@ -43,15 +55,18 @@ final class RESTALER {
 	private function __construct() {
 		$this->define_constants();
 
-		$this->load_dependencies();
 		$this->init_core();
 
 		// Assign template override.
 		$this->templates = \StoboKit\Template_Factory::get_instance(
 			'restock-alerts-for-woocommerce',
 			RESTALER_PLUGIN_FILE
-    );
+		);
 
+		// Logger.
+		$this->logger = new \StoboKit\Logger();
+
+		$this->load_dependencies();
 		$this->init_hooks();
 	}
 
@@ -59,9 +74,15 @@ final class RESTALER {
 	 * Define plugin constants.
 	 */
 	private function define_constants() {
-		define( 'RESTALER_VERSION', '1.0.0' );
-		define( 'RESTALER_PATH', plugin_dir_path( dirname( __FILE__ ) ) );
-		define( 'RESTALER_URL', plugin_dir_url( dirname( __FILE__ ) ) );
+		if ( ! defined( 'RESTALER_VERSION' ) ) {
+			define( 'RESTALER_VERSION', '1.0.0' );
+		}
+		if ( ! defined( 'RESTALER_PATH' ) ) {
+			define( 'RESTALER_PATH', plugin_dir_path( dirname( __FILE__ ) ) );
+		}
+		if ( ! defined( 'RESTALER_URL' ) ) {
+			define( 'RESTALER_URL', plugin_dir_url( dirname( __FILE__ ) ) );
+		}
 	}
 
 	/**
@@ -75,6 +96,7 @@ final class RESTALER {
 	 * Load required files.
 	 */
 	private function load_dependencies() {
+
 		require_once RESTALER_PATH . '/includes/class-utils.php';
 
 		require_once RESTALER_PATH . '/public/class-cron.php';

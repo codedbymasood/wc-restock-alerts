@@ -28,4 +28,3 @@ require_once STOBOKIT_PATH . '/class-plugin-updater.php';
 require_once STOBOKIT_PATH . '/update-handler.php';
 require_once STOBOKIT_PATH . '/class-frontend-template.php';
 require_once STOBOKIT_PATH . '/class-template-factory.php';
-
