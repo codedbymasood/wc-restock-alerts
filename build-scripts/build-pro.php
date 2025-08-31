@@ -91,9 +91,9 @@ function restaler_on_plugin_activation() {
 }
 ';
 
-file_put_contents( $build_dir . '/restock-alerts-pro.php', $plugin_header );
+file_put_contents( $build_dir . '/restock-alerts-for-woocommerce.php', $plugin_header );
 
-$zip_file = $source_dir . '/builds/restock-alerts-pro-' . $version . '.zip';
+$zip_file = $source_dir . '/builds/restock-alerts-for-woocommerce-pro-' . $version . '.zip';
 create_zip_archive( $build_dir, $zip_file );
 
 echo 'Pro version built: ' . $zip_file . "\n";

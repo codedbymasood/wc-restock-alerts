@@ -96,7 +96,7 @@ function restaler_on_plugin_activation() {
 
 file_put_contents( $build_dir . '/restock-alerts-for-woocommerce.php', $plugin_header );
 
-$zip_file = $source_dir . '/builds/restock-alerts-lite-for-woocommerce-' . $version . '.zip';
+$zip_file = $source_dir . '/builds/restock-alerts-for-woocommerce-lite-' . $version . '.zip';
 create_zip_archive( $build_dir, $zip_file );
 
 echo 'Lite version built: ' . $zip_file . "\n";
