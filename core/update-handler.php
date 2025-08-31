@@ -87,7 +87,9 @@ class Update_Handler {
 	 * @return void
 	 */
 	private function define_constants() {
-		define( 'STOBOKIT_SITE_URL', 'https://storeboostkit.com' );
+		if ( ! defined( 'STOBOKIT_SITE_URL' ) ) {
+			define( 'STOBOKIT_SITE_URL', 'https://storeboostkit.com' );
+		}
 	}
 
 	/**

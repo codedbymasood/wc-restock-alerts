@@ -132,9 +132,10 @@ final class RESTALER {
 	 */
 	public function init_onboarding() {
 		$steps = array(
-			'welcome'  => 'Welcome',
-			'settings' => 'General Setup',
-			'finish'   => 'Finish',
+			'welcome'            => 'Welcome',
+			'license-activation' => 'Activate License',
+			'settings'           => 'General Setup',
+			'finish'             => 'Finish',
 		);
 
 		new \STOBOKIT\Onboarding(

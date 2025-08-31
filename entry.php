@@ -20,6 +20,10 @@ if ( ! defined( 'RESTALER_PLUGIN_FILE' ) ) {
 	define( 'RESTALER_PLUGIN_FILE', __FILE__ );
 }
 
+if ( ! defined( 'RESTALER_VERSION' ) ) {
+	define( 'RESTALER_VERSION', '1.0.0' );
+}
+
 /**
  * Development version switcher
  * Use ?restaler_version=pro or ?restaler_version=lite in URL to switch versions
