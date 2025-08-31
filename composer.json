@@ -1,0 +1,16 @@
+{
+  "name": "storeboostkit/restock-alerts",
+  "description": "WooCommerce Restock Alerts Plugin",
+  "type": "wordpress-plugin",
+  "require": {
+    "php": ">=7.4"
+  },
+  "scripts": {
+    "build-lite": "php build-scripts/build-lite.php",
+    "build-pro": "php build-scripts/build-pro.php", 
+    "build-all": [
+        "@build-lite",
+        "@build-pro"
+    ]
+  }
+}

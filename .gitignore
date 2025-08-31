@@ -1,0 +1,16 @@
+# Dependencies
+/vendor/
+
+# Build outputs
+/builds/
+
+# Node modules
+/node_modules/
+
+# Logs and temp files
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
