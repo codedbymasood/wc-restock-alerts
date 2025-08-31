@@ -4,6 +4,9 @@
 # Build outputs
 /builds/
 
+# ZIP files
+*.zip
+
 # Node modules
 /node_modules/
 

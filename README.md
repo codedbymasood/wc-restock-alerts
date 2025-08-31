@@ -53,6 +53,6 @@ GPLv2 or later
 
 ## Author
 
-Made with care by [Masood Mohamed](https://github.com/codedbymasood)
+Made with care by [Store Boost Kit](https://github.com/codedbymasood)
 Follow me on [Twitter](https://x.com/masoodmohamed90)
 Connect me on [Linkedin](https://www.linkedin.com/in/masoodmohamed/)

@@ -104,6 +104,8 @@ final class RESTALER {
 			require_once RESTALER_PATH . '/common/admin/class-admin.php';
 			require_once RESTALER_PATH . '/common/admin/class-notify-list-table.php';
 		}
+
+		require RESTALER_PATH . '/common/admin/init-update.php';
 	}
 
 	/**
