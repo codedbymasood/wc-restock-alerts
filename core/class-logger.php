@@ -88,27 +88,27 @@ class Logger {
 	}
 
 	public function info( $message, $context = array() ) {
-			$this->add_log( 'INFO', $message, $context );
+		$this->add_log( 'INFO', $message, $context );
 	}
 
 	public function warning( $message, $context = array() ) {
-			$this->add_log( 'WARNING', $message, $context );
+		$this->add_log( 'WARNING', $message, $context );
 	}
 
 	public function error( $message, $context = array() ) {
-			$this->add_log( 'ERROR', $message, $context );
+		$this->add_log( 'ERROR', $message, $context );
 	}
 
 	public function debug( $message, $context = array() ) {
-			$this->add_log( 'DEBUG', $message, $context );
+		$this->add_log( 'DEBUG', $message, $context );
 	}
 
 	public function get_logs() {
-			return get_option( $this->option_name, array() );
+		return get_option( $this->option_name, array() );
 	}
 
 	public function clear_logs() {
-			return delete_option( $this->option_name );
+		return delete_option( $this->option_name );
 	}
 
 	public function export_as_text() {
