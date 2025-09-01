@@ -1,4 +1,4 @@
-.hidden {
+[class*="stobokit-wrapper"] .hidden {
   display: none !important;
 }
 
@@ -338,7 +338,7 @@ body[class*="stobokit"] div.error {
   padding: 28px 28px 12px 28px;
 }
 
-[class*="stobokit-wrapper"] label {
+[class*="stobokit-wrapper"] label:not(.screen-reader-text) {
   display: block;
   cursor: pointer;
   font-size: 14px;

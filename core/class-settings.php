@@ -87,8 +87,16 @@ class Settings {
 	private $nonce_action;
 
 	/**
+	 * Pro status.
+	 *
+	 * @var boolean
+	 */
+	private $pro;
+
+	/**
 	 * Plugin constructor.
 	 *
+	 * @param string  $plugin_slug Plugin_slug.
 	 * @param string  $parent_slug Parent slug.
 	 * @param string  $menu_slug Menu slug.
 	 * @param string  $page_title Page title.
@@ -98,7 +106,8 @@ class Settings {
 	 * @param boolean $direct Load directly or separated.
 	 * @param array   $fields Setting fields.
 	 */
-	public function __construct( $parent_slug, $menu_slug, $page_title, $menu_title, $capability, $icon, $direct, $fields ) {
+	public function __construct( $plugin_slug, $parent_slug, $menu_slug, $page_title, $menu_title, $capability, $icon, $direct, $fields ) {
+		$this->plugin_slug = $plugin_slug;
 		$this->parent_slug = $parent_slug;
 		$this->menu_slug   = $menu_slug;
 		$this->page_title  = $page_title;
@@ -111,6 +120,9 @@ class Settings {
 		// Make nonce unique per page.
 		$this->nonce_name   = $menu_slug . '_nonce';
 		$this->nonce_action = $menu_slug . '_action';
+
+		// Check if pro version is active.
+		$this->pro = apply_filters( $plugin_slug . '_is_pro_active', false );
 
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ), 10 );
 		add_action( 'admin_init', array( $this, 'save_settings' ) );
@@ -165,12 +177,18 @@ class Settings {
 
 		foreach ( $this->fields as $tab_fields ) {
 			foreach ( $tab_fields as $field ) {
-				$id    = $field['id'];
-				$type  = isset( $field['type'] ) ? $field['type'] : 'text';
+				$id     = $field['id'];
+				$type   = isset( $field['type'] ) ? $field['type'] : 'text';
+				$is_pro = isset( $field['pro'] ) ? $field['pro'] : false;
+
+				// Skip saving pro fields if pro is not active.
+				if ( $is_pro && ! $this->pro ) {
+					continue;
+				}
 
 				if ( 'richtext_editor' === $type ) {
 					if ( isset( $_POST[ $id ] ) && is_array( $_POST[ $id ] ) ) {
-							$raw_value = wp_unslash( $_POST[ $id ] );
+							$raw_value = sanitize_text_field( wp_unslash( $_POST[ $id ] ) );
 
 							$value = array(
 								'html' => isset( $raw_value['html'] )
@@ -290,6 +308,7 @@ class Settings {
 		$type        = isset( $field['type'] ) ? $field['type'] : 'text';
 		$label       = isset( $field['label'] ) ? $field['label'] : '';
 		$description = isset( $field['description'] ) ? $field['description'] : '';
+		$is_pro      = isset( $field['pro'] ) ? $field['pro'] : false;
 
 		if ( 'richtext_editor' === $type ) {
 			$default_editor = isset( $field['default_editor'] ) ? $field['default_editor'] : 'html';
@@ -299,9 +318,14 @@ class Settings {
 		?>
 
 		<?php if ( 'group_start' !== $type && 'group_end' !== $type ) { ?>
-			<div class="field-wrap field-<?php echo esc_attr( $type ); ?>">
+			<div class="field-wrap field-<?php echo esc_attr( $type ); ?><?php echo $is_pro ? ' field-pro' : ''; ?>">
 				<?php if ( $label ) : ?>
-					<label for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label>
+					<label for="<?php echo esc_attr( $id ); ?>">
+						<?php echo esc_html( $label ); ?>
+						<?php if ( $is_pro && ! $this->pro ) : ?>
+							<span class="pro-tag">PRO</span>
+						<?php endif; ?>
+					</label>
 				<?php endif; ?>
 		<?php } ?>
 			<?php
@@ -316,11 +340,13 @@ class Settings {
 					echo '</div>';
 					break;
 				case 'textarea':
-					echo '<textarea id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" rows="4" cols="50">' . esc_textarea( $value ) . '</textarea>';
+					$disabled = $is_pro && ! $this->pro ? ' disabled' : '';
+					echo '<textarea id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" rows="4" cols="50"' . esc_attr( $disabled ) . '>' . esc_textarea( $value ) . '</textarea>';
 					break;
 
 				case 'select':
-					echo '<select id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '">';
+					$disabled = $is_pro && ! $this->pro ? ' disabled' : '';
+					echo '<select id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '"' . esc_attr( $disabled ) . '>';
 					foreach ( $field['options'] as $opt_val => $opt_label ) {
 						$selected = selected( $value, $opt_val, false );
 						echo '<option value="' . esc_attr( $opt_val ) . '"' . esc_attr( $selected ) . '>' . esc_html( $opt_label ) . '</option>';
@@ -329,29 +355,34 @@ class Settings {
 					break;
 
 				case 'radio':
+					$disabled = $is_pro && ! $this->pro ? ' disabled' : '';
 					echo '<div class="radio-group">';
 					foreach ( $field['options'] as $opt_val => $opt_label ) {
 						$checked = checked( $value, $opt_val, false );
-						echo '<label><input type="radio" name="' . esc_attr( $name ) . '" value="' . esc_attr( $opt_val ) . '"' . esc_attr( $checked ) . '> ' . esc_html( $opt_label ) . '</label>';
+						echo '<label><input type="radio" name="' . esc_attr( $name ) . '" value="' . esc_attr( $opt_val ) . '"' . esc_attr( $checked ) . esc_attr( $disabled ) . '> ' . esc_html( $opt_label ) . '</label>';
 					}
 					echo '</div>';
 					break;
 
 				case 'checkbox':
-					echo '<input type="checkbox" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="1"' . checked( $value, '1', false ) . '>';
+					$disabled = $is_pro && ! $this->pro ? ' disabled' : '';
+					echo '<input type="checkbox" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="1"' . checked( $value, '1', false ) . esc_attr( $disabled ) . '>';
 					break;
 
 				case 'switch':
+					$disabled = $is_pro && ! $this->pro ? ' disabled' : '';
 					echo '<label class="switch-control">';
-					echo '<input type="checkbox" name="' . esc_attr( $name ) . '" value="1"' . checked( $value, '1', false ) . '>';
+					echo '<input type="checkbox" name="' . esc_attr( $name ) . '" value="1"' . checked( $value, '1', false ) . esc_attr( $disabled ) . '>';
 					echo '<span class="slider round"></span></label>';
 					break;
 
 				case 'color':
-					echo '<input type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="color-picker">';
+					$disabled = $is_pro && ! $this->pro ? ' disabled' : '';
+					echo '<input type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="color-picker"' . esc_attr( $disabled ) . '>';
 					break;
 
 				case 'richtext_editor':
+					$disabled = $is_pro && ! $this->pro ? ' disabled' : '';
 					echo '<div class="richtext-editor" data-default-editor="' . esc_attr( $default_editor ) . '">';
 
 					if ( in_array( array( 'html', 'css' ), array( $field['options'] ), true ) ) {
@@ -361,8 +392,8 @@ class Settings {
 						echo '</ul>';
 					}
 
-					echo '<textarea class="html" name="' . esc_attr( $name ) . '[html]">' . esc_textarea( $html_value ) . '</textarea>';
-					echo '<textarea class="css" name="' . esc_attr( $name ) . '[css]" style="display:none;">' . esc_textarea( $css_value ) . '</textarea>';
+					echo '<textarea class="html" name="' . esc_attr( $name ) . '[html]"' . esc_attr( $disabled ) . '>' . esc_textarea( $html_value ) . '</textarea>';
+					echo '<textarea class="css" name="' . esc_attr( $name ) . '[css]" style="display:none;"' . esc_attr( $disabled ) . '>' . esc_textarea( $css_value ) . '</textarea>';
 
 					if ( $description ) {
 						echo '<p>* ' . esc_html( $description ) . '</p>';
@@ -371,12 +402,14 @@ class Settings {
 					break;
 
 				case 'number':
-					echo '<input type="number" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="regular-text">';
+					$disabled = $is_pro && ! $this->pro ? ' disabled' : '';
+					echo '<input type="number" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="regular-text"' . esc_attr( $disabled ) . '>';
 					break;
 
 				case 'text':
 				default:
-					echo '<input type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="regular-text">';
+					$disabled = $is_pro && ! $this->pro ? ' disabled' : '';
+					echo '<input type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="regular-text"' . esc_attr( $disabled ) . '>';
 					break;
 			}
 			?>
@@ -386,4 +419,3 @@ class Settings {
 		<?php
 	}
 }
-

@@ -26,7 +26,7 @@ if ( ! class_exists( 'StoboKit\Template_Factory' ) ) {
 		public static function get_instance($plugin_slug, $plugin_file) {
 				if (!isset(self::$instances[$plugin_slug])) {
 						$plugin_dir = plugin_dir_path($plugin_file);
-						$templates_path = $plugin_dir . 'templates';
+						$templates_path = apply_filters( 'stobokit_main_template_path', $plugin_dir . 'templates' );
 						
 						self::$instances[$plugin_slug] = new Frontend_Template(
 								$plugin_slug,

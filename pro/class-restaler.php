@@ -63,6 +63,9 @@ final class RESTALER {
 			RESTALER_PLUGIN_FILE
 		);
 
+		// Emailer.
+		$this->emailer = \StoboKit\Emailer::get_instance();
+
 		// Logger.
 		$this->logger = new \StoboKit\Logger();
 
@@ -93,7 +96,6 @@ final class RESTALER {
 	 * Load required files.
 	 */
 	private function load_common() {
-
 		require_once RESTALER_PATH . '/common/includes/class-utils.php';
 
 		require_once RESTALER_PATH . '/common/public/class-cron.php';
@@ -113,6 +115,9 @@ final class RESTALER {
 	 */
 	private function load_dependencies() {
 		$this->load_common();
+
+		require_once __DIR__ . '/class-hooks.php';
+		require_once __DIR__ . '/class-notify-list-table-pro.php';
 	}
 
 	/**

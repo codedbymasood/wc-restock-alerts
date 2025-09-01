@@ -39,6 +39,13 @@ function restaler_development_init() {
 
 	// Load appropriate version.
 	if ( 'pro' === $force_version && file_exists( __DIR__ . '/pro/class-restaler.php' ) ) {
+		add_filter(
+			'stobokit_frontend_template_file',
+			function ( $template_file = '' ) {
+				return str_replace( 'templates', 'templates/pro', $template_file );
+			}
+		);
+
 		require_once __DIR__ . '/pro/class-restaler.php';
 
 		// Show pro version notice.
@@ -47,13 +54,20 @@ function restaler_development_init() {
 				'admin_notices',
 				function () {
 					echo '<div class="notice notice-success is-dismissible">';
-					echo '<p><strong>🚀 PRO VERSION ACTIVE</strong> - Development Mode | ';
+					echo '<p><strong>🚀 RESTOCK ALERTS PRO VERSION ACTIVE</strong> - Development Mode | ';
 					echo '<a href="' . esc_url( add_query_arg( 'restaler_version', 'lite' ) ) . '">Switch to Lite</a>';
 					echo '</p></div>';
 				}
 			);
 		}
 	} else {
+		add_filter(
+			'stobokit_frontend_template_file',
+			function ( $template_file = '' ) {
+				return str_replace( 'templates', 'templates/lite', $template_file );
+			}
+		);
+
 		require_once __DIR__ . '/lite/class-restaler.php';
 
 		// Show lite version notice.
@@ -62,7 +76,7 @@ function restaler_development_init() {
 				'admin_notices',
 				function () {
 					echo '<div class="notice notice-info is-dismissible">';
-					echo '<p><strong>💡 LITE VERSION ACTIVE</strong> - Development Mode | ';
+					echo '<p><strong>💡RESTOCK ALERTS LITE VERSION ACTIVE</strong> - Development Mode | ';
 					echo '<a href="' . esc_url( add_query_arg( 'restaler_version', 'pro' ) ) . '">Switch to Pro</a>';
 					echo '</p></div>';
 				}
@@ -133,15 +147,24 @@ function restaler_dev_admin_bar( $wp_admin_bar ) {
 
 	$wp_admin_bar->add_node(
 		array(
-			'id'    => 'restaler-dev',
-			'title' => 'Restaler: ' . strtoupper( $current_version ),
+			'id'    => 'stobokit-dev',
+			'title' => 'Store Boost Kit Dev',
 			'href'  => '#',
 		)
 	);
 
 	$wp_admin_bar->add_node(
 		array(
-			'parent' => 'restaler-dev',
+			'parent' => 'stobokit-dev',
+			'id'     => 'restaler-dev-switch',
+			'title'  => 'Restock Alerts: ' . strtoupper( $current_version ),
+			'href'   => '#',
+		)
+	);
+
+	$wp_admin_bar->add_node(
+		array(
+			'parent' => 'restaler-dev-switch',
 			'id'     => 'restaler-switch-lite',
 			'title'  => 'Switch to Lite',
 			'href'   => add_query_arg( 'restaler_version', 'lite' ),
@@ -150,7 +173,7 @@ function restaler_dev_admin_bar( $wp_admin_bar ) {
 
 	$wp_admin_bar->add_node(
 		array(
-			'parent' => 'restaler-dev',
+			'parent' => 'restaler-dev-switch',
 			'id'     => 'restaler-switch-pro',
 			'title'  => 'Switch to Pro',
 			'href'   => add_query_arg( 'restaler_version', 'pro' ),

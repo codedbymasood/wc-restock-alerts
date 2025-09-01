@@ -39,12 +39,14 @@ add_action(
 					'label'   => esc_html__( 'Enable Followup', 'restock-alerts-for-woocommerce' ),
 					'type'    => 'checkbox',
 					'default' => '1',
+					'pro'     => true,
 				),
 				array(
 					'id'      => 'restaler_first_followup_days',
 					'label'   => esc_html__( 'First Followup Days', 'restock-alerts-for-woocommerce' ),
 					'type'    => 'text',
 					'default' => 2,
+					'pro'     => true,
 				),
 				array(
 					'id'      => 'restaler_first_followup_email_subject',
@@ -89,6 +91,7 @@ add_action(
 		);
 
 		new Settings(
+			'restock-alerts-for-woocommerce',
 			'stobokit-notify-list',          // Parent menu slug.
 			'stobokit-notify-list-settings', // menu slug.
 			esc_html__( 'Settings', 'restock-alerts-for-woocommerce' ),

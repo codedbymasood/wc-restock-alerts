@@ -144,6 +144,7 @@ if ( ! class_exists( 'STOBOKIT\Frontend_Template' ) ) {
 
 			// Allow plugins to modify template args
 			$args = apply_filters('stobokit_frontend_template_args', $args, $template_file, $this->plugin_slug);
+
 			$template_file = apply_filters('stobokit_frontend_template_file', $template_file, $args, $this->plugin_slug);
 
 			// Include the template

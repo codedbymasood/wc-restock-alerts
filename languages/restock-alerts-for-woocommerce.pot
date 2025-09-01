@@ -30,7 +30,7 @@ msgid "Email Notifications"
 msgstr ""
 
 #: ../admin/class-admin.php:172 ../admin/view/settings-page.php:33
-#: ../template/email/html-back-in-stock-email.php:16
+#: ../template/email/back-in-stock-email.php:16
 msgid "Back in Stock!"
 msgstr ""
 
@@ -160,69 +160,69 @@ msgstr ""
 msgid "Notify Me"
 msgstr ""
 
-#: ../template/email/html-back-in-stock-email.php:20
+#: ../template/email/back-in-stock-email.php:20
 msgid "Good news!"
 msgstr ""
 
-#: ../template/email/html-back-in-stock-email.php:21
+#: ../template/email/back-in-stock-email.php:21
 msgid "The product you were waiting for is now back in stock"
 msgstr ""
 
-#: ../template/email/html-back-in-stock-email.php:24
-#: ../template/email/html-urgency-followup-email.php:38
+#: ../template/email/back-in-stock-email.php:24
+#: ../template/email/urgency-followup-email.php:38
 msgid "Buy Now"
 msgstr ""
 
-#: ../template/email/html-back-in-stock-email.php:27
+#: ../template/email/back-in-stock-email.php:27
 msgid "Don't wait too long, popular products sell out quickly!"
 msgstr ""
 
-#: ../template/email/html-still-interested-followup-email.php:31
+#: ../template/email/still-interested-followup-email.php:31
 msgid ""
 "If you're still thinking it over, no rush! We're here if you have any "
 "questions or need help deciding if it's the right fit for you."
 msgstr ""
 
-#: ../template/email/html-still-interested-followup-email.php:33
+#: ../template/email/still-interested-followup-email.php:33
 msgid "View Product"
 msgstr ""
 
-#: ../template/email/html-still-interested-followup-email.php:35
+#: ../template/email/still-interested-followup-email.php:35
 msgid "Sometimes all it takes is a second look."
 msgstr ""
 
-#: ../template/email/html-still-interested-followup-email.php:37
+#: ../template/email/still-interested-followup-email.php:37
 msgid "Thanks again for your interest!"
 msgstr ""
 
-#: ../template/email/html-urgency-followup-email.php:40
+#: ../template/email/urgency-followup-email.php:40
 msgid "Don't miss out - after this, it's back to full price."
 msgstr ""
 
-#: ../template/email/html-verification-email.php:29
+#: ../template/email/verification-email.php:29
 msgid "Confirm your email"
 msgstr ""
 
-#: ../template/email/html-verification-email.php:30
+#: ../template/email/verification-email.php:30
 msgid "Hi there,"
 msgstr ""
 
-#: ../template/email/html-verification-email.php:31
+#: ../template/email/verification-email.php:31
 msgid ""
 "Thanks for signing up. Please confirm your email address by clicking the "
 "button below:"
 msgstr ""
 
-#: ../template/email/html-verification-email.php:33
+#: ../template/email/verification-email.php:33
 msgid "Verify Email"
 msgstr ""
 
-#: ../template/email/html-verification-email.php:35
+#: ../template/email/verification-email.php:35
 msgid ""
 "If the button doesn't work, copy and paste this link into your browser:"
 msgstr ""
 
-#: ../template/email/html-verification-email.php:39
+#: ../template/email/verification-email.php:39
 msgid ""
 "This verification link will expire soon. If you did not request this, "
 "please ignore this email."

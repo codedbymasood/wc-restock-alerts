@@ -24,7 +24,6 @@ class Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		add_action( 'wp_ajax_stobokit_save_settings', array( $this, 'save_settings' ) );
-
 	}
 
 	/**

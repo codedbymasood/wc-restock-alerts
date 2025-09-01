@@ -13,7 +13,7 @@ copy_directory( $source_dir . '/core', $build_dir . '/core' );
 copy_directory( $source_dir . '/pro', $build_dir . '/includes' );
 copy_directory( $source_dir . '/common', $build_dir . '/common' );
 copy_directory( $source_dir . '/onboarding', $build_dir . '/onboarding' );
-copy_directory( $source_dir . '/templates', $build_dir . '/templates' );
+copy_directory( $source_dir . '/templates/pro', $build_dir . '/templates' );
 copy_directory( $source_dir . '/languages', $build_dir . '/languages' );
 copy( $source_dir . '/CHANGELOG-PRO.md', $build_dir . '/CHANGELOG.md' );
 copy( $source_dir . '/readme-pro.txt', $build_dir . '/readme.txt' );

@@ -57,7 +57,7 @@ class Frontend {
 	}
 
 	public function enqueue_scripts() {
-		wp_enqueue_script( 'restaler-main', RESTALER_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
+		wp_enqueue_script( 'restaler-main', RESTALER_URL . '/common/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
 	}
 
 	public function mail_from() {
@@ -176,12 +176,18 @@ class Frontend {
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 		$subject = esc_html__( 'Send verification email', 'restock-alerts-for-woocommerce' );
 
-		ob_start();
-		include RESTALER_PATH . '/templates/email/html-verification-email.php';
-		$content = ob_get_contents();
-		ob_end_clean();
+		$html = restaler()->templates->get_template(
+			'email/verification-email.php',
+			array(
+				'subject'    => $subject,
+				'email'      => $email,
+				'product'    => $product,
+				'verify_url' => $verify_url,
+			)
+		);
 
-		$result = wp_mail( $email, $subject, $content, $headers );
+		$result = restaler()->emailer->send_now( $email, $subject, $html, $args = array() );
+
 		if ( ! $result ) {
 			esc_html_e( 'Mail failed to sent.', 'restock-alerts-for-woocommerce' );
 		} else {
@@ -197,7 +203,13 @@ class Frontend {
 	 * @return string
 	 */
 	public function append_notify_form( $html, $product ) {
-		return restaler()->templates->get_template( 'notify-form.php', array( 'html' => $html, 'product' => $product ) );
+		return restaler()->templates->get_template(
+			'notify-form.php',
+			array(
+				'html'    => $html,
+				'product' => $product,
+			)
+		);
 	}
 
 }

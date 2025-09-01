@@ -7,6 +7,7 @@
  * @version 1.0
  */
 
+
 namespace RESTALER;
 
 use Pelago\Emogrifier\CssInliner;
@@ -87,15 +88,16 @@ class Admin {
 	}
 
 	public function render_notify_list_page() {
-		echo '<div class="stobokit-wrapper no-spacing">';
-		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Email Notifications', 'restock-alerts-for-woocommerce' ) . '</h1>';
-		$notify_table = new Notify_List_Table();
-		$notify_table->prepare_items();
-		echo '<form method="post">';
-		$notify_table->display();
-		echo '</form></div>';
-		echo '</div>';
+		$args = array(
+			'title'      => esc_html__( 'Email Notifications', 'restock-alerts-for-woocommerce' ),
+			'singular'   => 'notification',
+			'plural'     => 'notifications',
+			'table_name' => 'restaler_restock_alerts',
+			'id'         => 'restock_alerts',
+		);
+
+		$notify_table = new Notify_List_Table( $args );
+		$notify_table->display_table();
 	}
 
 	public function save_product( $post_id = 0 ) {
@@ -148,6 +150,11 @@ class Admin {
 				$this->send_notify_emails( $row );
 				$this->change_status_to_email_sent( $row );
 
+				/**
+				 * After restock alert email sent.
+				 */
+				do_action( 'restaler_alert_email_sent', $row, $args );
+
 				if ( ! empty( $enable_followup ) ) {
 					$this->create_followup_schedule( $row, $args );
 				}
@@ -181,15 +188,20 @@ class Admin {
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 		$subject = get_option( 'restaler_email_subject', esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ) );
 
-		ob_start();
-		include RESTALER_PATH . '/templates/email/html-back-in-stock-email.php';
-		$content = ob_get_contents();
-		ob_end_clean();
+		$content = restaler()->templates->get_template(
+			'email/back-in-stock-email.php',
+			array(
+				'subject'    => $subject,
+				'email'      => $email,
+				'product_id' => $product_id,
+			)
+		);
 
 		// CssInliner loads from WooCommerce.
 		$html = CssInliner::fromHtml( $content )->inlineCss()->render();
 
-		$result = wp_mail( $email, $subject, $html, $headers );
+		$result = restaler()->emailer->send_now( $email, $subject, $html, $args = array() );
+
 		if ( ! $result ) {
 			esc_html_e( 'Mail failed to sent.', 'restock-alerts-for-woocommerce' );
 		} else {
