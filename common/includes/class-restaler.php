@@ -98,6 +98,7 @@ final class RESTALER {
 	private function load_dependencies() {
 
 		require_once RESTALER_PATH . '/includes/class-utils.php';
+		require_once RESTALER_PATH . '/public/class-hooks.php';
 
 		require_once RESTALER_PATH . '/public/class-cron.php';
 		require_once RESTALER_PATH . '/public/class-frontend.php';

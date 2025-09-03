@@ -1,4 +1,14 @@
 <?php
+/**
+ * Notify form template.
+ *
+ * @package restock-alerts-for-woocommerce\template\email\
+ * @author Store Boost Kit <storeboostkit@gmail.com>
+ * @version 1.0
+ */
+
+defined( 'ABSPATH' ) || exit;
+
 $html    = $args['html'];
 $product = $args['product'];
 

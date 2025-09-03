@@ -22,18 +22,12 @@ add_action(
 					'type'  => 'text',
 				),
 				array(
-					'id'    => 'stobokit_email_from_address',
-					'label' => esc_html__( 'From Address', 'restock-alerts-for-woocommerce' ),
+					'id'    => 'stobokit_email_from_email',
+					'label' => esc_html__( 'From Email Address', 'restock-alerts-for-woocommerce' ),
 					'type'  => 'text',
 				),
-				array(
-					'id'      => 'restaler_email_subject',
-					'label'   => esc_html__( 'From Address', 'restock-alerts-for-woocommerce' ),
-					'type'    => 'text',
-					'default' => esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ),
-				),
 			),
-			esc_html__( 'Followup Email', 'restock-alerts-for-woocommerce' ) => array(				
+			esc_html__( 'Followup Email Settings', 'restock-alerts-for-woocommerce' ) => array(
 				array(
 					'id'      => 'restaler_enable_followup',
 					'label'   => esc_html__( 'Enable Followup', 'restock-alerts-for-woocommerce' ),
@@ -49,22 +43,10 @@ add_action(
 					'pro'     => true,
 				),
 				array(
-					'id'      => 'restaler_first_followup_email_subject',
-					'label'   => esc_html__( 'First Followup Email Subject', 'restock-alerts-for-woocommerce' ),
-					'type'    => 'text',
-					'default' => esc_html__( 'Just a Quick Reminder', 'restock-alerts-for-woocommerce' ),
-				),
-				array(
 					'id'      => 'restaler_second_followup_days',
 					'label'   => esc_html__( 'Second Followup Days', 'restock-alerts-for-woocommerce' ),
 					'type'    => 'text',
 					'default' => 3,
-				),
-				array(
-					'id'      => 'restaler_second_followup_email_subject',
-					'label'   => esc_html__( 'Second Followup Email Subject', 'restock-alerts-for-woocommerce' ),
-					'type'    => 'text',
-					'default' => esc_html__( 'Last Chance! 20% Off Ends in 3 Days', 'restock-alerts-for-woocommerce' ),
 				),
 				array(
 					'id'      => 'restaler_discount_type',

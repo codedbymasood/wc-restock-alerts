@@ -61,12 +61,16 @@ class Frontend {
 	}
 
 	public function mail_from() {
-		$from_address = get_option( 'stobokit_email_from_address', '' );
-		return $from_address;
+		$from_email = get_option( 'stobokit_email_from_email', '' );
+		$from_email = $from_email ? $from_email : get_option( 'admin_email', '' );
+
+		return $from_email;
 	}
 
 	public function mail_from_name() {
 		$from_name = get_option( 'stobokit_email_from_name', '' );
+		$from_name = $from_name ? $from_name : get_option( 'blogname', '' );
+
 		return $from_name;
 	}
 
@@ -173,20 +177,46 @@ class Frontend {
 	}
 
 	public function send_verification_email( $email = '', $product = 0, $verify_url = '' ) {
-		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = esc_html__( 'Send verification email', 'restock-alerts-for-woocommerce' );
+		$subject     = get_option( 'restaler_verification_email_subject', esc_html__( 'Send verification email', 'restock-alerts-for-woocommerce' ) );
+		$heading     = get_option( 'restaler_verification_email_heading', esc_html__( 'Confirm your email', 'restock-alerts-for-woocommerce' ) );
+		$footer_text = get_option(
+			'restaler_verification_email_footer_text',
+			esc_html__(
+				'You\'re receiving this email because you registered with {site_name}.
 
-		$html = restaler()->templates->get_template(
-			'email/verification-email.php',
-			array(
-				'subject'    => $subject,
-				'email'      => $email,
-				'product'    => $product,
-				'verify_url' => $verify_url,
+If you didn\'t request this, please ignore it.',
+				'restock-alerts-for-woocommerce'
 			)
 		);
 
-		$result = restaler()->emailer->send_now( $email, $subject, $html, $args = array() );
+		$content = get_option(
+			'restaler_verification_email_content',
+			"Hi {customer_name},
+
+Thanks for signing up. Please confirm your email address by clicking the button below:
+
+{verify_url_btn}
+
+If the button doesn't work, copy and paste this link into your browser:
+
+{verify_url}
+
+This verification link will expire soon. If you did not request this, please ignore this email.
+
+Warmly,
+The {site_name} Team"
+		);
+
+		$html = restaler()->templates->get_template(
+			'email/email-content.php',
+			array(
+				'heading'     => $heading,
+				'content'     => $content,
+				'footer_text' => $footer_text,
+			)
+		);
+
+		$result = restaler()->emailer->send_now( $email, $subject, $html, $args = array( 'verify_url' => $verify_url ) );
 
 		if ( ! $result ) {
 			esc_html_e( 'Mail failed to sent.', 'restock-alerts-for-woocommerce' );

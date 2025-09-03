@@ -85,6 +85,8 @@ class Admin {
 			'dashicons-bell',
 			50
 		);
+
+		do_action( 'restock_alerts_menu_registered' );
 	}
 
 	public function render_notify_list_page() {
@@ -118,34 +120,6 @@ class Admin {
 		$results = $this->get_emails( $post_id );
 
 		if ( $results ) {
-			$enable_followup = get_option( 'restaler_enable_followup', '' );
-
-			$discount_type        = get_option( 'restaler_discount_type', 'percent' );
-			$amount               = get_option( 'restaler_discount_amount', 20 );
-			$first_followup_days  = get_option( 'restaler_first_followup_days', 2 );
-			$second_followup_days = get_option( 'restaler_second_followup_days', 3 );
-			$coupon_expires_in    = get_option( 'restaler_coupon_expires_in', 3 );
-
-			$first_followup  = time() + ( $first_followup_days * DAY_IN_SECONDS ); // 2 days later
-			$second_followup = $first_followup + ( $second_followup_days * DAY_IN_SECONDS ); // 5 days total
-
-			$coupon_expires      = $second_followup + ( $coupon_expires_in * DAY_IN_SECONDS ); // Add 3 days.
-			$coupon_expires_date = gmdate( 'd-m-Y', $coupon_expires );
-
-			$args = array(
-				'first_followup'      => $first_followup,
-				'second_followup'     => $second_followup,
-				'product'             => $product,
-				'discount_type'       => $discount_type,
-				'amount'              => $amount,
-				'coupon_expires_in'   => $coupon_expires_in,
-				'coupon_expires_date' => $coupon_expires_date,
-			);
-
-			$coupon = Utils::generate_discount( $args );
-
-			$args['coupon'] = $coupon;
-
 			foreach ( $results as $row ) {
 				$this->send_notify_emails( $row );
 				$this->change_status_to_email_sent( $row );
@@ -153,11 +127,7 @@ class Admin {
 				/**
 				 * After restock alert email sent.
 				 */
-				do_action( 'restaler_alert_email_sent', $row, $args );
-
-				if ( ! empty( $enable_followup ) ) {
-					$this->create_followup_schedule( $row, $args );
-				}
+				do_action( 'restaler_alert_email_sent', $row, $product );
 			}
 		}
 
@@ -185,22 +155,36 @@ class Admin {
 		$email      = $row['email'];
 		$product_id = $row['product_id'];
 
-		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = get_option( 'restaler_email_subject', esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ) );
+		$subject     = get_option( 'restaler_back_in_stock_email_subject', esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ) );
+		$heading     = get_option( 'restaler_back_in_stock_email_heading', esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ) );
+		$footer_text = get_option( 'restaler_back_in_stock_email_footer_text', '' );
+
+		$content = get_option(
+			'restaler_back_in_stock_email_content',
+			"The product you were waiting for is now back in stock
+
+{product_name}
+{buy_now}
+
+Don't wait too long, popular products sell out quickly!
+
+Warmly,
+The {site_name} Team"
+		);
 
 		$content = restaler()->templates->get_template(
-			'email/back-in-stock-email.php',
+			'email/email-content.php',
 			array(
-				'subject'    => $subject,
-				'email'      => $email,
-				'product_id' => $product_id,
+				'heading'     => $heading,
+				'content'     => $content,
+				'footer_text' => $footer_text,
 			)
 		);
 
 		// CssInliner loads from WooCommerce.
 		$html = CssInliner::fromHtml( $content )->inlineCss()->render();
 
-		$result = restaler()->emailer->send_now( $email, $subject, $html, $args = array() );
+		$result = restaler()->emailer->send_now( $email, $subject, $html, $args = array( 'product_id' => $product_id ) );
 
 		if ( ! $result ) {
 			esc_html_e( 'Mail failed to sent.', 'restock-alerts-for-woocommerce' );
@@ -218,20 +202,6 @@ class Admin {
 			array(
 				'id' => $row['id'],
 			)
-		);
-	}
-
-	public function create_followup_schedule( $row = array(), $args = array() ) {
-		wp_schedule_single_event(
-			$args['first_followup'],
-			'restaler_still_interested_followup_email',
-			array( $row, $args )
-		);
-
-		wp_schedule_single_event(
-			$args['second_followup'],
-			'restaler_urgency_followup_email',
-			array( $row, $args )
 		);
 	}
 }

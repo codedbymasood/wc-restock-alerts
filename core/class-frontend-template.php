@@ -144,10 +144,6 @@ if ( ! class_exists( 'STOBOKIT\Frontend_Template' ) ) {
 		 * @param array  $args Variables to extract in template.
 		 */
 		private function include_template_file( $template_file, $args = array() ) {
-			// Extract variables for use in template.
-			if ( ! empty( $args ) && is_array( $args ) ) {
-				extract( $args, EXTR_SKIP );
-			}
 
 			// Allow plugins to modify template args.
 			$args = apply_filters( 'stobokit_frontend_template_args', $args, $template_file, $this->plugin_slug );

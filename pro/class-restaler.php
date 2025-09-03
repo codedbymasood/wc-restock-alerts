@@ -24,6 +24,13 @@ final class RESTALER {
 	public $logger;
 
 	/**
+	 * Schedule logger class
+	 *
+	 * @var \StoboKit\Schedule_Logger
+	 */
+	public $scheduler;
+
+	/**
 	 * Template override class.
 	 *
 	 * @var \StoboKit\Template_Factory
@@ -69,6 +76,9 @@ final class RESTALER {
 		// Logger.
 		$this->logger = new \StoboKit\Logger();
 
+		// Schedule logger.
+		$this->scheduler = new \StoboKit\Schedule_Logger();
+
 		$this->load_dependencies();
 		$this->init_hooks();
 	}
@@ -97,8 +107,8 @@ final class RESTALER {
 	 */
 	private function load_common() {
 		require_once RESTALER_PATH . '/common/includes/class-utils.php';
+		require_once RESTALER_PATH . '/common/includes/class-hooks.php';
 
-		require_once RESTALER_PATH . '/common/public/class-cron.php';
 		require_once RESTALER_PATH . '/common/public/class-frontend.php';
 
 		if ( is_admin() ) {
@@ -117,6 +127,8 @@ final class RESTALER {
 		$this->load_common();
 
 		require_once __DIR__ . '/class-hooks.php';
+		require_once __DIR__ . '/class-admin.php';
+		require_once __DIR__ . '/views/email-templates.php';
 		require_once __DIR__ . '/class-notify-list-table-pro.php';
 	}
 

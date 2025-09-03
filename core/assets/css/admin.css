@@ -8,8 +8,17 @@ body[class*="stobokit"] {
   background: #F8FAFC;
 }
 
+[class*="stobokit-wrapper"] .wrap {
+  margin: 0;
+}
+
 [class*="stobokit-wrapper"] p {
   font-size: 15px;
+}
+
+[class*="stobokit-wrapper"] span.pro-tag {
+  color: #6366F1;
+  font-weight: 500;
 }
 
 [class*="stobokit-wrapper"] li span.small {
@@ -46,6 +55,7 @@ body[class*="stobokit"] div.error {
 
 .stobokit-wrapper.no-spacing {
   margin: 0;
+  margin-right: 20px;
 }
 
 .stobokit-wrapper.spacing {
@@ -96,8 +106,9 @@ body[class*="stobokit"] div.error {
 }
 
 .stobokit-wrapper table {
-  width: 98%;
   border: 0;
+  box-shadow: none;
+  width: 100%;
 }
 
 .stobokit-widgets {
@@ -131,6 +142,7 @@ body[class*="stobokit"] div.error {
 
 .stobokit-wrapper table.widefat tr th {
   font-weight: 400;
+  padding: 10px 0 10px 12px;
 }
 
 .stobokit-wrapper table.widefat .sorting-indicator:before {
@@ -208,10 +220,6 @@ body[class*="stobokit"] div.error {
 
 .stobokit-wrapper .status-table th {
   width: 30%;
-}
-
-.stobokit-wrapper .status-table td {
-  width: 70%;
 }
 
 .stobokit-wrapper .status-table table.widefat,
@@ -363,11 +371,23 @@ body[class*="stobokit"] div.error {
 [class*="stobokit-wrapper"] input[type="week"],
 [class*="stobokit-wrapper"] select,
 [class*="stobokit-wrapper"] textarea {
+  font-size: 15px;
+  color: #1a1a1a;
   border: 1px solid #E2E8F0;
   height: 40px;
   padding: 0 12px;
   width: 320px;
   max-width: 60%;
+}
+
+[class*="stobokit-wrapper"] input.current-page {
+  width: 80px;
+}
+
+[class*="stobokit-wrapper"] textarea {
+  min-height: 160px;
+  min-width: 360px;
+  padding: 12px;
 }
 
 [class*="stobokit-wrapper"] input[type="text"]:focus,
@@ -537,6 +557,16 @@ body[class*="stobokit"] div.error {
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
+}
+
+[class*="stobokit-wrapper"] .tablenav .tablenav-pages .button,
+[class*="stobokit-wrapper"] .tablenav .tablenav-pages .button:hover,
+[class*="stobokit-wrapper"] .tablenav .tablenav-pages .tablenav-pages-navspan {
+  min-width: 30px;
+  min-height: 30px;
+  margin: 0;
+  padding: 0 4px;
+  font-size: 16px;
 }
 
 [class*="stobokit-wrapper"] .btn.btn-red {
@@ -710,6 +740,10 @@ body[class*="stobokit"] div.error {
   width: 90%;
   border-radius: 4px;
   margin: 0 0 24px 0;
+}
+
+[class*="stobokit-wrapper"] table.email-logs {
+  margin: 24px 0;
 }
 
 [class*="stobokit-wrapper"] .log-entry {
