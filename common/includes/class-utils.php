@@ -53,6 +53,8 @@ class Utils {
 		global $wpdb;
 		$table = $wpdb->prefix . 'restaler_restock_alerts';
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->update(
 			$table,
 			array(

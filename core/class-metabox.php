@@ -121,12 +121,15 @@ class Metabox {
 			$field_value = get_post_meta( $post->ID, $field['id'], true );
 		}
 
-		$condition_attr = '';
 		if ( isset( $field['condition'] ) && ! $is_repeater ) {
-			$condition_attr = 'data-condition="' . esc_attr( wp_json_encode( $field['condition'] ) ) . '"';
+			printf(
+				'<div class="field-wrap field-%s" %s>',
+				esc_attr( $field['type'] ),
+				'data-condition="' . esc_attr( wp_json_encode( $field['condition'] ) ) . '"'
+			);
+		} else {
+			echo '<div class="field-wrap field-' . esc_attr( $field['type'] ) . '">';
 		}
-
-		echo '<div class="field-wrap field-' . esc_attr( $field['type'] ) . '"' . $condition_attr . '>';
 
 		if ( isset( $field['label'] ) ) {
 			echo '<label for="' . esc_attr( $field_id ) . '">' . esc_html( $field['label'] ) . '</label>';
@@ -147,6 +150,14 @@ class Metabox {
 		echo '</div>';
 	}
 
+	/**
+	 * Render repeater fields
+	 *
+	 * @param array   $field Field.
+	 * @param WP_Post $post Post.
+	 * @param array   $field_value Field value.
+	 * @return void
+	 */
 	private function render_repeater_field( $field, $post, $field_value ) {
 		$repeater_values = (array) $field_value;
 		echo '<div class="repeater-container" data-field-id="' . esc_attr( $field['id'] ) . '">';
@@ -219,8 +230,12 @@ class Metabox {
 				echo '<select id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '">';
 				if ( isset( $field['options'] ) ) {
 					foreach ( $field['options'] as $option_value => $option_label ) {
-						$selected = selected( $field_value, $option_value, false );
-						echo '<option value="' . esc_attr( $option_value ) . '" ' . $selected . '>' . esc_html( $option_label ) . '</option>';
+						printf(
+							'<option value="%s" %s>%s</option>',
+							esc_attr( $option_value ),
+							selected( $field_value, $option_value, false ),
+							esc_html( $option_label )
+						);
 					}
 				}
 				echo '</select>';
@@ -232,21 +247,40 @@ class Metabox {
 					foreach ( $field['options'] as $option_value => $option_label ) {
 						$checked  = checked( $field_value, $option_value, false );
 						$radio_id = $field_id . '_' . $option_value;
-						echo '<label for="' . esc_attr( $radio_id ) . '"><input type="radio" id="' . esc_attr( $radio_id ) . '" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $option_value ) . '" ' . esc_attr( $checked ) . '/>' . esc_html( $option_label ) . '</label>';
+
+						echo '<label	abel for="' . esc_attr( $radio_id ) . '">';
+						printf(
+							'<input type="radio" id="%s" name="%s" value="%s" ' . esc_attr( $checked ) . '/>',
+							esc_attr( $radio_id ),
+							esc_attr( $field_name ),
+							esc_attr( $option_value ),
+							checked( $field_value, $option_value, false )
+						);
+						echo esc_html( $option_label );
+						echo '</label>';
 					}
 					echo '</div>';
 				}
 				break;
 
 			case 'checkbox':
-				$checked = checked( $field_value, '1', false );
-				echo '<input type="checkbox" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" value="1" ' . $checked . '/>';
+				printf(
+					'<input type="checkbox" id="%s" name="%s" value="1" %s />',
+					esc_attr( $field_id ),
+					esc_attr( $field_name ),
+					checked( $field_value, '1', false )
+				);
 				break;
 
 			case 'switch':
 				$checked = checked( $field_value, '1', false );
 				echo '<label class="switch-control">';
-				echo '<input type="checkbox" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" value="1" ' . $checked . ' />';
+				printf(
+					'<input type="checkbox" id="%s" name="%s" value="1" %s />',
+					esc_attr( $field_id ),
+					esc_attr( $field_name ),
+					checked( $field_value, '1', false )
+				);
 				echo '<span class="slider round"></span>';
 				echo '</label>';
 				break;
@@ -258,68 +292,70 @@ class Metabox {
 
 			case 'media':
 				echo '<div class="field-content">';
-				// Get field configuration
-				$multiple = isset($field['multiple']) ? $field['multiple'] : false;
-				$file_type = isset($field['file_type']) ? $field['file_type'] : 'all'; // array or string: ['image', 'video'] or 'image' or 'all'
-				
-				// Handle multiple vs single media
-				if ($multiple) {
-						$media_ids = $field_value ? (array) $field_value : array();
-						echo '<input type="hidden" id="' . esc_attr($field_id) . '" name="' . esc_attr($field_name) . '" value="' . esc_attr(implode(',', $media_ids)) . '" />';
+
+				$multiple  = isset( $field['multiple'] ) ? $field['multiple'] : false;
+				$file_type = isset( $field['file_type'] ) ? $field['file_type'] : 'all'; // ['image', 'video'] or 'image' or 'all'.
+
+				// Handle multiple vs single media.
+				if ( $multiple ) {
+					$media_ids = $field_value ? (array) $field_value : array();
+					echo '<input type="hidden" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( implode( ',', $media_ids ) ) . '" />';
 				} else {
-						echo '<input type="hidden" id="' . esc_attr($field_id) . '" name="' . esc_attr($field_name) . '" value="' . esc_attr($field_value) . '" />';
+					echo '<input type="hidden" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" />';
 				}
-				
-				// Add data attributes for JavaScript
-				$button_class = 'upload-media-button';
-				$data_multiple = $multiple ? 'true' : 'false';
-				$data_file_type = esc_attr(is_array($file_type) ? wp_json_encode($file_type) : $file_type);
-				
-				echo '<button type="button" class="button ' . esc_attr($button_class) . '" data-multiple="' . $data_multiple . '" data-file-type="' . $data_file_type . '">' . esc_html__('Select Media', 'store-boost-kit') . '</button>';
-				echo '<button type="button" class="button remove-media-button">' . esc_html__('Remove All', 'store-boost-kit') . '</button>';
-				
+
+				printf(
+					'<button type="button" class="button upload-media-button" data-multiple="%s" data-file-type="%s">%s</button>',
+					esc_attr( $button_class ),
+					( $multiple ) ? 'true' : 'false',
+					esc_attr( is_array( $file_type ) ? wp_json_encode( $file_type ) : $file_type ),
+					esc_html__( 'Select Media', 'store-boost-kit' )
+				);
+
+				echo '<button type="button" class="button remove-media-button">' . esc_html__( 'Remove All', 'store-boost-kit' ) . '</button>';
+
 				echo '<div class="media-preview">';
-				
-				if ($multiple && !empty($media_ids)) {
-						echo '<div class="media-gallery">';
-						foreach ($media_ids as $media_id) {
-								if ($media_id) {
-										$media_url = wp_get_attachment_url($media_id);
-										$media_filename = basename($media_url);
-										$file_type_check = wp_check_filetype($media_url);
-										
-										echo '<div class="media-item" data-id="' . esc_attr($media_id) . '">';
-										echo '<span class="remove-single-media"><span class="dashicons dashicons-no-alt"></span></span>';
-										
-										if (strpos($file_type_check['type'], 'image') !== false) {
-												echo '<img src="' . esc_url($media_url) . '" style="max-width: 100px; height: auto;" />';
-										} elseif (strpos($file_type_check['type'], 'video') !== false) {
-												echo '<video width="100" controls><source src="' . esc_url($media_url) . '" type="' . esc_attr($file_type_check['type']) . '"></video>';
-										} else {
-												echo '<p class="file-name">' . esc_html($media_filename) . '</p>';
-										}
-										echo '</div>';
-								}
+
+				if ( $multiple && ! empty( $media_ids ) ) {
+					echo '<div class="media-gallery">';
+					foreach ( $media_ids as $media_id ) {
+						if ( $media_id ) {
+							$media_url       = wp_get_attachment_url( $media_id );
+							$media_filename  = basename( $media_url );
+							$file_type_check = wp_check_filetype( $media_url );
+
+							echo '<div class="media-item" data-id="' . esc_attr( $media_id ) . '">';
+							echo '<span class="remove-single-media"><span class="dashicons dashicons-no-alt"></span></span>';
+
+							if ( strpos( $file_type_check['type'], 'image' ) !== false ) {
+								echo '<img src="' . esc_url( $media_url ) . '" style="max-width: 100px; height: auto;" />';
+							} elseif ( strpos( $file_type_check['type'], 'video' ) !== false ) {
+								echo '<video width="100" controls><source src="' . esc_url( $media_url ) . '" type="' . esc_attr( $file_type_check['type'] ) . '"></video>';
+							} else {
+								echo '<p class="file-name">' . esc_html( $media_filename ) . '</p>';
+							}
+							echo '</div>';
+						}
+					}
+					echo '</div>';
+				} elseif ( ! $multiple && $field_value ) {
+					$media_url = wp_get_attachment_url( $field_value );
+					if ( $media_url ) {
+						$media_filename  = basename( $media_url );
+						$file_type_check = wp_check_filetype( $media_url );
+
+						echo '<div class="media-item" data-id="' . esc_attr( $media_id ) . '">';
+						if ( strpos( $file_type_check['type'], 'image' ) !== false ) {
+							echo '<img src="' . esc_url( $media_url ) . '" style="max-width: 150px; height: auto;" />';
+						} elseif ( strpos( $file_type_check['type'], 'video' ) !== false ) {
+							echo '<video width="150" controls><source src="' . esc_url( $media_url ) . '" type="' . esc_attr( $file_type_check['type'] ) . '"></video>';
+						} else {
+							echo '<p>' . esc_html( $media_filename ) . '</p>';
 						}
 						echo '</div>';
-				} elseif (!$multiple && $field_value) {
-						$media_url = wp_get_attachment_url($field_value);
-						if ($media_url) {
-								$media_filename = basename($media_url);
-								$file_type_check = wp_check_filetype($media_url);
-								
-								echo '<div class="media-item" data-id="' . esc_attr($media_id) . '">';
-								if (strpos($file_type_check['type'], 'image') !== false) {
-										echo '<img src="' . esc_url($media_url) . '" style="max-width: 150px; height: auto;" />';
-								} elseif (strpos($file_type_check['type'], 'video') !== false) {
-										echo '<video width="150" controls><source src="' . esc_url($media_url) . '" type="' . esc_attr($file_type_check['type']) . '"></video>';
-								} else {
-										echo '<p>' . esc_html($media_filename) . '</p>';
-								}
-								echo '</div>';
-						}
+					}
 				}
-				
+
 				echo '</div>';
 				echo '</div>';
 				break;
@@ -327,7 +363,7 @@ class Metabox {
 	}
 
 	public function save_metabox( $post_id ) {
-		if ( ! isset( $_POST[ $this->metabox_id . '_nonce' ] ) || ! wp_verify_nonce( wp_unslash( $_POST[ $this->metabox_id . '_nonce' ] ), $this->metabox_id . '_nonce' ) ) {
+		if ( ! isset( $_POST[ $this->metabox_id . '_nonce' ] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ $this->metabox_id . '_nonce' ] ) ), $this->metabox_id . '_nonce' ) ) {
 			return;
 		}
 
@@ -344,7 +380,9 @@ class Metabox {
 
 		foreach ( $all_field_ids as $field_id ) {
 			if ( isset( $_POST[ $field_id ] ) ) {
-				$sanitized_value = $this->sanitize_field_value( $_POST[ $field_id ] );
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$sanitized_value = $this->sanitize_field_value( wp_unslash( $_POST[ $field_id ] ) );
 				update_post_meta( $post_id, $field_id, $sanitized_value );
 			} else {
 				// For non-repeater fields, delete meta if field is not present (for checkboxes, etc.)
@@ -386,7 +424,7 @@ class Metabox {
 		foreach ( $this->fields as $tab_fields ) {
 			if ( is_array( $tab_fields ) ) {
 				foreach ( $tab_fields as $field ) {
-					if ( $field['id'] === $field_id && isset( $field['type'] ) && $field['type'] === 'repeater' ) {
+					if ( $field['id'] === $field_id && isset( $field['type'] ) && 'repeater' === $field['type'] ) {
 						return true;
 					}
 				}
@@ -396,66 +434,66 @@ class Metabox {
 	}
 
 	private function sanitize_field_value( $value ) {
-    if (is_array($value)) {
-      return array_map(array($this, 'sanitize_field_value'), $value);
-    }
-    
-    // Handle comma-separated media IDs
-    if (strpos($value, ',') !== false) {
-			$ids = explode(',', $value);
-			$sanitized_ids = array_filter(array_map('absint', $ids));
-			return implode(',', $sanitized_ids);
-    }
-    
-    // Handle single media ID
-    if (is_numeric($value)) {
-        return absint($value);
-    }
-    
-    return sanitize_text_field($value);
+		if ( is_array( $value ) ) {
+			return array_map( array( $this, 'sanitize_field_value' ), $value );
+		}
+
+		// Handle comma-separated media IDs.
+		if ( strpos( $value, ',' ) !== false ) {
+			$ids = explode( ',', $value );
+			$sanitized_ids = array_filter( array_map( 'absint', $ids ) );
+			return implode( ',', $sanitized_ids );
+		}
+
+		// Handle single media ID.
+		if ( is_numeric( $value ) ) {
+			return absint( $value );
+		}
+
+		return sanitize_text_field( $value );
 	}
 
 	public static function get_media_field( $post_id, $field_id, $multiple = false ) {
-    $value = get_post_meta($post_id, $field_id, true);
-    
-    if ($multiple) {
-        if (empty($value)) {
-            return array();
-        }
-        
-        $ids = explode(',', $value);
-        $media_items = array();
-        
-        foreach ($ids as $id) {
-            if ($id) {
-                $url = wp_get_attachment_url($id);
-                if ($url) {
-                    $media_items[] = array(
-                        'id' => $id,
-                        'url' => $url,
-                        'filename' => basename($url),
-                        'type' => wp_check_filetype($url)['type']
-                    );
-                }
-            }
-        }
-        
-        return $media_items;
-    }
-    
-    if ($value) {
-        $url = wp_get_attachment_url($value);
-        if ($url) {
-            return array(
-                'id' => $value,
-                'url' => $url,
-                'filename' => basename($url),
-                'type' => wp_check_filetype($url)['type']
-            );
-        }
-    }
-    
-    return null;
+		$value = get_post_meta( $post_id, $field_id, true );
+
+		if ( $multiple ) {
+			if ( empty( $value ) ) {
+				return array();
+			}
+
+			$ids = explode( ',', $value );
+			$media_items = array();
+
+			foreach ( $ids as $id ) {
+				if ( $id ) {
+					$url = wp_get_attachment_url( $id );
+					if ( $url ) {
+						$media_items[] = array(
+							'id'       => $id,
+							'url'      => $url,
+							'filename' => basename( $url ),
+							'type'     => wp_check_filetype( $url )['type'],
+						);
+					}
+				}
+			}
+
+			return $media_items;
+		}
+
+		if ( $value ) {
+			$url = wp_get_attachment_url( $value );
+			if ( $url ) {
+				return array(
+					'id'       => $value,
+					'url'      => $url,
+					'filename' => basename( $url ),
+					'type'     => wp_check_filetype( $url )['type'],
+				);
+			}
+		}
+
+		return null;
 	}
 
 	public static function get_field( $post_id, $field_id ) {

@@ -84,7 +84,7 @@ $theme = wp_get_theme();
 
 			$logs = $logger->get_logs();
 
-			if ( isset( $_POST['action'] ) && 'download' === $_POST['action'] && wp_verify_nonce( $_POST['_wpnonce'], 'download_logs' ) ) {
+			if ( isset( $_POST['action'] ) && 'download' === $_POST['action'] && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'download_logs' ) ) {
 				$filename = 'debug-logs-' . gmdate( 'Y-m-d-H-i-s' ) . '.txt';
 				$content  = $logger->export_as_text();
 
@@ -106,7 +106,7 @@ $theme = wp_get_theme();
 				}
 			}
 
-			if ( isset( $_POST['action'] ) && 'clear_logs' === $_POST['action'] && wp_verify_nonce( $_POST['_wpnonce'], 'clear_logs' ) ) {
+			if ( isset( $_POST['action'] ) && 'clear_logs' === $_POST['action'] && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'clear_logs' ) ) {
 				$logger->clear_logs();
 				wp_safe_redirect( admin_url( 'admin.php?page=stobokit-status&tab=logs' ) );
 			}
@@ -191,7 +191,7 @@ $theme = wp_get_theme();
 				<?php
 				$logs = array_reverse( get_option( 'stobokit_emailer_logs', array() ) );
 
-				if ( isset( $_POST['action'] ) && 'clear_email_logs' === $_POST['action'] && wp_verify_nonce( $_POST['_wpnonce'], 'clear_email_logs' ) ) {
+				if ( isset( $_POST['action'] ) && 'clear_email_logs' === $_POST['action'] && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'clear_email_logs' ) ) {
 					update_option( 'stobokit_emailer_logs', array() );
 					wp_safe_redirect( admin_url( 'admin.php?page=stobokit-status&tab=email-logs' ) );
 				}

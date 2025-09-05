@@ -24,6 +24,14 @@ if ( ! defined( 'RESTALER_VERSION' ) ) {
 	define( 'RESTALER_VERSION', '1.0.0' );
 }
 
+if ( ! defined( 'RESTALER_PATH' ) ) {
+	define( 'RESTALER_PATH', plugin_dir_path( __FILE__ ) );
+}
+
+if ( ! defined( 'RESTALER_URL' ) ) {
+	define( 'RESTALER_URL', plugin_dir_url( __FILE__ ) );
+}
+
 /**
  * Development version switcher
  * Use ?restaler_version=pro or ?restaler_version=lite in URL to switch versions

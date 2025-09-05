@@ -60,8 +60,6 @@ final class RESTALER {
 	 * Plugin constructor.
 	 */
 	private function __construct() {
-		$this->define_constants();
-
 		$this->init_core();
 
 		// Assign template override.
@@ -78,18 +76,6 @@ final class RESTALER {
 
 		$this->load_dependencies();
 		$this->init_hooks();
-	}
-
-	/**
-	 * Define plugin constants.
-	 */
-	private function define_constants() {
-		if ( ! defined( 'RESTALER_PATH' ) ) {
-			define( 'RESTALER_PATH', plugin_dir_path( __DIR__ ) );
-		}
-		if ( ! defined( 'RESTALER_URL' ) ) {
-			define( 'RESTALER_URL', plugin_dir_url( __DIR__ ) );
-		}
 	}
 
 	/**
@@ -130,7 +116,7 @@ final class RESTALER {
 		add_action( 'plugins_loaded', array( $this, 'ensure_table_exists' ) );
 
 		// Create a table when activate the plugin.
-		register_activation_hook( RESTALER_PLUGIN_FILE, array( $this, 'create_notify_table' ) );
+		register_activation_hook( RESTALER_PLUGIN_FILE, array( $this, 'maybe_create_table' ) );
 		add_action( 'before_woocommerce_init', array( $this, 'enable_hpos' ) );
 	}
 
@@ -166,9 +152,17 @@ final class RESTALER {
 
 		$table = $wpdb->prefix . 'restaler_restock_alerts';
 
-		// Check if table exists.
-		if( $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) !== $table ) {
-			$this->create_notify_table();
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$table_exists = $wpdb->get_var(
+			$wpdb->prepare(
+				'SHOW TABLES LIKE %s',
+				$table
+			)
+		);
+
+		if ( $table_exists !== $table ) {
+			$this->maybe_create_table();
 		}
 	}
 
@@ -177,7 +171,7 @@ final class RESTALER {
 	 *
 	 * @return void
 	 */
-	public function create_notify_table() {
+	public function maybe_create_table() {
 		global $wpdb;
 
 		$table = $wpdb->prefix . 'restaler_restock_alerts';

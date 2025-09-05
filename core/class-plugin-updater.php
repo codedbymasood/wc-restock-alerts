@@ -262,8 +262,8 @@ class Plugin_Updater {
 
 		printf(
 			'<tr class="plugin-update-tr %3$s" id="%1$s-update" data-slug="%1$s" data-plugin="%2$s">',
-			$this->slug,
-			$file,
+			esc_html( $this->slug ),
+			esc_html( $file ),
 			in_array( $this->name, $this->get_active_plugins(), true ) ? 'active' : 'inactive'
 		);
 
@@ -303,29 +303,27 @@ class Plugin_Updater {
 			esc_html_e( 'Contact your network administrator to install the update.', 'store-boost-kit' );
 		} elseif ( empty( $update_cache->response[ $this->name ]->package ) && ! empty( $changelog_link ) ) {
 			echo ' ';
+
 			printf(
-				/* translators: 1: opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate. */
-				__( '%1$sView version %2$s details%3$s.', 'store-boost-kit' ),
-				'<a target="_blank" class="thickbox open-plugin-details-modal" href="' . esc_url( $changelog_link ) . '">',
-				esc_html( $update_cache->response[ $this->name ]->new_version ),
-				'</a>'
+				' <a target="_blank" class="thickbox open-plugin-details-modal" href="%s">View version %s details</a>',
+				esc_url( $changelog_link ),
+				esc_html( $update_cache->response[ $this->name ]->new_version )
 			);
 		} elseif ( ! empty( $changelog_link ) ) {
 			echo ' ';
+
 			printf(
-				__( '%1$sView version %2$s details%3$s or %4$supdate now%5$s.', 'store-boost-kit' ),
-				'<a target="_blank" class="thickbox open-plugin-details-modal" href="' . esc_url( $changelog_link ) . '">',
+				' <a target="_blank" class="thickbox open-plugin-details-modal" href="%s">View version %s details</a> or <a target="_blank" class="update-link" href="%s">update now</a>',
+				esc_url( $changelog_link ),
 				esc_html( $update_cache->response[ $this->name ]->new_version ),
-				'</a>',
-				'<a target="_blank" class="update-link" href="' . esc_url( wp_nonce_url( $update_link, 'upgrade-plugin_' . $file ) ) . '">',
-				'</a>'
+				esc_url( wp_nonce_url( $update_link, 'upgrade-plugin_' . $file ) )
 			);
 		} else {
+			echo ' ';
 			printf(
-				' %1$s%2$s%3$s',
-				'<a target="_blank" class="update-link" href="' . esc_url( wp_nonce_url( $update_link, 'upgrade-plugin_' . $file ) ) . '">',
-				esc_html__( 'Update now.', 'store-boost-kit' ),
-				'</a>'
+				'<a target="_blank" class="update-link" href="%s">%s</a>',
+				esc_url( wp_nonce_url( $update_link, 'upgrade-plugin_' . $file ) ),
+				esc_html__( 'Update now.', 'store-boost-kit' )
 			);
 		}
 
@@ -541,15 +539,17 @@ class Plugin_Updater {
 	 * If available, show the changelog for sites in a multisite install.
 	 */
 	public function show_changelog() {
-
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $_REQUEST['stobokit_action'] ) || 'view_plugin_changelog' !== $_REQUEST['stobokit_action'] ) {
 			return;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $_REQUEST['plugin'] ) ) {
 			return;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $_REQUEST['slug'] ) || $this->slug !== $_REQUEST['slug'] ) {
 			return;
 		}

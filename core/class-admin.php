@@ -40,8 +40,16 @@ class Admin {
 
 		$table = $wpdb->prefix . 'stobokit_scheduler_logs';
 
-		// Check if table exists.
-		if( $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) !== $table ) {
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$table_exists = $wpdb->get_var(
+			$wpdb->prepare(
+				'SHOW TABLES LIKE %s',
+				$table
+			)
+		);
+
+		if ( $table_exists !== $table ) {
 			$this->create_scheduler_logs_table();
 		}
 	}
@@ -85,7 +93,7 @@ class Admin {
 	 * @return void
 	 */
 	public function save_settings() {
-		if ( ! isset( $_POST['nonce'] ) && ! empty( isset( $_POST['nonce'] ) ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_save_settings' ) ) {
+		if ( ! isset( $_POST['nonce'] ) || empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_save_settings' ) ) {
 			wp_send_json_error(
 				array(
 					'message' => esc_html__( 'Sorry, not verified.', 'store-boost-kit' ),
@@ -93,7 +101,7 @@ class Admin {
 			);
 		}
 
-		$inputs = isset( $_POST['inputs'] ) && ! empty( $_POST['inputs'] ) ? $_POST['inputs'] : array();
+		$inputs = isset( $_POST['inputs'] ) && ! empty( $_POST['inputs'] ) ? wp_unslash( $_POST['inputs'] ) : array();
 
 		if ( ! empty( $inputs ) ) {
 			foreach ( $inputs as $index => $field ) {

@@ -62,7 +62,7 @@ class Logger {
 			'file'      => $this->get_caller_info()['file'] ?? null,
 			'line'      => $this->get_caller_info()['line'] ?? null,
 			'user_id'   => get_current_user_id(),
-			'ip'        => $_SERVER['REMOTE_ADDR'] ?? null,
+			'ip'        => isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : null,
 		);
 
 		// Add to beginning of array.
@@ -76,6 +76,7 @@ class Logger {
 	}
 
 	public function get_caller_info() {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 		$backtrace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 4 );
 
 		// Skip this method and the log level method.

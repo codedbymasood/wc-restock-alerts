@@ -128,6 +128,7 @@ class Onboarding {
 	 * Set current step.
 	 */
 	public function set_current_step() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$requested_step = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : '';
 
 		// Only allow valid steps, default to first step if invalid.
@@ -353,7 +354,8 @@ class Onboarding {
 	 * Handle onboarding completion.
 	 */
 	public function handle_onboarding_completion() {
-		if ( isset( $_GET['onboarding'] ) && 'complete' === $_GET['onboarding'] ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['onboarding'] ) && 'complete' === sanitize_key( $_GET['onboarding'] ) ) {
 			$this->complete_onboarding();
 			wp_safe_redirect( $this->redirect_page );
 			exit;

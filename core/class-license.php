@@ -29,7 +29,7 @@ class License {
 	 * @return void
 	 */
 	public function activate_license() {
-		if ( ! isset( $_POST['nonce'] ) && ! empty( isset( $_POST['nonce'] ) ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_license' ) ) {
+		if ( ! isset( $_POST['nonce'] ) || empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_license' ) ) {
 			wp_send_json_error(
 				array(
 					'message' => esc_html__( 'Sorry, not verified.', 'store-boost-kit' ),
@@ -67,7 +67,6 @@ class License {
 		} else {
 			$data = json_decode( wp_remote_retrieve_body( $response ) );
 			if ( false === $data->success ) {
-				error_log($data->error);
 				switch ( $data->error ) {
 					case 'expired':
 						$message = sprintf(
@@ -130,7 +129,7 @@ class License {
 	 * @return void
 	 */
 	public function deactivate_license() {
-		if ( ! isset( $_POST['nonce'] ) && ! empty( isset( $_POST['nonce'] ) ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_license' ) ) {
+		if ( ! isset( $_POST['nonce'] ) || empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_license' ) ) {
 			wp_send_json_error(
 				array(
 					'message' => esc_html__( 'Sorry, not verified.', 'store-boost-kit' ),

@@ -91,6 +91,9 @@ class Frontend {
 
 		$table = $wpdb->prefix . 'restaler_restock_alerts';
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT * FROM $table WHERE email = %s AND token = %s AND status = 'pending'",
@@ -150,6 +153,9 @@ class Frontend {
 		if ( ! empty( $email ) && ! empty( $product ) ) {
 			$table = $wpdb->prefix . 'restaler_restock_alerts';
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$exists = $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT COUNT(*) FROM $table WHERE email = %s AND product_id = %d",

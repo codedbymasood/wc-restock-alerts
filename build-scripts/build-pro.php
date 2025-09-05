@@ -23,7 +23,7 @@ $plugin_header = '<?php
  * Plugin Name: Restock Alerts Pro for WooCommerce
  * Requires Plugins: woocommerce
  * Plugin URI: https://wordpress.org/plugins/search/restock-alerts-for-woocommerce/
- * Description: Add a Notify Me button for out-of-stock products (Lite Version)
+ * Description: Add a Notify Me When Available button for out-of-stock items. Store owner gets the list, user gets email when back in stock.
  * Version: ' . $version . '
  * Author: Store Boost Kit
  * Author URI: https://storeboostkit.com/

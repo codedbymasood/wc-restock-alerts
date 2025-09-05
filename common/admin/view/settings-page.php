@@ -74,8 +74,8 @@ add_action(
 
 		new Settings(
 			'restock-alerts-for-woocommerce',
-			'stobokit-notify-list',          // Parent menu slug.
-			'stobokit-notify-list-settings', // menu slug.
+			'stobokit-restaler-notify-list',          // Parent menu slug.
+			'stobokit-restaler-notify-list-settings', // menu slug.
 			esc_html__( 'Settings', 'restock-alerts-for-woocommerce' ),
 			esc_html__( 'Settings', 'restock-alerts-for-woocommerce' ),
 			'manage_options',

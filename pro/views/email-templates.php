@@ -206,7 +206,7 @@ If you didn\'t request this, please ignore it.',
 
 		new Settings(
 			'restock-alerts-for-woocommerce',
-			'stobokit-notify-list',              // Parent menu slug.
+			'stobokit-restaler-notify-list',              // Parent menu slug.
 			'stobokit-restaler-email-templates', // menu slug.
 			esc_html__( 'Email Templates', 'restock-alerts-for-woocommerce' ),
 			esc_html__( 'Email Templates', 'restock-alerts-for-woocommerce' ),

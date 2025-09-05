@@ -59,11 +59,13 @@ class Admin {
 		$order = wc_get_order( $order_id );
 
 		foreach ( $order->get_items() as $item ) {
-			$product_id = $item->get_product_id();
+			$product_id     = $item->get_product_id();
 			$customer_email = $order->get_billing_email();
 
 			global $wpdb;
 
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->update(
 				$wpdb->prefix . 'restaler_restock_alerts',
 				array( 'status' => 'completed' ),
@@ -80,7 +82,7 @@ class Admin {
 			esc_html__( 'Restock Alerts', 'restock-alerts-for-woocommerce' ),
 			esc_html__( 'Restock Alerts', 'restock-alerts-for-woocommerce' ),
 			'manage_options',
-			'stobokit-notify-list',
+			'stobokit-restaler-notify-list',
 			array( $this, 'render_notify_list_page' ),
 			'dashicons-bell',
 			50
@@ -139,6 +141,9 @@ class Admin {
 
 		$table = $wpdb->prefix . 'restaler_restock_alerts';
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM $table WHERE product_id = %d AND status = %s",
@@ -196,6 +201,9 @@ The {site_name} Team"
 	public function change_status_to_email_sent( $row = array() ) {
 		global $wpdb;
 		$table = $wpdb->prefix . 'restaler_restock_alerts';
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->update(
 			$table,
 			array( 'status' => 'email-sent' ),

@@ -261,7 +261,8 @@
 					const conditions = JSON.parse(element.attr('data-condition'));
 					let show = true;
 					
-					if (Array.isArray(conditions)) {
+					if (conditions.conditions && Array.isArray(conditions.conditions)) {
+						
 						// Multiple conditions with AND/OR logic
 						const relation = conditions.relation || 'AND';
 						const results = [];
@@ -290,10 +291,11 @@
     }
     
     function checkSingleCondition(condition) {
-			const field = $("[name*=\"[" + condition.field + "]\"]");
+			const field = $(`[name*="${condition.field}"]`);
 			if (!field.length) return false;
 			
-			const fieldValue = '';
+
+			let fieldValue = '';
 			if (field.is(':checkbox')) {
 				fieldValue = field.is(':checked') ? '1' : '0';
 			} else if (field.is(':radio')) {
@@ -301,6 +303,8 @@
 			} else {
 				fieldValue = field.val();
 			}
+			
+			console.log(fieldValue);
 			
 			const conditionValue = condition.value;
 			const operator = condition.operator || "=";
