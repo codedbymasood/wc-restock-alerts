@@ -2,7 +2,7 @@
 /**
  * Settings class.
  *
- * @package restock-alerts-for-woocommerce\admin\
+ * @package plugin-slug\admin\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -69,22 +69,22 @@ Warmly,
 The {site_name} Team";
 
 		$fields = array(
-			esc_html__( 'Verification Email', 'restock-alerts-for-woocommerce' ) => array(
+			esc_html__( 'Verification Email', 'plugin-slug' ) => array(
 				array(
 					'id'      => 'restaler_verification_email_subject',
-					'label'   => esc_html__( 'Subject', 'restock-alerts-for-woocommerce' ),
+					'label'   => esc_html__( 'Subject', 'plugin-slug' ),
 					'type'    => 'text',
-					'default' => esc_html__( 'Send verification email', 'restock-alerts-for-woocommerce' ),
+					'default' => esc_html__( 'Send verification email', 'plugin-slug' ),
 				),
 				array(
 					'id'      => 'restaler_verification_email_heading',
-					'label'   => esc_html__( 'Heading', 'restock-alerts-for-woocommerce' ),
+					'label'   => esc_html__( 'Heading', 'plugin-slug' ),
 					'type'    => 'text',
-					'default' => esc_html__( 'Confirm your email', 'restock-alerts-for-woocommerce' ),
+					'default' => esc_html__( 'Confirm your email', 'plugin-slug' ),
 				),
 				array(
 					'id'             => 'restaler_verification_email_content',
-					'label'          => esc_html__( 'Email Content', 'restock-alerts-for-woocommerce' ),
+					'label'          => esc_html__( 'Email Content', 'plugin-slug' ),
 					'type'           => 'richtext_editor',
 					'options'        => array( 'html' ),
 					'default_editor' => 'html',
@@ -96,32 +96,32 @@ The {site_name} Team";
 				),
 				array(
 					'id'      => 'restaler_verification_email_footer_text',
-					'label'   => esc_html__( 'Footer Text', 'restock-alerts-for-woocommerce' ),
+					'label'   => esc_html__( 'Footer Text', 'plugin-slug' ),
 					'type'    => 'textarea',
 					'default' => esc_html__(
 						'You\'re receiving this email because you registered with {site_name}.
 
 If you didn\'t request this, please ignore it.',
-						'restock-alerts-for-woocommerce'
+						'plugin-slug'
 					),
 				),
 			),
-			esc_html__( 'Back In Stock Email', 'restock-alerts-for-woocommerce' ) => array(
+			esc_html__( 'Back In Stock Email', 'plugin-slug' ) => array(
 				array(
 					'id'      => 'restaler_back_in_stock_email_subject',
-					'label'   => esc_html__( 'Subject', 'restock-alerts-for-woocommerce' ),
+					'label'   => esc_html__( 'Subject', 'plugin-slug' ),
 					'type'    => 'text',
-					'default' => esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ),
+					'default' => esc_html__( 'Back in Stock!', 'plugin-slug' ),
 				),
 				array(
 					'id'      => 'restaler_back_in_stock_email_heading',
-					'label'   => esc_html__( 'Heading', 'restock-alerts-for-woocommerce' ),
+					'label'   => esc_html__( 'Heading', 'plugin-slug' ),
 					'type'    => 'text',
-					'default' => esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ),
+					'default' => esc_html__( 'Back in Stock!', 'plugin-slug' ),
 				),
 				array(
 					'id'             => 'restaler_back_in_stock_email_content',
-					'label'          => esc_html__( 'Email Content', 'restock-alerts-for-woocommerce' ),
+					'label'          => esc_html__( 'Email Content', 'plugin-slug' ),
 					'type'           => 'richtext_editor',
 					'options'        => array( 'html' ),
 					'default_editor' => 'html',
@@ -133,27 +133,27 @@ If you didn\'t request this, please ignore it.',
 				),
 				array(
 					'id'      => 'restaler_back_in_stock_email_footer_text',
-					'label'   => esc_html__( 'Footer Text', 'restock-alerts-for-woocommerce' ),
+					'label'   => esc_html__( 'Footer Text', 'plugin-slug' ),
 					'type'    => 'textarea',
 					'default' => '',
 				),
 			),
-			esc_html__( 'First Follow Up Email', 'restock-alerts-for-woocommerce' ) => array(
+			esc_html__( 'First Follow Up Email', 'plugin-slug' ) => array(
 				array(
 					'id'      => 'restaler_first_follow_up_email_subject',
-					'label'   => esc_html__( 'Subject', 'restock-alerts-for-woocommerce' ),
+					'label'   => esc_html__( 'Subject', 'plugin-slug' ),
 					'type'    => 'text',
-					'default' => esc_html__( 'Still on your mind?', 'restock-alerts-for-woocommerce' ),
+					'default' => esc_html__( 'Still on your mind?', 'plugin-slug' ),
 				),
 				array(
 					'id'      => 'restaler_first_follow_up_email_heading',
-					'label'   => esc_html__( 'Heading', 'restock-alerts-for-woocommerce' ),
+					'label'   => esc_html__( 'Heading', 'plugin-slug' ),
 					'type'    => 'text',
-					'default' => esc_html__( 'Still on your mind?', 'restock-alerts-for-woocommerce' ),
+					'default' => esc_html__( 'Still on your mind?', 'plugin-slug' ),
 				),
 				array(
 					'id'             => 'restaler_first_follow_up_email_content',
-					'label'          => esc_html__( 'Email Content', 'restock-alerts-for-woocommerce' ),
+					'label'          => esc_html__( 'Email Content', 'plugin-slug' ),
 					'type'           => 'richtext_editor',
 					'options'        => array( 'html' ),
 					'default_editor' => 'html',
@@ -165,27 +165,27 @@ If you didn\'t request this, please ignore it.',
 				),
 				array(
 					'id'      => 'restaler_first_follow_up_email_footer_text',
-					'label'   => esc_html__( 'Footer Text', 'restock-alerts-for-woocommerce' ),
+					'label'   => esc_html__( 'Footer Text', 'plugin-slug' ),
 					'type'    => 'textarea',
-					'default' => esc_html__( 'Thanks again for your interest!', 'restock-alerts-for-woocommerce' ),
+					'default' => esc_html__( 'Thanks again for your interest!', 'plugin-slug' ),
 				),
 			),
-			esc_html__( 'Second Follow Up Email', 'restock-alerts-for-woocommerce' ) => array(
+			esc_html__( 'Second Follow Up Email', 'plugin-slug' ) => array(
 				array(
 					'id'      => 'restaler_second_follow_up_email_subject',
-					'label'   => esc_html__( 'Subject', 'restock-alerts-for-woocommerce' ),
+					'label'   => esc_html__( 'Subject', 'plugin-slug' ),
 					'type'    => 'text',
-					'default' => esc_html__( 'Last Chance! {discount} Off Ends in {coupon_expires} Days', 'restock-alerts-for-woocommerce' ),
+					'default' => esc_html__( 'Last Chance! {discount} Off Ends in {coupon_expires} Days', 'plugin-slug' ),
 				),
 				array(
 					'id'      => 'restaler_second_follow_up_email_heading',
-					'label'   => esc_html__( 'Heading', 'restock-alerts-for-woocommerce' ),
+					'label'   => esc_html__( 'Heading', 'plugin-slug' ),
 					'type'    => 'text',
-					'default' => esc_html__( 'Your {discount} Discount Is About to Expire', 'restock-alerts-for-woocommerce' ),
+					'default' => esc_html__( 'Your {discount} Discount Is About to Expire', 'plugin-slug' ),
 				),
 				array(
 					'id'             => 'restaler_second_follow_up_email_content',
-					'label'          => esc_html__( 'Email Content', 'restock-alerts-for-woocommerce' ),
+					'label'          => esc_html__( 'Email Content', 'plugin-slug' ),
 					'type'           => 'richtext_editor',
 					'options'        => array( 'html' ),
 					'default_editor' => 'html',
@@ -197,19 +197,19 @@ If you didn\'t request this, please ignore it.',
 				),
 				array(
 					'id'      => 'restaler_second_follow_up_email_footer_text',
-					'label'   => esc_html__( 'Footer Text', 'restock-alerts-for-woocommerce' ),
+					'label'   => esc_html__( 'Footer Text', 'plugin-slug' ),
 					'type'    => 'textarea',
-					'default' => esc_html__( 'Thanks again for your interest!', 'restock-alerts-for-woocommerce' ),
+					'default' => esc_html__( 'Thanks again for your interest!', 'plugin-slug' ),
 				),
 			),
 		);
 
 		new Settings(
-			'restock-alerts-for-woocommerce',
+			'plugin-slug',
 			'stobokit-restaler-notify-list',              // Parent menu slug.
 			'stobokit-restaler-email-templates', // menu slug.
-			esc_html__( 'Email Templates', 'restock-alerts-for-woocommerce' ),
-			esc_html__( 'Email Templates', 'restock-alerts-for-woocommerce' ),
+			esc_html__( 'Email Templates', 'plugin-slug' ),
+			esc_html__( 'Email Templates', 'plugin-slug' ),
 			'manage_options',
 			'',
 			0,

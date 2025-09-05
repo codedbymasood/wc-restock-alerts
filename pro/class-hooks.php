@@ -23,7 +23,7 @@ class Hooks_Pro {
 	 */
 	public function __construct() {
 		$this->register_mail_tags();
-		add_filter( 'restock-alerts-for-woocommerce_is_pro_active', '__return_true' );
+		add_filter( 'plugin-slug_is_pro_active', '__return_true' );
 
 		add_action( 'restaler_alert_email_sent', array( $this, 'alert_email_sent' ), 10, 2 );
 	}
@@ -82,17 +82,17 @@ class Hooks_Pro {
 		$email      = $row['email'];
 		$product_id = $row['product_id'];
 
-		$first_follow_up_subject  = get_option( 'restaler_first_follow_up_email_subject', esc_html__( 'Just a Quick Reminder', 'restock-alerts-for-woocommerce' ) );
-		$second_follow_up_subject = get_option( 'restaler_second_follow_up_email_subject', esc_html__( 'Last Chance! 20% Off Ends in 3 Days', 'restock-alerts-for-woocommerce' ) );
+		$first_follow_up_subject  = get_option( 'restaler_first_follow_up_email_subject', esc_html__( 'Just a Quick Reminder', 'plugin-slug' ) );
+		$second_follow_up_subject = get_option( 'restaler_second_follow_up_email_subject', esc_html__( 'Last Chance! 20% Off Ends in 3 Days', 'plugin-slug' ) );
 
-		$first_follow_up_heading     = get_option( 'restaler_first_follow_up_email_heading', esc_html__( 'Confirm your email', 'restock-alerts-for-woocommerce' ) );
+		$first_follow_up_heading     = get_option( 'restaler_first_follow_up_email_heading', esc_html__( 'Confirm your email', 'plugin-slug' ) );
 		$first_follow_up_footer_text = get_option(
 			'restaler_first_follow_up_email_footer_text',
 			esc_html__(
 				'You\'re receiving this email because you registered with {site_name}.
 
 If you didn\'t request this, please ignore it.',
-				'restock-alerts-for-woocommerce'
+				'plugin-slug'
 			)
 		);
 
@@ -112,14 +112,14 @@ Warmly,
 The {site_name} Team"
 		);
 
-		$second_follow_up_heading     = get_option( 'restaler_second_follow_up_email_heading', esc_html__( 'Confirm your email', 'restock-alerts-for-woocommerce' ) );
+		$second_follow_up_heading     = get_option( 'restaler_second_follow_up_email_heading', esc_html__( 'Confirm your email', 'plugin-slug' ) );
 		$second_follow_up_footer_text = get_option(
 			'restaler_second_follow_up_email_footer_text',
 			esc_html__(
 				'You\'re receiving this email because you registered with {site_name}.
 
 If you didn\'t request this, please ignore it.',
-				'restock-alerts-for-woocommerce'
+				'plugin-slug'
 			)
 		);
 

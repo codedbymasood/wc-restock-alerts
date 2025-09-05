@@ -2,7 +2,7 @@
 /**
  * Onboarding welcome page.
  *
- * @package restock-alerts-for-woocommerce\admin\
+ * @package plugin-slug\admin\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -12,13 +12,13 @@ namespace PRODEXMA;
 defined( 'ABSPATH' ) || exit;
 ?>
 <div>
-	<h2><?php esc_html_e( 'Setup Complete!', 'restock-alerts-for-woocommerce' ); ?></h2>
-	<p><?php esc_html_e( 'You\'re all set to start using Product Expiry Manager.', 'restock-alerts-for-woocommerce' ); ?></p>
+	<h2><?php esc_html_e( 'Setup Complete!', 'plugin-slug' ); ?></h2>
+	<p><?php esc_html_e( 'You\'re all set to start using Product Expiry Manager.', 'plugin-slug' ); ?></p>
 	<div class="section">
 		<ul>
-			<li><a href="https://help.storeboostkit.com/restock-alerts-for-woocommerce/product-expiry-manager-getting-started/"><?php esc_html_e( 'Documentation', 'restock-alerts-for-woocommerce' ); ?></a><?php esc_html_e( ' - Learn how to configure and use the plugin.', 'restock-alerts-for-woocommerce' ); ?></li>
-			<li><a href="https://help.storeboostkit.com/"><?php esc_html_e( 'Help Desk', 'restock-alerts-for-woocommerce' ); ?></a><?php esc_html_e( ' - Browse FAQs and troubleshooting guides.', 'restock-alerts-for-woocommerce' ); ?></li>
-			<li><a href="https://storeboostkit.com/support-form/"><?php esc_html_e( 'Support', 'restock-alerts-for-woocommerce' ); ?></a><?php esc_html_e( ' - Contact our team if you need direct assistance.', 'restock-alerts-for-woocommerce' ); ?></li>
+			<li><a href="https://help.storeboostkit.com/plugin-slug/product-expiry-manager-getting-started/"><?php esc_html_e( 'Documentation', 'plugin-slug' ); ?></a><?php esc_html_e( ' - Learn how to configure and use the plugin.', 'plugin-slug' ); ?></li>
+			<li><a href="https://help.storeboostkit.com/"><?php esc_html_e( 'Help Desk', 'plugin-slug' ); ?></a><?php esc_html_e( ' - Browse FAQs and troubleshooting guides.', 'plugin-slug' ); ?></li>
+			<li><a href="https://storeboostkit.com/support-form/"><?php esc_html_e( 'Support', 'plugin-slug' ); ?></a><?php esc_html_e( ' - Contact our team if you need direct assistance.', 'plugin-slug' ); ?></li>
 		</ul>
 	</div>
 </div>

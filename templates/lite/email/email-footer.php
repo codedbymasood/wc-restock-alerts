@@ -2,7 +2,7 @@
 /**
  * Email footer template.
  *
- * @package restock-alerts-for-woocommerce\template\email\
+ * @package plugin-slug\template\email\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */

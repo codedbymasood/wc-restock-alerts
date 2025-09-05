@@ -2,7 +2,7 @@
 /**
  * Table holds all the notify details.
  *
- * @package restock-alerts-for-woocommerce\admin\
+ * @package plugin-slug\admin\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -25,9 +25,9 @@ class Notify_List_Table_Pro {
 					'cb'         => '<input type="checkbox" />',
 					'id'         => 'ID',
 					'email'      => 'Email',
-					'product_id' => esc_html__( 'Product ID', 'restock-alerts-for-woocommerce' ),
-					'status'     => esc_html__( 'Status', 'restock-alerts-for-woocommerce' ),
-					'created_at' => esc_html__( 'Created At', 'restock-alerts-for-woocommerce' ),
+					'product_id' => esc_html__( 'Product ID', 'plugin-slug' ),
+					'status'     => esc_html__( 'Status', 'plugin-slug' ),
+					'created_at' => esc_html__( 'Created At', 'plugin-slug' ),
 				);
 			},
 			99

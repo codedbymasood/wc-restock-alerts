@@ -248,7 +248,7 @@ $theme = wp_get_theme();
 			<div class="status-table wrap">
 				<?php
 				$args = array(
-					'title'      => esc_html__( 'Scheduled Actions', 'restock-alerts-for-woocommerce' ),
+					'title'      => esc_html__( 'Scheduled Actions', 'plugin-slug' ),
 					'singular'   => 'scheduler_log',
 					'plural'     => 'scheduler_logs',
 					'table_name' => 'stobokit_scheduler_logs',

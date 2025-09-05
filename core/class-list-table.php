@@ -17,7 +17,7 @@
  *   return $filter_data;
  * });
  *
- * @package restock-alerts-for-woocommerce\admin\
+ * @package plugin-slug\admin\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */

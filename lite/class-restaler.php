@@ -2,7 +2,7 @@
 /**
  * Plugin initialization class.
  *
- * @package restock-alerts-for-woocommerce\includes\
+ * @package plugin-slug\includes\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -64,7 +64,7 @@ final class RESTALER {
 
 		// Assign template override.
 		$this->templates = \StoboKit\Template_Factory::get_instance(
-			'restock-alerts-for-woocommerce',
+			'plugin-slug',
 			RESTALER_PLUGIN_FILE
 		);
 
@@ -133,7 +133,7 @@ final class RESTALER {
 		new \STOBOKIT\Onboarding(
 			array(
 				'path'          => RESTALER_PATH,
-				'plugin_slug'   => 'restock-alerts-for-woocommerce',
+				'plugin_slug'   => 'plugin-slug',
 				'steps'         => $steps,
 				'redirect_page' => 'stobokit-review-follow-up-settings',
 				'page_slug'     => 'stobokit-onboarding-restaler',

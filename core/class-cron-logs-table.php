@@ -2,7 +2,7 @@
 /**
  * Table holds all the notify details.
  *
- * @package restock-alerts-for-woocommerce\admin\
+ * @package plugin-slug\admin\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -35,13 +35,13 @@ class Cron_Table extends \STOBOKIT\List_Table {
 	public function custom_columns() {
 		return array(
 			'cb'         => '<input type="checkbox" />',
-			'id'         => esc_html__( 'ID', 'restock-alerts-for-woocommerce' ),
-			'hook_name'  => esc_html__( 'Hook', 'restock-alerts-for-woocommerce' ),
-			'status'     => esc_html__( 'Status', 'restock-alerts-for-woocommerce' ),
-			'args'       => esc_html__( 'Arguments', 'restock-alerts-for-woocommerce' ),
-			'created_at' => esc_html__( 'Created At', 'restock-alerts-for-woocommerce' ),
-			'schedule'   => esc_html__( 'Schedule', 'restock-alerts-for-woocommerce' ),
-			'next_run'   => esc_html__( 'Next Run', 'restock-alerts-for-woocommerce' ),
+			'id'         => esc_html__( 'ID', 'plugin-slug' ),
+			'hook_name'  => esc_html__( 'Hook', 'plugin-slug' ),
+			'status'     => esc_html__( 'Status', 'plugin-slug' ),
+			'args'       => esc_html__( 'Arguments', 'plugin-slug' ),
+			'created_at' => esc_html__( 'Created At', 'plugin-slug' ),
+			'schedule'   => esc_html__( 'Schedule', 'plugin-slug' ),
+			'next_run'   => esc_html__( 'Next Run', 'plugin-slug' ),
 		);
 	}
 

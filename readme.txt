@@ -1,4 +1,4 @@
-=== Restock Alerts for WooCommerce ===
+=== Plugin Name ===
 Tags: online store, ecommerce, shop, shopping cart, sell online
 Requires at least: 6.6
 Tested up to: 6.8

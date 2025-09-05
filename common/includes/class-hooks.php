@@ -2,7 +2,7 @@
 /**
  * Hooks class.
  *
- * @package restock-alerts-for-woocommerce\includes\
+ * @package plugin-slug\includes\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -35,7 +35,7 @@ class Hooks {
 			'verify_url_btn',
 			function ( $args ) {
 
-				$verify_btn_text = get_option( 'verify_btn_text', esc_html__( 'Verify Email', 'restock-alerts-for-woocommerce' ) );
+				$verify_btn_text = get_option( 'verify_btn_text', esc_html__( 'Verify Email', 'plugin-slug' ) );
 
 				$verify_url = isset( $args['verify_url'] ) ? $args['verify_url'] : '';
 
@@ -50,7 +50,7 @@ class Hooks {
 			'product_name',
 			function ( $args ) {
 
-				$verify_btn_text = get_option( 'verify_btn_text', esc_html__( 'Verify Email', 'restock-alerts-for-woocommerce' ) );
+				$verify_btn_text = get_option( 'verify_btn_text', esc_html__( 'Verify Email', 'plugin-slug' ) );
 
 				$product_id = isset( $args['product_id'] ) ? $args['product_id'] : '';
 
@@ -67,7 +67,7 @@ class Hooks {
 			'buy_now',
 			function ( $args ) {
 
-				$buy_now_btn_text = get_option( 'buy_now_btn_text', esc_html__( 'Buy Now', 'restock-alerts-for-woocommerce' ) );
+				$buy_now_btn_text = get_option( 'buy_now_btn_text', esc_html__( 'Buy Now', 'plugin-slug' ) );
 
 				$product_id = isset( $args['product_id'] ) ? $args['product_id'] : '';
 

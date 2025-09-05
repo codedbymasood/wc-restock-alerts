@@ -2,11 +2,10 @@
 /**
  * Admin class.
  *
- * @package restock-alerts-for-woocommerce\admin\
+ * @package plugin-slug\admin\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
-
 
 namespace RESTALER;
 
@@ -49,8 +48,8 @@ class Admin {
 	}
 
 	public function add_product( $products = array() ) {
-		$products['restock-alerts-for-woocommerce']['name'] = esc_html__( 'Restock Alerts for WooCommerce', 'restock-alerts-for-woocommerce' );
-		$products['restock-alerts-for-woocommerce']['id']   = 74;
+		$products['plugin-slug']['name'] = esc_html__( 'Plugin Name', 'plugin-slug' );
+		$products['plugin-slug']['id']   = 74;
 
 		return $products;
 	}
@@ -79,8 +78,8 @@ class Admin {
 
 	public function admin_menu() {
 		add_menu_page(
-			esc_html__( 'Restock Alerts', 'restock-alerts-for-woocommerce' ),
-			esc_html__( 'Restock Alerts', 'restock-alerts-for-woocommerce' ),
+			esc_html__( 'Restock Alerts', 'plugin-slug' ),
+			esc_html__( 'Restock Alerts', 'plugin-slug' ),
 			'manage_options',
 			'stobokit-restaler-notify-list',
 			array( $this, 'render_notify_list_page' ),
@@ -93,7 +92,7 @@ class Admin {
 
 	public function render_notify_list_page() {
 		$args = array(
-			'title'      => esc_html__( 'Email Notifications', 'restock-alerts-for-woocommerce' ),
+			'title'      => esc_html__( 'Email Notifications', 'plugin-slug' ),
 			'singular'   => 'notification',
 			'plural'     => 'notifications',
 			'table_name' => 'restaler_restock_alerts',
@@ -160,8 +159,8 @@ class Admin {
 		$email      = $row['email'];
 		$product_id = $row['product_id'];
 
-		$subject     = get_option( 'restaler_back_in_stock_email_subject', esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ) );
-		$heading     = get_option( 'restaler_back_in_stock_email_heading', esc_html__( 'Back in Stock!', 'restock-alerts-for-woocommerce' ) );
+		$subject     = get_option( 'restaler_back_in_stock_email_subject', esc_html__( 'Back in Stock!', 'plugin-slug' ) );
+		$heading     = get_option( 'restaler_back_in_stock_email_heading', esc_html__( 'Back in Stock!', 'plugin-slug' ) );
 		$footer_text = get_option( 'restaler_back_in_stock_email_footer_text', '' );
 
 		$content = get_option(
@@ -192,9 +191,9 @@ The {site_name} Team"
 		$result = restaler()->emailer->send_now( $email, $subject, $html, $args = array( 'product_id' => $product_id ) );
 
 		if ( ! $result ) {
-			esc_html_e( 'Mail failed to sent.', 'restock-alerts-for-woocommerce' );
+			esc_html_e( 'Mail failed to sent.', 'plugin-slug' );
 		} else {
-			esc_html_e( 'Mail sent successfully.', 'restock-alerts-for-woocommerce' );
+			esc_html_e( 'Mail sent successfully.', 'plugin-slug' );
 		}
 	}
 

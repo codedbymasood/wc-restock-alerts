@@ -2,7 +2,7 @@
 /**
  * Admin class.
  *
- * @package restock-alerts-for-woocommerce\admin\
+ * @package plugin-slug\admin\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -13,10 +13,10 @@ defined( 'ABSPATH' ) || exit;
 
 $args = array(
 	'file'      => RESTALER_PLUGIN_FILE,
-	'slug'      => 'restock-alerts-for-woocommerce',
+	'slug'      => 'plugin-slug',
 	'version'   => RESTALER_VERSION,
-	'license'   => get_option( 'restock-alerts-for-woocommerce_license_key', '' ),
-	'item_name' => 'Restock Alerts for WooCommerce',
+	'license'   => get_option( 'plugin-slug_license_key', '' ),
+	'item_name' => 'Plugin Name',
 	'item_id'   => 74,
 );
 

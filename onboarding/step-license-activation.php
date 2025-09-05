@@ -2,7 +2,7 @@
 /**
  * Onboarding license activation page.
  *
- * @package restock-alerts-for-woocommerce\admin\
+ * @package plugin-slug\admin\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -18,8 +18,8 @@ $product_id = isset( $product_lists[ $plugin_slug ] ) && isset( $product_lists[ 
 
 <div class="license-activation">
 	<div class="header">
-		<h2><?php esc_html_e( 'Activate Your License', 'restock-alerts-for-woocommerce' ); ?></h2>
-		<p><?php esc_html_e( 'Enter your license key to unlock automatic updates and premium support.', 'restock-alerts-for-woocommerce' ); ?></p>
+		<h2><?php esc_html_e( 'Activate Your License', 'plugin-slug' ); ?></h2>
+		<p><?php esc_html_e( 'Enter your license key to unlock automatic updates and premium support.', 'plugin-slug' ); ?></p>
 		<?php wp_nonce_field( 'stobokit_license', 'stobokit_license_nonce' ); ?>
 	</div>
 	<table>
@@ -34,6 +34,6 @@ $product_id = isset( $product_lists[ $plugin_slug ] ) && isset( $product_lists[ 
 		</tbody>
 	</table>
 	<div class="footer">
-		<p><?php esc_html_e( 'Don\'t know your license key?', 'restock-alerts-for-woocommerce' ); ?> <a href="https://storeboostkit.com/account/?tab=licenses"><?php esc_html_e( 'Copy it from your account', 'restock-alerts-for-woocommerce' ); ?></a></p>
+		<p><?php esc_html_e( 'Don\'t know your license key?', 'plugin-slug' ); ?> <a href="https://storeboostkit.com/account/?tab=licenses"><?php esc_html_e( 'Copy it from your account', 'plugin-slug' ); ?></a></p>
 	</div>
 </div>

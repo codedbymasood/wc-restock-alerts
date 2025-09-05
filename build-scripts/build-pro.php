@@ -1,6 +1,9 @@
 <?php
 $version = '1.0.0';
 
+$plugin_slug = 'restock-alerts-for-woocommerce';
+$plugin_name = 'Restock Alerts for WooCommerce';
+
 $source_dir = dirname( __DIR__ );
 $build_dir  = $source_dir . '/builds/pro';
 
@@ -11,8 +14,6 @@ if ( ! is_dir( $build_dir ) ) {
 // Copy files.
 copy_directory( $source_dir . '/core', $build_dir . '/core' );
 
-replace_text_domain_in_directory( $build_dir . '/core', 'restock-alerts-for-woocommerce' );
-
 copy_directory( $source_dir . '/pro', $build_dir . '/includes' );
 copy_directory( $source_dir . '/common', $build_dir . '/common' );
 copy_directory( $source_dir . '/onboarding', $build_dir . '/onboarding' );
@@ -21,23 +22,30 @@ copy_directory( $source_dir . '/languages', $build_dir . '/languages' );
 copy( $source_dir . '/CHANGELOG-PRO.md', $build_dir . '/CHANGELOG.md' );
 copy( $source_dir . '/readme-pro.txt', $build_dir . '/readme.txt' );
 
+$replacements = array(
+	'plugin-slug' => $plugin_slug,
+	'Plugin Name' => $plugin_name,
+);
+
+replace_multiple_strings_in_directory( $build_dir, $replacements );
+
 $plugin_header = '<?php
 /**
- * Plugin Name: Restock Alerts Pro for WooCommerce
+ * Plugin Name: ' . $plugin_name . '
  * Requires Plugins: woocommerce
- * Plugin URI: https://storeboostkit.com/product/restock-alerts-for-woocommerce/
+ * Plugin URI: https://storeboostkit.com/product/' . $plugin_slug . '/
  * Description: Add a Notify Me When Available button for out-of-stock items. Store owner gets the list, user gets email when back in stock.
  * Version: ' . $version . '
  * Author: Store Boost Kit
  * Author URI: https://storeboostkit.com/
- * Text Domain: restock-alerts-for-woocommerce
+ * Text Domain: ' . $plugin_slug . '
  * Domain Path: /languages/
  * Requires at least: 6.6
  * Requires PHP: 7.4
  * WC requires at least: 6.0
  * WC tested up to: 9.6
  *
- * @package restock-alerts-pro
+ * @package ' . $plugin_slug . '
  */
 
 defined( \'ABSPATH\' ) || exit;
@@ -94,14 +102,14 @@ function restaler_on_plugin_activation() {
 }
 ';
 
-file_put_contents( $build_dir . '/restock-alerts-for-woocommerce.php', $plugin_header );
+file_put_contents( $build_dir . '/plugin-slug.php', $plugin_header );
 
-$zip_file = $source_dir . '/builds/restock-alerts-for-woocommerce-pro-' . $version . '.zip';
+$zip_file = $source_dir . '/builds/plugin-slug-pro-' . $version . '.zip';
 create_zip_archive( $build_dir, $zip_file );
 
 echo 'Pro version built: ' . $zip_file . "\n";
 
-function replace_text_domain_in_directory( $directory, $new_text_domain ) {
+function replace_multiple_strings_in_directory( $directory, $replacements ) {
 	$iterator = new RecursiveIteratorIterator(
 		new RecursiveDirectoryIterator( $directory )
 	);
@@ -110,9 +118,9 @@ function replace_text_domain_in_directory( $directory, $new_text_domain ) {
 		if ( $file->getExtension() === 'php' ) {
 			$content = file_get_contents( $file->getPathname() );
 
-			// Replace the core text domain with new text domain.
-			$content = str_replace( "'text-domain'", "'$new_text_domain'", $content );
-			$content = str_replace( '"text-domain"', "'$new_text_domain'", $content );
+			foreach ( $replacements as $search => $replace ) {
+				$content = str_replace( $search, $replace, $content );
+			}
 
 			file_put_contents( $file->getPathname(), $content );
 		}

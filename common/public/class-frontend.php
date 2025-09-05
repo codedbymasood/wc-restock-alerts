@@ -2,7 +2,7 @@
 /**
  * Frontend class.
  *
- * @package restock-alerts-for-woocommerce\public\
+ * @package plugin-slug\public\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -126,7 +126,7 @@ class Frontend {
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
 		if ( ! wp_verify_nonce( $nonce, 'restaler-save-email' ) ) {
-			die( esc_html__( 'Nonce failed.', 'restock-alerts-for-woocommerce' ) );
+			die( esc_html__( 'Nonce failed.', 'plugin-slug' ) );
 		} else {
 			$email   = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash( $_POST['email'] ) ) : '';
 			$product = isset( $_POST['product'] ) ? sanitize_text_field( wp_unslash( $_POST['product'] ) ) : '';
@@ -175,23 +175,23 @@ class Frontend {
 					array( '%s', '%d', '%s' )
 				);
 			} else {
-				die( esc_html__( 'Email already added in this product.', 'restock-alerts-for-woocommerce' ) );
+				die( esc_html__( 'Email already added in this product.', 'plugin-slug' ) );
 			}
 		} else {
-			die( esc_html__( 'Please enter the email address.', 'restock-alerts-for-woocommerce' ) );
+			die( esc_html__( 'Please enter the email address.', 'plugin-slug' ) );
 		}
 	}
 
 	public function send_verification_email( $email = '', $product = 0, $verify_url = '' ) {
-		$subject     = get_option( 'restaler_verification_email_subject', esc_html__( 'Send verification email', 'restock-alerts-for-woocommerce' ) );
-		$heading     = get_option( 'restaler_verification_email_heading', esc_html__( 'Confirm your email', 'restock-alerts-for-woocommerce' ) );
+		$subject     = get_option( 'restaler_verification_email_subject', esc_html__( 'Send verification email', 'plugin-slug' ) );
+		$heading     = get_option( 'restaler_verification_email_heading', esc_html__( 'Confirm your email', 'plugin-slug' ) );
 		$footer_text = get_option(
 			'restaler_verification_email_footer_text',
 			esc_html__(
 				'You\'re receiving this email because you registered with {site_name}.
 
 If you didn\'t request this, please ignore it.',
-				'restock-alerts-for-woocommerce'
+				'plugin-slug'
 			)
 		);
 
@@ -225,9 +225,9 @@ The {site_name} Team"
 		$result = restaler()->emailer->send_now( $email, $subject, $html, $args = array( 'verify_url' => $verify_url ) );
 
 		if ( ! $result ) {
-			esc_html_e( 'Mail failed to sent.', 'restock-alerts-for-woocommerce' );
+			esc_html_e( 'Mail failed to sent.', 'plugin-slug' );
 		} else {
-			esc_html_e( 'Mail sent successfully.', 'restock-alerts-for-woocommerce' );
+			esc_html_e( 'Mail sent successfully.', 'plugin-slug' );
 		}
 	}
 
