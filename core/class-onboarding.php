@@ -86,8 +86,8 @@ class Onboarding {
 			'plugin_slug'   => '',
 			'textdomain'    => '',
 			'steps'         => array(),
-			'page_slug'     => 'store-boost-kit',
-			'option_prefix' => 'store-boost-kit',
+			'page_slug'     => 'text-domain',
+			'option_prefix' => 'text-domain',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -116,8 +116,8 @@ class Onboarding {
 	public function register_onboarding_page() {
 		add_submenu_page(
 			'stobokit',
-			esc_html__( 'Onboarding', 'store-boost-kit' ),
-			esc_html__( 'Onboarding', 'store-boost-kit' ),
+			esc_html__( 'Onboarding', 'text-domain' ),
+			esc_html__( 'Onboarding', 'text-domain' ),
 			'manage_options',
 			$this->page_slug,
 			array( $this, 'render_page' )
@@ -185,7 +185,7 @@ class Onboarding {
 			} else {
 				?>
 				<div class="notice notice-error">
-					<p><?php esc_html_e( 'Step file missing. Please contact support.', 'store-boost-kit' ); ?></p>
+					<p><?php esc_html_e( 'Step file missing. Please contact support.', 'text-domain' ); ?></p>
 				</div>
 				<?php
 			}
@@ -205,18 +205,18 @@ class Onboarding {
 			<?php if ( $current_pos > 0 ) : ?>
 				<?php $prev_step = $step_keys[ $current_pos - 1 ]; ?>
 				<a class="btn stobokit-button--prev" href="<?php echo esc_url( add_query_arg( 'step', $prev_step ) ); ?>">
-					&larr; <?php esc_html_e( 'Back', 'store-boost-kit' ); ?>
+					&larr; <?php esc_html_e( 'Back', 'text-domain' ); ?>
 				</a>
 			<?php endif; ?>
 
 			<?php if ( $current_pos < count( $step_keys ) - 1 ) : ?>
 				<?php $next_step = $step_keys[ $current_pos + 1 ]; ?>
 				<a class="btn stobokit-button--next" href="<?php echo esc_url( add_query_arg( 'step', $next_step ) ); ?>">
-					<?php esc_html_e( 'Continue', 'store-boost-kit' ); ?> &rarr;
+					<?php esc_html_e( 'Continue', 'text-domain' ); ?> &rarr;
 				</a>
 			<?php else : ?>
 				<a class="btn stobokit-button--finish" href="<?php echo esc_url( $this->redirect_page . '&onboarding=complete' ); ?>">
-					<?php esc_html_e( 'Finish', 'store-boost-kit' ); ?>
+					<?php esc_html_e( 'Finish', 'text-domain' ); ?>
 				</a>
 			<?php endif; ?>
 		</div>
@@ -254,7 +254,7 @@ class Onboarding {
 	public function render_page() {
 		?>
 		<div class="stobokit-wrapper stobokit-onboarding">
-			<h1><?php esc_html_e( 'Getting Things Ready', 'store-boost-kit' ); ?></h1>
+			<h1><?php esc_html_e( 'Getting Things Ready', 'text-domain' ); ?></h1>
 			<?php $this->render_progress_bar(); ?>
 			<?php $this->render_step_navigation(); ?>
 			<?php $this->render_step_content(); ?>

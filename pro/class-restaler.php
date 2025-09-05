@@ -113,10 +113,6 @@ final class RESTALER {
 	private function load_dependencies() {
 		$this->load_common();
 
-		require_once __DIR__ . '/updater/class-license.php';
-		require_once __DIR__ . '/updater/class-plugin-updater.php';
-		require_once __DIR__ . '/updater/update-handler.php';
-
 		require_once __DIR__ . '/class-hooks.php';
 		require_once __DIR__ . '/class-admin.php';
 		require_once __DIR__ . '/views/email-templates.php';

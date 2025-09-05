@@ -103,7 +103,7 @@ class List_Table extends \WP_List_Table {
 			$this->id . '_table_columns',
 			array(
 				'cb' => '<input type="checkbox" />',
-				'id' => esc_html__( 'ID', 'store-boost-kit' ),
+				'id' => esc_html__( 'ID', 'text-domain' ),
 			)
 		);
 	}
@@ -147,7 +147,7 @@ class List_Table extends \WP_List_Table {
 		return apply_filters(
 			$this->id . '_table_bulk_actions',
 			array(
-				'delete' => esc_html__( 'Delete permanently', 'store-boost-kit' ),
+				'delete' => esc_html__( 'Delete permanently', 'text-domain' ),
 			)
 		);
 	}

@@ -25,7 +25,7 @@ $strings_to_remove = array(
 	'class-license.php',
 );
 
-remove_lines_containing( 
+remove_lines_containing(
 	$build_dir . '/core/init-core.php',
 	$strings_to_remove
 );
@@ -43,11 +43,13 @@ copy( $source_dir . '/CHANGELOG-LITE.md', $build_dir . '/CHANGELOG.md' );
 copy( $source_dir . '/README.md', $build_dir . '/README.md' );
 copy( $source_dir . '/readme.txt', $build_dir . '/readme.txt' );
 
+replace_text_domain_in_directory( $build_dir, 'restock-alerts-for-woocommerce' );
+
 $plugin_header = '<?php
 /**
  * Plugin Name: Restock Alerts for WooCommerce
  * Requires Plugins: woocommerce
- * Plugin URI: https://wordpress.org/plugins/search/restock-alerts-for-woocommerce/
+ * Plugin URI: https://storeboostkit.com/product/restock-alerts-for-woocommerce/
  * Description: Add a Notify Me When Available button for out-of-stock items. Store owner gets the list, user gets email when back in stock.
  * Version: ' . $version . '
  * Author: Store Boost Kit
@@ -132,6 +134,24 @@ $zip_file = $source_dir . '/builds/restock-alerts-for-woocommerce-lite-' . $vers
 create_zip_archive( $build_dir, $zip_file );
 
 echo 'Lite version built: ' . $zip_file . "\n";
+
+function replace_text_domain_in_directory( $directory, $new_text_domain ) {
+	$iterator = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator( $directory )
+	);
+
+	foreach ( $iterator as $file ) {
+		if ( $file->getExtension() === 'php' ) {
+			$content = file_get_contents( $file->getPathname() );
+
+			// Replace the core text domain with new text domain.
+			$content = str_replace( "'text-domain'", "'$new_text_domain'", $content );
+			$content = str_replace( '"text-domain"', "'$new_text_domain'", $content );
+
+			file_put_contents( $file->getPathname(), $content );
+		}
+	}
+}
 
 function copy_directory( $src, $dst, $exclude_files = array() ) {
 	if ( ! is_dir( $src ) ) {

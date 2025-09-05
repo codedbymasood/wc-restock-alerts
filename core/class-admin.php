@@ -96,7 +96,7 @@ class Admin {
 		if ( ! isset( $_POST['nonce'] ) || empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_save_settings' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Sorry, not verified.', 'store-boost-kit' ),
+					'message' => esc_html__( 'Sorry, not verified.', 'text-domain' ),
 				)
 			);
 		}
@@ -113,7 +113,7 @@ class Admin {
 
 		wp_send_json_success(
 			array(
-				'message' => esc_html__( 'Settings saved!', 'store-boost-kit' ),
+				'message' => esc_html__( 'Settings saved!', 'text-domain' ),
 			)
 		);
 
@@ -145,8 +145,8 @@ class Admin {
 		$icon = $this->get_svg_icon();
 
 		add_menu_page(
-			esc_html__( 'Store Boost Kit', 'store-boost-kit' ),
-			esc_html__( 'Store Boost Kit', 'store-boost-kit' ),
+			esc_html__( 'Store Boost Kit', 'text-domain' ),
+			esc_html__( 'Store Boost Kit', 'text-domain' ),
 			'manage_options',
 			'stobokit-dashboard',
 			array( $this, 'dashboard' ),
@@ -156,8 +156,8 @@ class Admin {
 
 		add_submenu_page(
 			'stobokit-dashboard',
-			esc_html__( 'Dashboard', 'store-boost-kit' ),
-			esc_html__( 'Dashboard', 'store-boost-kit' ),
+			esc_html__( 'Dashboard', 'text-domain' ),
+			esc_html__( 'Dashboard', 'text-domain' ),
 			'manage_options',
 			'stobokit-dashboard',
 			array( $this, 'dashboard' )
@@ -165,8 +165,8 @@ class Admin {
 
 		add_submenu_page(
 			'stobokit-dashboard',
-			esc_html__( 'Status', 'store-boost-kit' ),
-			esc_html__( 'Status', 'store-boost-kit' ),
+			esc_html__( 'Status', 'text-domain' ),
+			esc_html__( 'Status', 'text-domain' ),
 			'manage_options',
 			'stobokit-status',
 			array( $this, 'status' )
@@ -174,8 +174,8 @@ class Admin {
 
 		add_submenu_page(
 			'stobokit-dashboard',
-			esc_html__( 'License', 'store-boost-kit' ),
-			esc_html__( 'License', 'store-boost-kit' ),
+			esc_html__( 'License', 'text-domain' ),
+			esc_html__( 'License', 'text-domain' ),
 			'manage_options',
 			'stobokit-license',
 			array( $this, 'license' )

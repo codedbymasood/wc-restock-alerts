@@ -10,6 +10,9 @@ if ( ! is_dir( $build_dir ) ) {
 
 // Copy files.
 copy_directory( $source_dir . '/core', $build_dir . '/core' );
+
+replace_text_domain_in_directory( $build_dir . '/core', 'restock-alerts-for-woocommerce' );
+
 copy_directory( $source_dir . '/pro', $build_dir . '/includes' );
 copy_directory( $source_dir . '/common', $build_dir . '/common' );
 copy_directory( $source_dir . '/onboarding', $build_dir . '/onboarding' );
@@ -22,7 +25,7 @@ $plugin_header = '<?php
 /**
  * Plugin Name: Restock Alerts Pro for WooCommerce
  * Requires Plugins: woocommerce
- * Plugin URI: https://wordpress.org/plugins/search/restock-alerts-for-woocommerce/
+ * Plugin URI: https://storeboostkit.com/product/restock-alerts-for-woocommerce/
  * Description: Add a Notify Me When Available button for out-of-stock items. Store owner gets the list, user gets email when back in stock.
  * Version: ' . $version . '
  * Author: Store Boost Kit
@@ -98,7 +101,25 @@ create_zip_archive( $build_dir, $zip_file );
 
 echo 'Pro version built: ' . $zip_file . "\n";
 
-function copy_directory( $src, $dst ) {
+function replace_text_domain_in_directory( $directory, $new_text_domain ) {
+	$iterator = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator( $directory )
+	);
+
+	foreach ( $iterator as $file ) {
+		if ( $file->getExtension() === 'php' ) {
+			$content = file_get_contents( $file->getPathname() );
+
+			// Replace the core text domain with new text domain.
+			$content = str_replace( "'text-domain'", "'$new_text_domain'", $content );
+			$content = str_replace( '"text-domain"', "'$new_text_domain'", $content );
+
+			file_put_contents( $file->getPathname(), $content );
+		}
+	}
+}
+
+function copy_directory( $src, $dst, $exclude_files = array() ) {
 	if ( ! is_dir( $src ) ) {
 		return;
 	}
@@ -108,12 +129,12 @@ function copy_directory( $src, $dst ) {
 
 	$files = scandir( $src );
 	foreach ( $files as $file ) {
-		if ( $file != '.' && $file != '..' ) {
+		if ( $file != '.' && $file != '..' && !in_array( $file, $exclude_files ) ) {
 			$src_file = $src . '/' . $file;
 			$dst_file = $dst . '/' . $file;
 
 			if ( is_dir( $src_file ) ) {
-				copy_directory( $src_file, $dst_file );
+				copy_directory( $src_file, $dst_file, $exclude_files );
 			} else {
 				copy( $src_file, $dst_file );
 			}
@@ -146,4 +167,32 @@ function create_zip_archive( $source, $destination ) {
 	}
 
 	$zip->close();
+}
+
+function remove_lines_containing( $file_path, $search_strings = array() ) {
+	if ( ! file_exists( $file_path ) ) {
+		return false;
+	}
+
+	// Keep newlines in the lines.
+	$lines = file( $file_path );
+	$filtered_lines = array();
+
+	foreach ( $lines as $line ) {
+		$should_remove = false;
+
+		foreach ( $search_strings as $search_string ) {
+			if ( strpos( $line, $search_string ) !== false ) {
+					$should_remove = true;
+					break;
+			}
+		}
+
+		if ( ! $should_remove ) {
+			$filtered_lines[] = $line;
+		}
+	}
+
+	// No need to add newlines since they're already preserved.
+	return file_put_contents( $file_path, implode( '', $filtered_lines ) );
 }
