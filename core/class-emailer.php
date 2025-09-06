@@ -34,8 +34,8 @@
  *   array('customer_name' => $customer_name)
  * );
  *
- * @package store-boost-kit\admin\
- * @author Store Boost Kit <hello@storeboostkit.com>
+ * @package plugin-slug\core\
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
@@ -143,16 +143,19 @@ class Emailer {
 	 * Schedule single email with individual cron job
 	 */
 	public function send_later( $to, $subject, $message, $days_later, $args = array() ) {
-		$send_time = current_time( 'timestamp' ) + ( $days_later * DAY_IN_SECONDS );
+		$base_time   = current_time( 'timestamp' );
+		// $send_time = $base_time + ( $days_later * DAY_IN_SECONDS );
+		$send_time = $base_time + ( 1 * MINUTE_IN_SECONDS );
 		$email_id  = 'email_' . uniqid();
 
 		// Create email data.
 		$email_data = array(
-			'to'       => $to,
-			'subject'  => $subject,
-			'message'  => $message,
-			'args'     => $args,
-			'email_id' => $email_id,
+			'to'          => $to,
+			'subject'     => $subject,
+			'message'     => $message,
+			'args'        => $args,
+			'email_id'    => $email_id,
+			'sequence_id' => $email_id,
 		);
 
 		// Store email data.
@@ -160,6 +163,8 @@ class Emailer {
 
 		// Schedule individual cron job for this specific email.
 		wp_schedule_single_event( $send_time, 'stobokit_emailer_send_single', array( $email_id ) );
+
+		$this->scheduler->insert_log( $email_id, 'stobokit_emailer_send_single', array( $email_id ), $send_time, null, 'scheduled' );
 
 		return $email_id;
 	}

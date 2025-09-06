@@ -2,7 +2,7 @@
 /**
  * Hooks class.
  *
- * @package plugin-slug\includes\
+ * @package plugin-slug\common\includes\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */

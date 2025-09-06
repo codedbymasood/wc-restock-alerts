@@ -2,8 +2,8 @@
 /**
  * Admin class.
  *
- * @package store-boost-kit\admin\
- * @author Store Boost Kit <hello@storeboostkit.com>
+ * @package plugin-slug\core\
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
@@ -96,12 +96,12 @@ class Admin {
 		if ( ! isset( $_POST['nonce'] ) || empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_save_settings' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Sorry, not verified.', 'text-domain' ),
+					'message' => esc_html__( 'Sorry, not verified.', 'plugin-slug' ),
 				)
 			);
 		}
 
-		$inputs = isset( $_POST['inputs'] ) && ! empty( $_POST['inputs'] ) ? wp_unslash( $_POST['inputs'] ) : array();
+		$inputs = isset( $_POST['inputs'] ) && ! empty( $_POST['inputs'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['inputs'] ) ) : array();
 
 		if ( ! empty( $inputs ) ) {
 			foreach ( $inputs as $index => $field ) {
@@ -113,7 +113,7 @@ class Admin {
 
 		wp_send_json_success(
 			array(
-				'message' => esc_html__( 'Settings saved!', 'text-domain' ),
+				'message' => esc_html__( 'Settings saved!', 'plugin-slug' ),
 			)
 		);
 
@@ -145,8 +145,8 @@ class Admin {
 		$icon = $this->get_svg_icon();
 
 		add_menu_page(
-			esc_html__( 'Store Boost Kit', 'text-domain' ),
-			esc_html__( 'Store Boost Kit', 'text-domain' ),
+			esc_html__( 'Store Boost Kit', 'plugin-slug' ),
+			esc_html__( 'Store Boost Kit', 'plugin-slug' ),
 			'manage_options',
 			'stobokit-dashboard',
 			array( $this, 'dashboard' ),
@@ -156,8 +156,8 @@ class Admin {
 
 		add_submenu_page(
 			'stobokit-dashboard',
-			esc_html__( 'Dashboard', 'text-domain' ),
-			esc_html__( 'Dashboard', 'text-domain' ),
+			esc_html__( 'Dashboard', 'plugin-slug' ),
+			esc_html__( 'Dashboard', 'plugin-slug' ),
 			'manage_options',
 			'stobokit-dashboard',
 			array( $this, 'dashboard' )
@@ -165,8 +165,8 @@ class Admin {
 
 		add_submenu_page(
 			'stobokit-dashboard',
-			esc_html__( 'Status', 'text-domain' ),
-			esc_html__( 'Status', 'text-domain' ),
+			esc_html__( 'Status', 'plugin-slug' ),
+			esc_html__( 'Status', 'plugin-slug' ),
 			'manage_options',
 			'stobokit-status',
 			array( $this, 'status' )
@@ -174,8 +174,8 @@ class Admin {
 
 		add_submenu_page(
 			'stobokit-dashboard',
-			esc_html__( 'License', 'text-domain' ),
-			esc_html__( 'License', 'text-domain' ),
+			esc_html__( 'License', 'plugin-slug' ),
+			esc_html__( 'License', 'plugin-slug' ),
 			'manage_options',
 			'stobokit-license',
 			array( $this, 'license' )

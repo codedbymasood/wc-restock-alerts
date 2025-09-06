@@ -3,7 +3,7 @@
  * Admin class.
  *
  * @package store-boost-kit\admin\
- * @author Store Boost Kit <hello@storeboostkit.com>
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 

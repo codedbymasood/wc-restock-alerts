@@ -3,7 +3,7 @@
  * Dashboard page html.
  *
  * @package store-boost-kit\admin\
- * @author Store Boost Kit <hello@storeboostkit.com>
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
@@ -53,24 +53,24 @@ if ( false === $announcement_cached_posts ) {
 
 <div class="stobokit-wrapper no-spacing">
 	<div class="wrap">
-		<h2><?php esc_html_e( 'Welcome to Store Boost Kit', 'text-domain' ); ?></h2>
+		<h2><?php esc_html_e( 'Welcome to Store Boost Kit', 'plugin-slug' ); ?></h2>
 
 		<div class="stobokit-widgets">
 
 			<!-- Quick Links Widget -->
 			<div class="stobokit-widget">
-					<h3><?php esc_html_e( 'Quick Links', 'text-domain' ); ?></h3>
+					<h3><?php esc_html_e( 'Quick Links', 'plugin-slug' ); ?></h3>
 					<ul>
-							<li><a href="https://storeboostkit.com/support-form" target="_blank"><?php esc_html_e( 'Support', 'text-domain' ); ?></a></li>
-							<li><a href="https://help.storeboostkit.com" target="_blank"><?php esc_html_e( 'Help Desk', 'text-domain' ); ?></a></li>
-							<li><a href="https://storeboostkit.com/frequently-asked-questions" target="_blank"><?php esc_html_e( 'FAQ', 'text-domain' ); ?></a></li>
-							<li><a href="https://storeboostkit.com/account" target="_blank"><?php esc_html_e( 'My Account', 'text-domain' ); ?></a></li>
+							<li><a href="https://storeboostkit.com/support-form" target="_blank"><?php esc_html_e( 'Support', 'plugin-slug' ); ?></a></li>
+							<li><a href="https://help.storeboostkit.com" target="_blank"><?php esc_html_e( 'Help Desk', 'plugin-slug' ); ?></a></li>
+							<li><a href="https://storeboostkit.com/frequently-asked-questions" target="_blank"><?php esc_html_e( 'FAQ', 'plugin-slug' ); ?></a></li>
+							<li><a href="https://storeboostkit.com/account" target="_blank"><?php esc_html_e( 'My Account', 'plugin-slug' ); ?></a></li>
 					</ul>
 			</div>
 
 			<!-- Licenses Widget -->
 			<div class="stobokit-widget">
-					<h3><?php esc_html_e( 'Licenses', 'text-domain' ); ?></h3>
+					<h3><?php esc_html_e( 'Licenses', 'plugin-slug' ); ?></h3>
 					<?php
 					$inactive_count = 0;
 					$expired_count  = 0;
@@ -92,11 +92,11 @@ if ( false === $announcement_cached_posts ) {
 						}
 						?>
 					</p>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-license' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Manage Licenses', 'text-domain' ); ?></a>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-license' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Manage Licenses', 'plugin-slug' ); ?></a>
 			</div>
 			<?php if ( ! empty( $recent_posts ) ) : ?>
 				<div class="stobokit-widget">
-					<h3><?php esc_html_e( 'News & Updates', 'text-domain' ); ?></h3>
+					<h3><?php esc_html_e( 'News & Updates', 'plugin-slug' ); ?></h3>
 					<ul>
 						<?php foreach ( $recent_posts as $item ) : ?>
 							<li>
@@ -111,7 +111,7 @@ if ( false === $announcement_cached_posts ) {
 
 			<?php if ( ! empty( $announcement_posts ) ) : ?>
 				<div class="stobokit-widget">
-					<h3><?php esc_html_e( 'Announcements & Promotions', 'text-domain' ); ?></h3>
+					<h3><?php esc_html_e( 'Announcements & Promotions', 'plugin-slug' ); ?></h3>
 					<ul>
 						<?php
 						foreach ( $announcement_posts as $announcement_item ) :

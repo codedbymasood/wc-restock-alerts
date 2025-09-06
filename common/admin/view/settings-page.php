@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 add_action(
 	'init',
-	function() {
+	function () {
 		$fields = array(
 			esc_html__( 'Mail Settings', 'plugin-slug' ) => array(
 				array(
@@ -32,7 +32,7 @@ add_action(
 					'id'      => 'restaler_enable_followup',
 					'label'   => esc_html__( 'Enable Followup', 'plugin-slug' ),
 					'type'    => 'checkbox',
-					'default' => '1',
+					'default' => '0',
 					'pro'     => true,
 				),
 				array(
@@ -47,6 +47,7 @@ add_action(
 					'label'   => esc_html__( 'Second Followup Days', 'plugin-slug' ),
 					'type'    => 'text',
 					'default' => 3,
+					'pro'     => true,
 				),
 				array(
 					'id'      => 'restaler_discount_type',
@@ -56,18 +57,21 @@ add_action(
 						'percent'    => esc_html__( 'Percentage discount', 'plugin-slug' ),
 						'fixed_cart' => esc_html__( 'Fixed cart discount', 'plugin-slug' ),
 					),
+					'pro'     => true,
 				),
 				array(
 					'id'      => 'restaler_discount_amount',
 					'label'   => esc_html__( 'Discount Amount', 'plugin-slug' ),
 					'type'    => 'text',
 					'default' => 20,
+					'pro'     => true,
 				),
 				array(
 					'id'      => 'restaler_coupon_expires_in',
 					'label'   => esc_html__( 'Coupon Expires In', 'plugin-slug' ),
 					'type'    => 'text',
 					'default' => 3,
+					'pro'     => true,
 				),
 			),
 		);

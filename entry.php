@@ -50,7 +50,7 @@ function restaler_development_init() {
 		add_filter(
 			'stobokit_frontend_template_file',
 			function ( $template_file = '' ) {
-				return str_replace( 'templates', 'templates/pro', $template_file );
+				return ( strpos( $template_file, 'pro' ) !== false ) ? $template_file : str_replace( 'templates', 'templates/pro', $template_file );
 			}
 		);
 
@@ -72,7 +72,7 @@ function restaler_development_init() {
 		add_filter(
 			'stobokit_frontend_template_file',
 			function ( $template_file = '' ) {
-				return str_replace( 'templates', 'templates/lite', $template_file );
+				return ( strpos( $template_file, 'lite' ) !== false ) ? $template_file : str_replace( 'templates', 'templates/lite', $template_file );
 			}
 		);
 

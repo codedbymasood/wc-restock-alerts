@@ -1,8 +1,8 @@
 <?php
 /**
- * Table holds all the notify details.
+ * Cron table.
  *
- * @package plugin-slug\admin\
+ * @package plugin-slug\core\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -12,9 +12,9 @@ namespace STOBOKIT;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Table holds all the notify details.
+ * Cron table.
  */
-class Cron_Table extends \STOBOKIT\List_Table {
+class Cron_Logs_Table extends \STOBOKIT\List_Table {
 	/**
 	 * Constructor.
 	 *

@@ -26,8 +26,8 @@ $product_id = isset( $product_lists[ $plugin_slug ] ) && isset( $product_lists[ 
 		<tbody>
 			<tr data-id="<?php echo esc_attr( $product_id ); ?>" data-slug="<?php echo esc_attr( $plugin_slug ); ?>">
 				<td>
-					<input name="<?php echo esc_attr( $plugin_slug ); ?>" type="password" placeholder="<?php esc_html_e( 'Enter license key', 'store-boost-kit' ); ?>">
-					<span class="activate-license btn"><?php esc_html_e( 'Activate', 'store-boost-kit' ); ?></span>
+					<input name="<?php echo esc_attr( $plugin_slug ); ?>" type="password" placeholder="<?php esc_html_e( 'Enter license key', 'plugin-slug' ); ?>">
+					<span class="activate-license btn"><?php esc_html_e( 'Activate', 'plugin-slug' ); ?></span>
 					<span class="license-notice" style="top: auto; bottom: 0; right: 0;"></span>
 				</td>
 			</tr>

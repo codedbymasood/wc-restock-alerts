@@ -2,7 +2,7 @@
 /**
  * Utils class.
  *
- * @package product-expiry-manager-for-woocommerce\admin\
+ * @package plugin-slug\core\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */

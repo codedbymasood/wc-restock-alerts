@@ -5,7 +5,8 @@
  * Simple template loading with override functionality for WooCommerce plugins
  * Users can override templates by placing them in theme/stobokit/plugin-slug/
  *
- * @package StoboKit Core
+ * @package plugin-slug\core\
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0.0
  */
 

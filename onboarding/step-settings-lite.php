@@ -27,18 +27,6 @@ defined( 'ABSPATH' ) || exit;
 				<label><?php esc_html_e( 'From Email Address', 'plugin-slug' ); ?></label>				
 				<input type="text" min="1" name="stobokit_email_from_email">
 			</div>
-			<div class="field-wrap">
-				<label><?php esc_html_e( 'Enable Follow Up', 'plugin-slug' ); ?></label>				
-				<input type="checkbox" value="1" name="restaler_enable_followup">
-			</div>
-			<div class="field-wrap">
-				<label><?php esc_html_e( 'Discount Amount', 'plugin-slug' ); ?></label>				
-				<input type="number" value="20" name="restaler_discount_amount">
-			</div>
-			<div class="field-wrap">
-				<label><?php esc_html_e( 'Coupon Expires In', 'plugin-slug' ); ?></label>				
-				<input type="number" min="1" name="restaler_coupon_expires_in">
-			</div>
 			<span class="save-general-settings btn btn-green"><?php esc_html_e( 'Save', 'plugin-slug' ); ?></span>
 
 			<span class="settings-notice below"></span>

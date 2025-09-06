@@ -2,7 +2,8 @@
 /**
  * Factory class for easy template management
  *
- * @package StoboKit Core
+ * @package plugin-slug\core\
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0.0
  */
 

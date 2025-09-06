@@ -1,6 +1,6 @@
 <?php
 /**
- * Onboarding welcome page.
+ * Onboarding finish page.
  *
  * @package plugin-slug\admin\
  * @author Store Boost Kit <storeboostkit@gmail.com>

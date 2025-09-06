@@ -13,10 +13,15 @@ if ( ! is_dir( $build_dir ) ) {
 
 // Copy files.
 copy_directory( $source_dir . '/core', $build_dir . '/core' );
-
 copy_directory( $source_dir . '/pro', $build_dir . '/includes' );
 copy_directory( $source_dir . '/common', $build_dir . '/common' );
-copy_directory( $source_dir . '/onboarding', $build_dir . '/onboarding' );
+copy_directory(
+	$source_dir . '/onboarding',
+	$build_dir . '/onboarding',
+	array(
+		'*lite.php',
+	)
+);
 copy_directory( $source_dir . '/templates/pro', $build_dir . '/templates' );
 copy_directory( $source_dir . '/languages', $build_dir . '/languages' );
 copy( $source_dir . '/CHANGELOG-PRO.md', $build_dir . '/CHANGELOG.md' );
@@ -56,6 +61,14 @@ if ( ! defined( \'RESTALER_PLUGIN_FILE\' ) ) {
 
 if ( ! defined( \'RESTALER_VERSION\' ) ) {
   define( \'RESTALER_VERSION\', \'' . $version . '\' );
+}
+
+if ( ! defined( \'RESTALER_PATH\' ) ) {
+	define( \'RESTALER_PATH\', plugin_dir_path( __FILE__ ) );
+}
+
+if ( ! defined( \'RESTALER_URL\' ) ) {
+	define( \'RESTALER_URL\', plugin_dir_url( __FILE__ ) );
 }
 
 require_once __DIR__ . \'/includes/class-restaler.php\';
@@ -104,7 +117,7 @@ function restaler_on_plugin_activation() {
 
 file_put_contents( $build_dir . '/plugin-slug.php', $plugin_header );
 
-$zip_file = $source_dir . '/builds/plugin-slug-pro-' . $version . '.zip';
+$zip_file = $source_dir . '/builds/' . $plugin_slug . '-pro-' . $version . '.zip';
 create_zip_archive( $build_dir, $zip_file );
 
 echo 'Pro version built: ' . $zip_file . "\n";

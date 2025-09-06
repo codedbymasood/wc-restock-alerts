@@ -34,12 +34,25 @@ remove_lines_containing(
 );
 
 copy_directory( $source_dir . '/lite', $build_dir . '/includes' );
-copy_directory( $source_dir . '/common', $build_dir . '/common' );
+copy_directory(
+	$source_dir . '/common',
+	$build_dir . '/common',
+	array(
+		'init-update.php',
+	)
+);
 copy_directory(
 	$source_dir . '/onboarding',
 	$build_dir . '/onboarding',
-	array( 'step-license-activation.php' )
+	array(
+		'step-license-activation.php',
+		'step-settings-lite.php',
+		'step-settings.php',
+	)
 );
+
+copy( $source_dir . '/onboarding/step-settings-lite.php', $build_dir . '/onboarding/step-settings.php' );
+
 copy_directory( $source_dir . '/templates/lite', $build_dir . '/templates' );
 copy_directory( $source_dir . '/languages', $build_dir . '/languages' );
 copy( $source_dir . '/CHANGELOG-LITE.md', $build_dir . '/CHANGELOG.md' );

@@ -68,6 +68,9 @@ final class RESTALER {
 			RESTALER_PLUGIN_FILE
 		);
 
+		// Emailer.
+		$this->emailer = \StoboKit\Emailer::get_instance();
+
 		// Logger.
 		$this->logger = new \StoboKit\Logger();
 
@@ -124,6 +127,12 @@ final class RESTALER {
 	 * Initialize the plugin.
 	 */
 	public function init_onboarding() {
+		static $onboarding_initialized = false;
+		if ( $onboarding_initialized ) {
+			return;
+		}
+		$onboarding_initialized = true;
+
 		$steps = array(
 			'welcome'  => 'Welcome',
 			'settings' => 'General Setup',

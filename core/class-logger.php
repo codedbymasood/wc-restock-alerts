@@ -11,8 +11,8 @@
  *
  * $this->addLog('INFO', $message, $context);
  *
- * @package store-boost-kit\admin\
- * @author Store Boost Kit <hello@storeboostkit.com>
+ * @package plugin-slug\core\
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 

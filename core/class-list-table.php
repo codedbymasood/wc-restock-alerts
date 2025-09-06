@@ -17,7 +17,7 @@
  *   return $filter_data;
  * });
  *
- * @package plugin-slug\admin\
+ * @package plugin-slug\core\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -103,7 +103,7 @@ class List_Table extends \WP_List_Table {
 			$this->id . '_table_columns',
 			array(
 				'cb' => '<input type="checkbox" />',
-				'id' => esc_html__( 'ID', 'text-domain' ),
+				'id' => esc_html__( 'ID', 'plugin-slug' ),
 			)
 		);
 	}
@@ -147,7 +147,7 @@ class List_Table extends \WP_List_Table {
 		return apply_filters(
 			$this->id . '_table_bulk_actions',
 			array(
-				'delete' => esc_html__( 'Delete permanently', 'text-domain' ),
+				'delete' => esc_html__( 'Delete permanently', 'plugin-slug' ),
 			)
 		);
 	}

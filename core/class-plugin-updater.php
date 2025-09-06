@@ -2,8 +2,8 @@
 /**
  * Plugin updater class.
  *
- * @package store-boost-kit\admin\
- * @author Store Boost Kit <hello@storeboostkit.com>
+ * @package plugin-slug\core\
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
@@ -294,13 +294,13 @@ class Plugin_Updater {
 
 		printf(
 			/* translators: the plugin name. */
-			esc_html__( 'There is a new version of %1$s available.', 'text-domain' ),
+			esc_html__( 'There is a new version of %1$s available.', 'plugin-slug' ),
 			esc_html( $plugin['Name'] )
 		);
 
 		if ( ! current_user_can( 'update_plugins' ) ) {
 			echo ' ';
-			esc_html_e( 'Contact your network administrator to install the update.', 'text-domain' );
+			esc_html_e( 'Contact your network administrator to install the update.', 'plugin-slug' );
 		} elseif ( empty( $update_cache->response[ $this->name ]->package ) && ! empty( $changelog_link ) ) {
 			echo ' ';
 
@@ -323,7 +323,7 @@ class Plugin_Updater {
 			printf(
 				'<a target="_blank" class="update-link" href="%s">%s</a>',
 				esc_url( wp_nonce_url( $update_link, 'upgrade-plugin_' . $file ) ),
-				esc_html__( 'Update now.', 'text-domain' )
+				esc_html__( 'Update now.', 'plugin-slug' )
 			);
 		}
 
@@ -555,7 +555,7 @@ class Plugin_Updater {
 		}
 
 		if ( ! current_user_can( 'update_plugins' ) ) {
-			wp_die( esc_html__( 'You do not have permission to install plugin updates', 'text-domain' ), esc_html__( 'Error', 'text-domain' ), array( 'response' => 403 ) );
+			wp_die( esc_html__( 'You do not have permission to install plugin updates', 'plugin-slug' ), esc_html__( 'Error', 'plugin-slug' ), array( 'response' => 403 ) );
 		}
 
 		$version_info = $this->get_repo_api_data();

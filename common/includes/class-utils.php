@@ -2,7 +2,7 @@
 /**
  * Utils class.
  *
- * @package plugin-slug\admin\
+ * @package plugin-slug\common\admin\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */

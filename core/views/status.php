@@ -3,7 +3,7 @@
  * Status page html.
  *
  * @package store-boost-kit\admin\
- * @author Store Boost Kit <hello@storeboostkit.com>
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
@@ -20,10 +20,10 @@ $theme = wp_get_theme();
 <div class="stobokit-wrapper">
 	<div class="nav-tab-wrapper horizontal">
 		<div class="nav-tabs">
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-status&tab=status' ) ); ?>" class="nav-tab<?php echo 'status' === $current_tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Status', 'text-domain' ); ?></a>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-status&tab=logs' ) ); ?>" class="nav-tab<?php echo 'logs' === $current_tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Logs', 'text-domain' ); ?></a>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-status&tab=>email-logs' ) ); ?>" class="nav-tab<?php echo 'email-logs' === $current_tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Email Logs', 'text-domain' ); ?></a>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-status&tab=scheduled-actions' ) ); ?>" class="nav-tab<?php echo 'scheduled-actions' === $current_tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Scheduled Actions', 'text-domain' ); ?></a
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-status&tab=status' ) ); ?>" class="nav-tab<?php echo 'status' === $current_tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Status', 'plugin-slug' ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-status&tab=logs' ) ); ?>" class="nav-tab<?php echo 'logs' === $current_tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Logs', 'plugin-slug' ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-status&tab=>email-logs' ) ); ?>" class="nav-tab<?php echo 'email-logs' === $current_tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Email Logs', 'plugin-slug' ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-status&tab=scheduled-actions' ) ); ?>" class="nav-tab<?php echo 'scheduled-actions' === $current_tab ? ' nav-tab-active' : ''; ?>"><?php esc_html_e( 'Scheduled Actions', 'plugin-slug' ); ?></a
 		</div>
 	</div>
 
@@ -32,7 +32,7 @@ $theme = wp_get_theme();
 		<div class="nav-tab-content <?php echo 'status' === $current_tab ? 'active' : ''; ?>">
 			<div class="stobokit-wrapper no-spacing">
 				<div class="status-table wrap">
-					<h1><?php esc_html_e( 'Plugin Status', 'text-domain' ); ?></h1>
+					<h1><?php esc_html_e( 'Plugin Status', 'plugin-slug' ); ?></h1>
 					<?php
 					$status_data = array(
 						'WordPress Environment' => array(
@@ -115,7 +115,7 @@ $theme = wp_get_theme();
 				<?php if ( empty( $logs ) ) : ?>
 					<div class="log-container">
 						<div class="log-entry">
-							<p><?php esc_html_e( 'No debug logs have been recorded yet.', 'text-domain' ); ?></p>
+							<p><?php esc_html_e( 'No debug logs have been recorded yet.', 'plugin-slug' ); ?></p>
 						</div>
 					</div>
 				<?php else : ?>
@@ -173,13 +173,13 @@ $theme = wp_get_theme();
 				<form method="post">
 					<?php wp_nonce_field( 'download_logs' ); ?>
 					<input type="hidden" name="action" value="download">
-					<button type="submit" class="button button-primary"><?php esc_html_e( 'Download Logs', 'text-domain' ); ?></button>
+					<button type="submit" class="button button-primary"><?php esc_html_e( 'Download Logs', 'plugin-slug' ); ?></button>
 				</form>
 
 				<form method="post">
 					<?php wp_nonce_field( 'clear_logs' ); ?>
 					<input type="hidden" name="action" value="clear_logs">
-					<button type="submit" class="button button-primary"><?php esc_html_e( 'Clear Logs', 'text-domain' ); ?></button>
+					<button type="submit" class="button button-primary"><?php esc_html_e( 'Clear Logs', 'plugin-slug' ); ?></button>
 				</form>
 			</div>
 		</div>
@@ -197,14 +197,14 @@ $theme = wp_get_theme();
 				}
 				?>
 				<div class="wrap">
-					<h1><?php esc_html_e( 'Email Logs', 'text-domain' ); ?></h1>
+					<h1><?php esc_html_e( 'Email Logs', 'plugin-slug' ); ?></h1>
 					<table class="wp-list-table widefat fixed striped table-view-list email-logs">
 						<thead>
 							<tr>
-								<th><?php esc_html_e( 'Email', 'text-domain' ); ?></th>
-								<th><?php esc_html_e( 'Subject', 'text-domain' ); ?></th>
-								<th><?php esc_html_e( 'Sent', 'text-domain' ); ?></th>
-								<th><?php esc_html_e( 'Sent At', 'text-domain' ); ?></th>
+								<th><?php esc_html_e( 'Email', 'plugin-slug' ); ?></th>
+								<th><?php esc_html_e( 'Subject', 'plugin-slug' ); ?></th>
+								<th><?php esc_html_e( 'Sent', 'plugin-slug' ); ?></th>
+								<th><?php esc_html_e( 'Sent At', 'plugin-slug' ); ?></th>
 							</tr>
 						</thead>
 
@@ -224,7 +224,7 @@ $theme = wp_get_theme();
 							} else {
 								?>
 								<tr>
-									<td colspan="4"><?php esc_html_e( 'No email logs found.', 'text-domain' ); ?></td>
+									<td colspan="4"><?php esc_html_e( 'No email logs found.', 'plugin-slug' ); ?></td>
 								</tr>
 								<?php
 							}
@@ -236,7 +236,7 @@ $theme = wp_get_theme();
 					<form method="post">
 						<?php wp_nonce_field( 'clear_email_logs' ); ?>
 						<input type="hidden" name="action" value="clear_email_logs">
-						<button type="submit" class="button button-primary"><?php esc_html_e( 'Clear Logs', 'text-domain' ); ?></button>
+						<button type="submit" class="button button-primary"><?php esc_html_e( 'Clear Logs', 'plugin-slug' ); ?></button>
 					</form>
 				</div>
 			</div>
@@ -255,7 +255,7 @@ $theme = wp_get_theme();
 					'id'         => 'scheduler_logs',
 				);
 
-				$notify_table = new \STOBOKIT\Cron_Table( $args );
+				$notify_table = new \STOBOKIT\Cron_Logs_Table( $args );
 				$notify_table->display_table();
 				?>
 			</div>

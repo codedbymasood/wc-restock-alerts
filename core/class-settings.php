@@ -2,8 +2,8 @@
 /**
  * Settings class.
  *
- * @package store-boost-kit\admin\
- * @author Store Boost Kit <hello@storeboostkit.com>
+ * @package plugin-slug\core\
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
@@ -258,7 +258,7 @@ class Settings {
 			if ( isset( $_GET['settings-updated'] ) ) :
 				?>
 				<div class="stobokit-notice">
-					<p><?php esc_html_e( 'Settings saved successfully!', 'text-domain' ); ?></p>
+					<p><?php esc_html_e( 'Settings saved successfully!', 'plugin-slug' ); ?></p>
 				</div>
 				<?php
 			endif;
@@ -287,7 +287,7 @@ class Settings {
 								<?php endforeach; ?>
 							</div>
 						<?php endforeach; ?>
-						<?php submit_button( esc_html__( 'Save Settings', 'text-domain' ) ); ?>
+						<?php submit_button( esc_html__( 'Save Settings', 'plugin-slug' ) ); ?>
 					</form>
 				</div>
 			</div>
@@ -393,8 +393,8 @@ class Settings {
 
 					if ( in_array( array( 'html', 'css' ), array( $field['options'] ), true ) ) {
 						echo '<ul class="tab-nav">';
-							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'text-domain' ) . '</li>';
-							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'text-domain' ) . '</li>';
+							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'plugin-slug' ) . '</li>';
+							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'plugin-slug' ) . '</li>';
 						echo '</ul>';
 					}
 

@@ -123,8 +123,8 @@ final class RESTALER {
 	 * Hook into WordPress.
 	 */
 	private function init_hooks() {
-		add_action( 'plugins_loaded', array( $this, 'init_onboarding' ) );
 		add_action( 'plugins_loaded', array( $this, 'ensure_table_exists' ) );
+		add_action( 'init', array( $this, 'init_onboarding' ) );
 
 		// Create a table when activate the plugin.
 		register_activation_hook( RESTALER_PLUGIN_FILE, array( $this, 'maybe_create_table' ) );
@@ -135,6 +135,12 @@ final class RESTALER {
 	 * Initialize the plugin.
 	 */
 	public function init_onboarding() {
+		static $onboarding_initialized = false;
+		if ( $onboarding_initialized ) {
+			return;
+		}
+		$onboarding_initialized = true;
+
 		$steps = array(
 			'welcome'            => 'Welcome',
 			'license-activation' => 'Activate License',
