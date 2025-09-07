@@ -86,7 +86,7 @@ class Cron_Logs_Table extends \STOBOKIT\List_Table {
 	 * @return string
 	 */
 	public function column_created_at( $item ) {
-		return $item['created_at'];
+		return $item['updated_at'] ? $item['updated_at'] : $item['created_at'];
 	}
 
 	/**

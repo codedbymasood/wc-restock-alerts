@@ -65,7 +65,7 @@ final class RESTALER {
 
 		// Assign template override.
 		$this->templates = \StoboKit\Template_Factory::get_instance(
-			'plugin-slug',
+			'restock-alerts-for-woocommerce',
 			RESTALER_PLUGIN_FILE
 		);
 

@@ -115,7 +115,7 @@ function restaler_on_plugin_activation() {
 }
 ';
 
-file_put_contents( $build_dir . '/plugin-slug.php', $plugin_header );
+file_put_contents( $build_dir . '/' . $plugin_slug . '.php', $plugin_header );
 
 $zip_file = $source_dir . '/builds/' . $plugin_slug . '-pro-' . $version . '.zip';
 create_zip_archive( $build_dir, $zip_file );
@@ -140,7 +140,7 @@ function replace_multiple_strings_in_directory( $directory, $replacements ) {
 	}
 }
 
-function copy_directory( $src, $dst, $exclude_files = array() ) {
+function copy_directory( $src, $dst, $exclude = array() ) {
 	if ( ! is_dir( $src ) ) {
 		return;
 	}
@@ -150,12 +150,33 @@ function copy_directory( $src, $dst, $exclude_files = array() ) {
 
 	$files = scandir( $src );
 	foreach ( $files as $file ) {
-		if ( $file != '.' && $file != '..' && !in_array( $file, $exclude_files ) ) {
+		if ( '.' !== $file && '..' !== $file ) {
+			// Check if file should be excluded.
+			$should_exclude = false;
+			foreach ( $exclude as $exclude_item ) {
+				// Check exact match first.
+				if ( $exclude_item === $file ) {
+					$should_exclude = true;
+					break;
+				}
+				// Check pattern match.
+				if ( strpos( $exclude_item, '*' ) !== false || strpos( $exclude_item, '?' ) !== false ) {
+					if ( fnmatch( $exclude_item, $file ) ) {
+						$should_exclude = true;
+						break;
+					}
+				}
+			}
+
+			if ( $should_exclude ) {
+				continue;
+			}
+
 			$src_file = $src . '/' . $file;
 			$dst_file = $dst . '/' . $file;
 
 			if ( is_dir( $src_file ) ) {
-				copy_directory( $src_file, $dst_file, $exclude_files );
+				copy_directory( $src_file, $dst_file, $exclude );
 			} else {
 				copy( $src_file, $dst_file );
 			}

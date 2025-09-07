@@ -24,7 +24,6 @@ class Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		// Create a table when activate the plugin.
-		register_activation_hook( RESTALER_PLUGIN_FILE, array( $this, 'create_scheduler_logs_table' ) );
 		add_action( 'plugins_loaded', array( $this, 'maybe_create_table' ) );
 
 		add_action( 'wp_ajax_stobokit_save_settings', array( $this, 'save_settings' ) );

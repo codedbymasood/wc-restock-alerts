@@ -181,6 +181,25 @@ class Schedule_Logger {
 	 * @param string $uid Unique identifier.
 	 * @return object|null Log entry object or null if not found.
 	 */
+	public function get_log_by_hook( $hook = '' ) {
+		if ( empty( $uid ) ) {
+			return null;
+		}
+
+		return $this->wpdb->get_row(
+			$this->wpdb->prepare(
+				"SELECT * FROM {$this->table_name} WHERE hook_name = %s",
+				sanitize_text_field( $hook )
+			)
+		);
+	}
+
+	/**
+	 * Get a log entry by UID
+	 *
+	 * @param string $uid Unique identifier.
+	 * @return object|null Log entry object or null if not found.
+	 */
 	public function get_log_by_uid( $uid = '' ) {
 		if ( empty( $uid ) ) {
 			return null;
