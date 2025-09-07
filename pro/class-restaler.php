@@ -75,6 +75,9 @@ final class RESTALER {
 		// Logger.
 		$this->logger = new \StoboKit\Logger();
 
+		// Cron scheduler.
+		$this->cron = new \StoboKit\Cron_Scheduler();
+
 		// Schedule logger.
 		$this->scheduler = new \StoboKit\Schedule_Logger();
 
@@ -153,7 +156,6 @@ final class RESTALER {
 				'path'          => RESTALER_PATH,
 				'plugin_slug'   => 'plugin-slug',
 				'steps'         => $steps,
-				'redirect_page' => 'stobokit-review-follow-up-settings',
 				'page_slug'     => 'stobokit-onboarding-restaler',
 				'option_prefix' => 'restaler_onboarding',
 			)
