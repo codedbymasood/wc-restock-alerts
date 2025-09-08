@@ -4,18 +4,29 @@
  *
  * Usage Examples:
  * ==============
- * add_filter( 'your_table_where_clause_filter', function( $filter_data ) {
- *   // Add custom condition: only show active items
- *   $filter_data['where_clause'] .= ' AND status = %s';
- *   $filter_data['where_params'][] = 'active';
-
- *   // Add date filter
- *   if ( isset( $_GET['date_from'] ) && ! empty( $_GET['date_from'] ) ) {
- *     $filter_data['where_clause'] .= ' AND created_date >= %s';
- *     $filter_data['where_params'][] = sanitize_text_field( $_GET['date_from'] );
- *   } *
- *   return $filter_data;
- * });
+ *  // Basic filter for active status
+ *  add_filter( 'your_table_id_where_clause_filter', 'filter_active_items_only', 10, 1 );
+ *  function filter_active_items_only( $filter_data ) {
+ *    // Only show active items
+ *    $filter_data['conditions'][] = array(
+ *      'clause' => '`status` = %s',
+ *      'params' => array( 'active' )
+ *    );
+ *
+ *    return $filter_data;
+ *  }
+ *
+ *  // Date range filter
+ *  add_filter( 'your_table_id_where_clause_filter', 'filter_by_date_range', 10, 1 );
+ *  function filter_by_date_range( $filter_data ) {
+ *    // Filter items created in the last 30 days
+ *    $filter_data['conditions'][] = array(
+ *      'clause' => '`created_date` >= %s',
+ *      'params' => array( date( 'Y-m-d', strtotime( '-30 days' ) ) )
+ *    );
+ *
+ *    return $filter_data;
+ *  }
  *
  * @package plugin-slug\core\
  * @author Store Boost Kit <storeboostkit@gmail.com>
@@ -208,69 +219,80 @@ class List_Table extends \WP_List_Table {
 
 		$table = $wpdb->prefix . $this->table_name;
 
-		$per_page     = 10;
+		$per_page     = 20;
 		$current_page = $this->get_pagenum();
+		$offset       = ( $current_page - 1 ) * $per_page;
 
-		$offset = ( $current_page - 1 ) * $per_page;
+		$search = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		$search = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
+		// Validate orderby against allowed columns.
+		$allowed_orderby   = $this->get_sortable_columns();
+		$allowed_orderby   = array_keys( $allowed_orderby );
+		$allowed_orderby[] = 'id';
 
-		$orderby = ! empty( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'id';
-		$order   = ! empty( $_GET['order'] ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'DESC';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$orderby = ! empty( $_GET['orderby'] ) && in_array( $_GET['orderby'], $allowed_orderby, true )
+			? sanitize_key( $_GET['orderby'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			: 'id';
 
-		$where_clause = '1=1';
-		$where_params = array();
+		// Validate order.
+		$order = ! empty( $_GET['order'] ) && strtoupper( sanitize_text_field( wp_unslash( $_GET['order'] ) ) ) === 'ASC' ? 'ASC' : 'DESC'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-    // phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+		$where_conditions = array( '1=1' );
+		$where_params     = array();
+
+		// Search with validated columns.
 		if ( ! empty( $search ) ) {
 			$searchable_columns = $this->get_searchable_columns();
+
 			if ( ! empty( $searchable_columns ) ) {
 				$search_conditions = array();
 
 				foreach ( $searchable_columns as $column ) {
-					$search_conditions[] = "$column LIKE %s";
-					$where_params[]      = '%' . $wpdb->esc_like( $search ) . '%';
+					$search_conditions[] = "`$column` LIKE %s";
+					$where_params[] = '%' . $wpdb->esc_like( $search ) . '%';
 				}
 
 				if ( ! empty( $search_conditions ) ) {
-					$where_clause .= ' AND (' . implode( ' OR ', $search_conditions ) . ')';
+					$where_conditions[] = '(' . implode( ' OR ', $search_conditions ) . ')';
 				}
 			}
 		}
 
-		// Apply custom filter for additional WHERE conditions.
+		// Apply custom filter with validation.
 		$filter_data = apply_filters(
 			$this->id . '_where_clause_filter',
 			array(
-				'where_clause' => $where_clause,
-				'where_params' => $where_params,
-				'table'        => $table,
-				'search'       => $search,
+				'conditions' => array(),
+				'params'     => array(),
+				'table'      => $table,
+				'search'     => $search,
 			)
 		);
 
-		$where_clause = $filter_data['where_clause'];
-		$where_params = $filter_data['where_params'];
-
-		// Count query.
-		if ( ! empty( $where_params ) ) {
-			$count_query = "SELECT COUNT(*) FROM $table WHERE $where_clause";
-			$this->total_items = $wpdb->get_var( $wpdb->prepare( $count_query, $where_params ) );
-		} else {
-			$this->total_items = $wpdb->get_var( "SELECT COUNT(*) FROM $table WHERE $where_clause" );
+		// Process filter conditions securely.
+		if ( ! empty( $filter_data['conditions'] ) && is_array( $filter_data['conditions'] ) ) {
+			foreach ( $filter_data['conditions'] as $condition ) {
+				if ( $this->is_valid_filter_condition( $condition ) ) {
+					$where_conditions[] = $condition['clause'];
+					if ( ! empty( $condition['params'] ) ) {
+						$where_params = array_merge( $where_params, $condition['params'] );
+					}
+				}
+			}
 		}
 
-		// Get the actual data.
-		$query        = "SELECT * FROM $table WHERE $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d";
-		$query_params = array_merge( $where_params, array( $per_page, $offset ) );
+		$where_clause = implode( ' AND ', $where_conditions );
+
+		$count_query = "SELECT COUNT(*) FROM `$table` WHERE $where_clause";
+		$this->total_items = empty( $where_params )
+			? $wpdb->get_var( "SELECT COUNT(*) FROM `$table` WHERE $where_clause" )
+			: $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM `$table` WHERE $where_clause", $where_params ) );
 
 		$this->items = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM $table WHERE $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d",
-				$query_params
+				"SELECT * FROM `$table` WHERE $where_clause ORDER BY `$orderby` $order LIMIT %d OFFSET %d",
+				array_merge( $where_params, array( $per_page, $offset ) )
 			),
 			ARRAY_A
 		);
@@ -284,6 +306,13 @@ class List_Table extends \WP_List_Table {
 				'total_pages' => ceil( $this->total_items / $per_page ),
 			)
 		);
+	}
+
+	private function is_valid_filter_condition( $condition ) {
+		return is_array( $condition )
+			&& isset( $condition['clause'] )
+			&& is_string( $condition['clause'] )
+			&& ! empty( $condition['clause'] );
 	}
 
 	/**

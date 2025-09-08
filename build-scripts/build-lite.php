@@ -18,7 +18,7 @@ copy_directory(
 	array(
 		'class-license.php',
 		'class-plugin-updater.php',
-		'update-handler.php',
+		'class-update-handler.php',
 	)
 );
 
