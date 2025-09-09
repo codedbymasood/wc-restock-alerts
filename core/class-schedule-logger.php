@@ -160,7 +160,10 @@ class Schedule_Logger {
 	 */
 	public function increment_attempts( $id = 0 ) {
 		$current_attempts = $this->wpdb->get_var(
-			$this->wpdb->prepare( "SELECT attempts FROM {$this->table_name} WHERE id = %d", $id )
+			$this->wpdb->prepare(
+				"SELECT attempts FROM {$this->table_name} WHERE id = %d",
+				$id
+			)
 		);
 
 		if ( null !== $current_attempts ) {
