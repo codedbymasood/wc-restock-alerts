@@ -169,18 +169,19 @@ $theme = wp_get_theme();
 						<?php endforeach; ?>
 					</div>
 				<?php endif; ?>
+				<div class="form-group">
+					<form method="post">
+						<?php wp_nonce_field( 'download_logs' ); ?>
+						<input type="hidden" name="action" value="download">
+						<button type="submit" class="button button-primary"><?php esc_html_e( 'Download Logs', 'plugin-slug' ); ?></button>
+					</form>
 
-				<form method="post">
-					<?php wp_nonce_field( 'download_logs' ); ?>
-					<input type="hidden" name="action" value="download">
-					<button type="submit" class="button button-primary"><?php esc_html_e( 'Download Logs', 'plugin-slug' ); ?></button>
-				</form>
-
-				<form method="post">
-					<?php wp_nonce_field( 'clear_logs' ); ?>
-					<input type="hidden" name="action" value="clear_logs">
-					<button type="submit" class="button button-primary"><?php esc_html_e( 'Clear Logs', 'plugin-slug' ); ?></button>
-				</form>
+					<form method="post">
+						<?php wp_nonce_field( 'clear_logs' ); ?>
+						<input type="hidden" name="action" value="clear_logs">
+						<button type="submit" class="button button-primary"><?php esc_html_e( 'Clear Logs', 'plugin-slug' ); ?></button>
+					</form>
+				</div>
 			</div>
 		</div>
 

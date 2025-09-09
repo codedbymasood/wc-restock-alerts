@@ -107,6 +107,8 @@ class List_Table extends \WP_List_Table {
 				'ajax'     => false,
 			)
 		);
+
+		$this->handle_csv_export();
 	}
 
 	public function get_columns() {
@@ -159,6 +161,7 @@ class List_Table extends \WP_List_Table {
 			$this->id . '_table_bulk_actions',
 			array(
 				'delete' => esc_html__( 'Delete permanently', 'plugin-slug' ),
+				'export_csv' => esc_html__( 'Export to CSV', 'plugin-slug' ),
 			)
 		);
 	}
@@ -208,6 +211,10 @@ class List_Table extends \WP_List_Table {
 				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$wpdb->query( $wpdb->prepare( $query, ...$ids ) );
 			}
+		}
+
+		if ( 'export_csv' === $current_action ) {
+			$this->export_selected_to_csv();
 		}
 
 		do_action( $this->id . '_process_bulk_action', $current_action, $table, $this );
@@ -308,11 +315,204 @@ class List_Table extends \WP_List_Table {
 		);
 	}
 
+	protected function extra_tablenav( $which ) {
+		if ( 'top' === $which ) {
+			$export_url = add_query_arg(
+				array(
+					'export_csv' => $this->id,
+					'_wpnonce'   => wp_create_nonce( $this->id . '_export_csv_nonce' ),
+				),
+				admin_url( 'admin.php?page=stobokit-restaler-notify-list' )
+			);
+
+			echo '<div class="alignleft actions">';
+			echo '<a href="' . esc_url( $export_url ) . '" class="button button-secondary">' . esc_html__( 'Export All to CSV', 'plugin-slug' ) . '</a>';
+			echo '</div>';
+		}
+
+		do_action( $this->id . '_extra_tablenav', $which );
+	}
+
 	private function is_valid_filter_condition( $condition ) {
 		return is_array( $condition )
 			&& isset( $condition['clause'] )
 			&& is_string( $condition['clause'] )
 			&& ! empty( $condition['clause'] );
+	}
+
+	/**
+	 * Handle CSV export via URL parameter
+	 */
+	public function handle_csv_export() {
+		if ( ! isset( $_GET['export_csv'] ) || $_GET['export_csv'] !== $this->id ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to export data.', 'plugin-slug' ) );
+		}
+
+		// Verify nonce.
+		if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), $this->id . '_export_csv_nonce' ) ) {
+			wp_die( esc_html__( 'Invalid nonce.', 'plugin-slug' ) );
+		}
+
+		$this->generate_csv_export();
+	}
+
+	/**
+	 * Export all items to CSV
+	 */
+	public function export_all_to_csv() {
+		$this->generate_csv_export();
+	}
+
+	public function get_csv_columns() {
+		$default_columns = $this->get_columns();
+		unset( $default_columns['cb'] );
+
+		return apply_filters(
+			$this->id . '_csv_export_columns',
+			$default_columns
+		);
+	}
+
+	/**
+	 * Export selected items to CSV
+	 */
+	private function export_selected_to_csv() {
+		if ( empty( $_REQUEST[ $this->singular ] ) ) {
+			return;
+		}
+
+		$ids = array_map( 'absint', $_REQUEST[ $this->singular ] );
+		$this->generate_csv_export( $ids );
+	}
+
+	/**
+	 * Export all items to CSV
+	 */
+	public function generate_csv_export( $ids = array() ) {
+		// Clean any previous output.
+		if ( ob_get_level() ) {
+			ob_end_clean();
+		}
+
+		global $wpdb;
+
+		$table = $wpdb->prefix . $this->table_name;
+
+		// Get columns for CSV export.
+		$columns = $this->get_csv_columns();
+
+		$where_conditions = array( '1=1' );
+		$where_params     = array();
+
+		if ( ! empty( $ids ) ) {
+			$placeholders       = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+			$where_conditions[] = "id IN ($placeholders)";
+			$where_params       = array_merge( $where_params, $ids );
+		}
+
+		$search = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
+
+		// Search functionality.
+		if ( ! empty( $search ) ) {
+			$searchable_columns = $this->get_searchable_columns();
+
+			if ( ! empty( $searchable_columns ) ) {
+				$search_conditions = array();
+
+				foreach ( $searchable_columns as $column ) {
+					$search_conditions[] = "`$column` LIKE %s";
+					$where_params[] = '%' . $wpdb->esc_like( $search ) . '%';
+				}
+
+				if ( ! empty( $search_conditions ) ) {
+					$where_conditions[] = '(' . implode( ' OR ', $search_conditions ) . ')';
+				}
+			}
+		}
+
+		// Apply custom filters
+		$filter_data = apply_filters(
+			$this->id . '_where_clause_filter',
+			array(
+				'conditions' => array(),
+				'params'     => array(),
+				'table'      => $table,
+				'search'     => $search,
+			)
+		);
+
+		if ( ! empty( $filter_data['conditions'] ) && is_array( $filter_data['conditions'] ) ) {
+			foreach ( $filter_data['conditions'] as $condition ) {
+				if ( $this->is_valid_filter_condition( $condition ) ) {
+					$where_conditions[] = $condition['clause'];
+					if ( ! empty( $condition['params'] ) ) {
+						$where_params = array_merge( $where_params, $condition['params'] );
+					}
+				}
+			}
+		}
+
+		$where_clause = implode( ' AND ', $where_conditions );
+
+		// Get data
+		$query = "SELECT * FROM `$table` WHERE $where_clause ORDER BY id DESC";
+
+		$results = empty( $where_params )
+				? $wpdb->get_results( "SELECT * FROM `$table` WHERE $where_clause ORDER BY id DESC", ARRAY_A )
+				: $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `$table` WHERE $where_clause ORDER BY id DESC", $where_params ), ARRAY_A );
+
+		// Generate filename.
+		$filename = sanitize_file_name( $this->plural . '_' . gmdate( 'Y-m-d_H-i-s' ) . '.csv' );
+
+		// Set headers for CSV download.
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=' . $filename );
+		header( 'Pragma: no-cache' );
+		header( 'Expires: 0' );
+
+		// Create file pointer.
+		$output = fopen( 'php://output', 'w' );
+
+		// Add BOM for UTF-8.
+		fprintf( $output, chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF ) );
+
+		// Add column headers.
+		$csv_headers = array();
+		foreach ( $columns as $key => $label ) {
+			$csv_headers[] = wp_strip_all_tags( $label );
+		}
+		fputcsv( $output, $csv_headers );
+
+		// Add data rows.
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $row ) {
+				$csv_row = array();
+				foreach ( array_keys( $columns ) as $column_key ) {
+					if ( method_exists( $this, 'column_' . $column_key ) ) {
+						// Use the column method to format data.
+						$value = call_user_func( array( $this, 'column_' . $column_key ), $row );
+
+						$csv_row[] = wp_strip_all_tags( $value );
+					} elseif ( isset( $row[ $column_key ] ) ) {
+						$csv_row[] = $row[ $column_key ];
+					} else {
+						// Use column_default method.
+						$value = $this->column_default( $row, $column_key );
+
+						$csv_row[] = wp_strip_all_tags( $value );
+					}
+				}
+
+				fputcsv( $output, $csv_row );
+			}
+		}
+
+		fclose( $output );
+		exit;
 	}
 
 	/**

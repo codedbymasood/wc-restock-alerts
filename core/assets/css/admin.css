@@ -540,6 +540,11 @@ body[class*="stobokit"] div.error {
   border-radius: 24px;
 }
 
+[class*="stobokit-wrapper"] .form-group {
+  display: flex;
+  gap: 12px;
+}
+
 [class*="stobokit-wrapper"] .btn,
 [class*="stobokit-wrapper"] .button, 
 [class*="stobokit-wrapper"] .btn:hover,
