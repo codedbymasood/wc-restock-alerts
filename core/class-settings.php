@@ -188,16 +188,16 @@ class Settings {
 
 				if ( 'richtext_editor' === $type ) {
 					if ( isset( $_POST[ $id ] ) && is_array( $_POST[ $id ] ) ) {
-							$raw_value = sanitize_text_field( wp_unslash( $_POST[ $id ] ) );
+						$raw_value = array_map( 'sanitize_textarea_field', wp_unslash( $_POST[ $id ] ) );
 
-							$value = array(
-								'html' => isset( $raw_value['html'] )
-									? wp_kses_post( $raw_value['html'] )
-									: '',
-								'css'  => isset( $raw_value['css'] )
-									? sanitize_textarea_field( $raw_value['css'] )
-									: '',
-							);
+						$value = array(
+							'html' => isset( $raw_value['html'] )
+								? wp_kses_post( $raw_value['html'] )
+								: '',
+							'css'  => isset( $raw_value['css'] )
+								? sanitize_textarea_field( $raw_value['css'] )
+								: '',
+						);
 					} else {
 						$value = isset( $field['default'] )
 							? $field['default']

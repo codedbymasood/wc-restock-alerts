@@ -44,19 +44,16 @@ class Frontend {
 
 		add_filter( 'wp_mail_from', array( $this, 'mail_from' ) );
 		add_filter( 'wp_mail_from_name', array( $this, 'mail_from_name' ) );
-
-		/**
-		 * TODO:
-		 * Variable product not supported yet, needs to send a variation product ID on email.
-		 */
-		add_filter( 'woocommerce_get_stock_html', array( $this, 'append_notify_form' ), 10, 2 );
 		add_action( 'init', array( $this, 'handle_email_verification_link' ) );
 
 		add_action( 'wp_ajax_restaler_save_notify_email', array( $this, 'save_notify_email' ) );
 		add_action( 'wp_ajax_nopriv_restaler_save_notify_email', array( $this, 'save_notify_email' ) );
+
+		add_action( 'woocommerce_simple_add_to_cart', array( $this, 'append_notify_form' ), 35 );
 	}
 
 	public function enqueue_scripts() {
+		wp_enqueue_style( 'restaler-main', RESTALER_URL . '/common/public/assets/css/main.css', array(), '1.0', 'all' );
 		wp_enqueue_script( 'restaler-main', RESTALER_URL . '/common/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
 	}
 
@@ -128,10 +125,12 @@ class Frontend {
 		if ( ! wp_verify_nonce( $nonce, 'restaler-save-email' ) ) {
 			die( esc_html__( 'Nonce failed.', 'plugin-slug' ) );
 		} else {
-			$email   = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash( $_POST['email'] ) ) : '';
-			$product = isset( $_POST['product'] ) ? sanitize_text_field( wp_unslash( $_POST['product'] ) ) : '';
+			$email        = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash( $_POST['email'] ) ) : '';
+			$product      = isset( $_POST['product'] ) ? sanitize_text_field( wp_unslash( $_POST['product'] ) ) : 0;
+			$product_type = isset( $_POST['product_type'] ) ? sanitize_text_field( wp_unslash( $_POST['product_type'] ) ) : '';
+			$variation_id = isset( $_POST['variation_id'] ) ? sanitize_text_field( wp_unslash( $_POST['variation_id'] ) ) : 0;
 
-			$this->save_data_in_table( $email, $product );
+			$this->save_data_in_table( $email, $product, $variation_id );
 
 			$verify_url = Utils::generate_verification_url( $email );
 
@@ -147,7 +146,7 @@ class Frontend {
 		die();
 	}
 
-	public function save_data_in_table( $email = '', $product = 0 ) {
+	public function save_data_in_table( $email = '', $product = 0, $variation_id = 0 ) {
 		global $wpdb;
 
 		if ( ! empty( $email ) && ! empty( $product ) ) {
@@ -168,11 +167,12 @@ class Frontend {
 				$wpdb->insert(
 					$table,
 					array(
-						'email'      => $email,
-						'product_id' => $product,
-						'status'     => 'pending',
+						'email'        => $email,
+						'product_id'   => $product,
+						'variation_id' => $variation_id,
+						'status'       => 'pending',
 					),
-					array( '%s', '%d', '%s' )
+					array( '%s', '%d', '%d', '%s' )
 				);
 			} else {
 				die( esc_html__( 'Email already added in this product.', 'plugin-slug' ) );
@@ -222,7 +222,7 @@ The {site_name} Team"
 			)
 		);
 
-		$result = restaler()->emailer->send_now( $email, $subject, $html, $args = array( 'verify_url' => $verify_url ) );
+		$result = restaler()->emailer->send_now( $email, $subject, $html, array( 'verify_url' => $verify_url ) );
 
 		if ( ! $result ) {
 			esc_html_e( 'Mail failed to sent.', 'plugin-slug' );
@@ -234,20 +234,24 @@ The {site_name} Team"
 	/**
 	 * Append notify form fields after the `out of stock` notice.
 	 *
-	 * @param string $html Notice html.
-	 * @param object $product Product.
-	 * @return string
+	 * @return void
 	 */
-	public function append_notify_form( $html, $product ) {
-		return restaler()->templates->get_template(
-			'notify-form.php',
-			array(
-				'html'    => $html,
-				'product' => $product,
-			)
-		);
-	}
+	public function append_notify_form() {
+		global $product;
 
+		$product_type = $product->get_type();
+
+		if ( 'simple' === $product_type && $product->is_purchasable() && ! $product->is_in_stock() ) {
+			restaler()->templates->include_template(
+				'notify-form.php',
+				array(
+					'product' => $product,
+					'type'    => $product_type,
+					'hide'    => false,
+				)
+			);
+		}
+	}
 }
 
 \RESTALER\Frontend::instance();

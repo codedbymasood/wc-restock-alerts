@@ -103,6 +103,8 @@ class Admin {
 		$product      = wc_get_product( $post_id );
 		$stock_status = $product->get_stock_status();
 
+		$product_type = $product->get_type();
+
 		if ( 'outofstock' === $stock_status ) {
 			return;
 		}
@@ -114,13 +116,21 @@ class Admin {
 
 		if ( $results ) {
 			foreach ( $results as $row ) {
-				$this->send_notify_emails( $row );
-				$this->change_status_to_email_sent( $row );
 
 				/**
-				 * After restock alert email sent.
+				 * Before restock alert email sent.
 				 */
-				do_action( 'restaler_alert_email_sent', $row, $product );
+				do_action( 'restaler_alert_before_email_sent', $row, $product, $this );
+
+				if ( 'simple' === $product_type ) {
+					$this->send_notify_emails( $row );
+					$this->change_status_to_email_sent( $row );
+
+					/**
+					 * After restock alert email sent.
+					 */
+					do_action( 'restaler_alert_email_sent', $row, $product );
+				}
 			}
 		}
 
@@ -148,8 +158,9 @@ class Admin {
 	}
 
 	public function send_notify_emails( $row = array() ) {
-		$email      = $row['email'];
-		$product_id = $row['product_id'];
+		$email        = $row['email'];
+		$product_id   = $row['product_id'];
+		$variation_id = $row['variation_id'];
 
 		$subject     = get_option( 'restaler_back_in_stock_email_subject', esc_html__( 'Back in Stock!', 'plugin-slug' ) );
 		$heading     = get_option( 'restaler_back_in_stock_email_heading', esc_html__( 'Back in Stock!', 'plugin-slug' ) );
@@ -159,7 +170,7 @@ class Admin {
 			'restaler_back_in_stock_email_content',
 			"The product you were waiting for is now back in stock
 
-{product_name}
+{product_name}{variation}
 {buy_now}
 
 Don't wait too long, popular products sell out quickly!
@@ -168,19 +179,27 @@ Warmly,
 The {site_name} Team"
 		);
 
-		$content = restaler()->templates->get_template(
+		$html = restaler()->templates->get_template(
 			'email/email-content.php',
 			array(
 				'heading'     => $heading,
-				'content'     => $content,
+				'content'     => $content['html'],
 				'footer_text' => $footer_text,
 			)
 		);
 
 		// CssInliner loads from WooCommerce.
-		$html = CssInliner::fromHtml( $content )->inlineCss()->render();
+		$html = CssInliner::fromHtml( $html )->inlineCss()->render();
 
-		$result = restaler()->emailer->send_now( $email, $subject, $html, $args = array( 'product_id' => $product_id ) );
+		$result = restaler()->emailer->send_now(
+			$email,
+			$subject,
+			$html,
+			array(
+				'product_id'   => $product_id,
+				'variation_id' => $variation_id,
+			)
+		);
 
 		if ( ! $result ) {
 			esc_html_e( 'Mail failed to sent.', 'plugin-slug' );

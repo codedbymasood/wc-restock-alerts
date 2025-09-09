@@ -193,6 +193,7 @@ final class RESTALER {
 			id INT(11) NOT NULL AUTO_INCREMENT,
 			email VARCHAR(255) NOT NULL,
 			product_id INT(11) NOT NULL,
+			variation_id INT(11) NOT NULL,
 			status VARCHAR(50) DEFAULT 'pending',
 			token VARCHAR(255) NOT NULL,
 			token_expires TIMESTAMP NOT NULL,			

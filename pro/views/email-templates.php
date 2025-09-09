@@ -31,7 +31,7 @@ The {site_name} Team";
 
 		$back_in_stock_email_html = "The product you were waiting for is now back in stock
 
-{product_name}
+{product_name}{variation}
 {buy_now}
 
 Don't wait too long, popular products sell out quickly!
@@ -129,7 +129,7 @@ If you didn\'t request this, please ignore it.',
 						'html' => $back_in_stock_email_html,
 						'css'  => '',
 					),
-					'description'    => 'You can use {verify_url}, {verify_url_btn}, {customer_name}, {site_name}, {site_url} in the editor.',
+					'description'    => 'You can use {product_name}, {variation}, {buy_now}, {customer_name}, {site_name}, {site_url} in the editor.',
 				),
 				array(
 					'id'      => 'restaler_back_in_stock_email_footer_text',
@@ -161,7 +161,7 @@ If you didn\'t request this, please ignore it.',
 						'html' => $first_follow_up_email_html,
 						'css'  => '',
 					),
-					'description'    => 'You can use {verify_url}, {verify_url_btn}, {customer_name}, {site_name}, {site_url} in the editor.',
+					'description'    => 'You can use {product_name}, {buy_now}, {customer_name}, {site_name}, {site_url} in the editor.',
 				),
 				array(
 					'id'      => 'restaler_first_follow_up_email_footer_text',

@@ -37,7 +37,7 @@ class Notify_List_Table extends \STOBOKIT\List_Table {
 			'cb'         => '<input type="checkbox" />',
 			'id'         => esc_html__( 'ID', 'plugin-slug' ),
 			'email'      => esc_html__( 'Email', 'plugin-slug' ),
-			'product_id' => esc_html__( 'Product ID', 'plugin-slug' ),
+			'product_id' => esc_html__( 'Product', 'plugin-slug' ),
 			'status'     => esc_html__( 'Status', 'plugin-slug' ),
 			'created_at' => esc_html__( 'Created At', 'plugin-slug' ),
 		);
@@ -84,7 +84,10 @@ class Notify_List_Table extends \STOBOKIT\List_Table {
 	 * @return string
 	 */
 	public function column_product_id( $item ) {
-		return $item['product_id'] ? $item['product_id'] : '';
+		$product_id = $item['product_id'] ? $item['product_id'] : 0;
+
+		$product = wc_get_product( $product_id );
+		return ( null !== $product ) ? $product->get_name() : '';
 	}
 
 	/**

@@ -26,6 +26,7 @@ class Hooks_Pro {
 		add_filter( 'plugin-slug_is_pro_active', '__return_true' );
 
 		add_action( 'restaler_alert_email_sent', array( $this, 'alert_email_sent' ), 10, 2 );
+		add_action( 'woocommerce_variable_add_to_cart', array( $this, 'append_notify_form' ), 35 );
 	}
 
 	public function register_mail_tags() {
@@ -33,6 +34,24 @@ class Hooks_Pro {
 			'coupon_code',
 			function ( $args ) {
 				return isset( $args['coupon'] ) ? $args['coupon'] : '';
+			}
+		);
+
+		restaler()->emailer->register_shortcode(
+			'variation',
+			function ( $args ) {
+				$variation_id = isset( $args['variation_id'] ) ? $args['variation_id'] : 0;
+				$variation    = wc_get_product( $variation_id );
+
+				if ( $variation && $variation->is_type( 'variation' ) ) {
+					// Get variation attributes.
+					$attributes = $variation->get_variation_attributes();
+
+					// Get formatted variation name.
+					$variation_name = wc_get_formatted_variation( $attributes, true );
+				}
+
+				return ( $variation_name ) ? sprintf( ' Variation: %s', esc_html( $variation_name ) ) : '';
 			}
 		);
 
@@ -146,7 +165,7 @@ The {site_name} Team"
 			'email/email-content.php',
 			array(
 				'heading'     => $first_follow_up_heading,
-				'content'     => $first_follow_up_content,
+				'content'     => $first_follow_up_content['html'],
 				'footer_text' => $first_follow_up_footer_text,
 			)
 		);
@@ -158,7 +177,7 @@ The {site_name} Team"
 			'email/email-content.php',
 			array(
 				'heading'     => $second_follow_up_heading,
-				'content'     => $second_follow_up_content,
+				'content'     => $second_follow_up_content['html'],
 				'footer_text' => $second_follow_up_footer_text,
 			)
 		);
@@ -188,6 +207,35 @@ The {site_name} Team"
 				'coupon_expires_in' => $coupon_expires_in,
 			)
 		);
+	}
+
+	/**
+	 * Append notify form fields after the `out of stock` notice.
+	 *
+	 * @return void
+	 */
+	public function append_notify_form() {
+		global $product;
+
+		$product_type = $product->get_type();
+
+		$hide = true;
+
+		if ( 'variable' === $product_type ) {
+			$available_variations = $product->get_available_variations();
+			if ( empty( $available_variations ) && false !== $available_variations ) {
+				$hide = false;
+			}
+
+			restaler()->templates->include_template(
+				'notify-form.php',
+				array(
+					'product' => $product,
+					'type'    => $product_type,
+					'hide'    => $hide,
+				)
+			);
+		}
 	}
 }
 
