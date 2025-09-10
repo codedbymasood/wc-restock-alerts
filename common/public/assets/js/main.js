@@ -36,25 +36,5 @@
         }, 2000 );
       }
     });
-  });  
-
-  const $form = $('form.variations_form');
-  const $notifyContainer = $('#restaler-notify-form');
-  
-  // When a variation is found/selected
-  $form.on('found_variation', function(event, variation) {
-      event.preventDefault();
-
-      $notifyContainer.data( 'variation-id', variation.variation_id );      
-      
-      if (variation.is_in_stock === false) {
-        $notifyContainer.removeClass('hidden');
-      } else {
-        $notifyContainer.addClass('hidden');
-      }
-  });
-
-  $form.on('reset_data', function() {
-    $notifyContainer.addClass('hidden');
   });
 })(jQuery);

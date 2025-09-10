@@ -17,24 +17,35 @@ defined( 'ABSPATH' ) || exit;
 class Notify_List_Table_Pro {
 
 	public function __construct() {
-
-		add_filter(
-			'restock_alerts_table_columns',
-			function () {
-				return array(
-					'cb'           => '<input type="checkbox" />',
-					'id'           => 'ID',
-					'email'        => 'Email',
-					'product_id'   => esc_html__( 'Product ID', 'plugin-slug' ),
-					'variation_id' => esc_html__( 'Variation', 'plugin-slug' ),
-					'status'       => esc_html__( 'Status', 'plugin-slug' ),
-					'created_at'   => esc_html__( 'Created At', 'plugin-slug' ),
-				);
-			},
-			99
-		);
-
+		add_filter( 'restock_alerts_table_columns', array( $this, 'default_columns' ), 99 );
+		add_filter( 'restock_alerts_table_allow_export_csv', '__return_true' );
 		add_filter( 'restock_alerts_table_column_default_variation_id', array( $this, 'column_variation_id' ), 99, 3 );
+		add_filter( 'restock_alerts_table_csv_export_columns', array( $this, 'csv_export_columns' ), 99 );
+		add_filter( 'restock_alerts_table_bulk_actions', array( $this, 'bulk_actions' ), 99 );
+	}
+
+	public function bulk_actions( $actions = array() ) {
+		$actions['export_csv'] = esc_html__( 'Export to CSV', 'plugin-slug' );
+		return $actions;
+	}
+
+	public function default_columns( $columns = array() ) {
+		return array(
+			'cb'           => '<input type="checkbox" />',
+			'id'           => 'ID',
+			'email'        => 'Email',
+			'product_id'   => esc_html__( 'Product', 'plugin-slug' ),
+			'variation_id' => esc_html__( 'Variation', 'plugin-slug' ),
+			'status'       => esc_html__( 'Status', 'plugin-slug' ),
+			'created_at'   => esc_html__( 'Created At', 'plugin-slug' ),
+		);
+	}
+
+	public function csv_export_columns() {
+		$columns = $this->default_columns();
+		unset( $columns['cb'] );
+
+		return $columns;
 	}
 
 	/**

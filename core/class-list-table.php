@@ -5,7 +5,7 @@
  * Usage Examples:
  * ==============
  *  // Basic filter for active status
- *  add_filter( 'your_table_id_where_clause_filter', 'filter_active_items_only', 10, 1 );
+ *  add_filter( '{table_id}_table_where_clause_filter', 'filter_active_items_only', 10, 1 );
  *  function filter_active_items_only( $filter_data ) {
  *    // Only show active items
  *    $filter_data['conditions'][] = array(
@@ -17,7 +17,7 @@
  *  }
  *
  *  // Date range filter
- *  add_filter( 'your_table_id_where_clause_filter', 'filter_by_date_range', 10, 1 );
+ *  add_filter( '{table_id}_table_where_clause_filter', 'filter_by_date_range', 10, 1 );
  *  function filter_by_date_range( $filter_data ) {
  *    // Filter items created in the last 30 days
  *    $filter_data['conditions'][] = array(
@@ -108,6 +108,8 @@ class List_Table extends \WP_List_Table {
 			)
 		);
 
+		do_action( $this->id . '_table_init', $this );
+
 		$this->handle_csv_export();
 	}
 
@@ -161,7 +163,6 @@ class List_Table extends \WP_List_Table {
 			$this->id . '_table_bulk_actions',
 			array(
 				'delete' => esc_html__( 'Delete permanently', 'plugin-slug' ),
-				'export_csv' => esc_html__( 'Export to CSV', 'plugin-slug' ),
 			)
 		);
 	}
@@ -217,7 +218,7 @@ class List_Table extends \WP_List_Table {
 			$this->export_selected_to_csv();
 		}
 
-		do_action( $this->id . '_process_bulk_action', $current_action, $table, $this );
+		do_action( $this->id . '_table_process_bulk_action', $current_action, $table, $this );
 	}
 
 	public function prepare_items() {
@@ -268,7 +269,7 @@ class List_Table extends \WP_List_Table {
 
 		// Apply custom filter with validation.
 		$filter_data = apply_filters(
-			$this->id . '_where_clause_filter',
+			$this->id . '_table_where_clause_filter',
 			array(
 				'conditions' => array(),
 				'params'     => array(),
@@ -316,13 +317,12 @@ class List_Table extends \WP_List_Table {
 	}
 
 	protected function extra_tablenav( $which ) {
-		if ( 'top' === $which ) {
+		if ( 'top' === $which && apply_filters( $this->id . '_table_allow_export_csv', false ) ) {
 			$export_url = add_query_arg(
 				array(
 					'export_csv' => $this->id,
 					'_wpnonce'   => wp_create_nonce( $this->id . '_export_csv_nonce' ),
-				),
-				admin_url( 'admin.php?page=stobokit-restaler-notify-list' )
+				)
 			);
 
 			echo '<div class="alignleft actions">';
@@ -330,7 +330,7 @@ class List_Table extends \WP_List_Table {
 			echo '</div>';
 		}
 
-		do_action( $this->id . '_extra_tablenav', $which );
+		do_action( $this->id . '_table_extra_tablenav', $which );
 	}
 
 	private function is_valid_filter_condition( $condition ) {
@@ -372,7 +372,7 @@ class List_Table extends \WP_List_Table {
 		unset( $default_columns['cb'] );
 
 		return apply_filters(
-			$this->id . '_csv_export_columns',
+			$this->id . '_table_csv_export_columns',
 			$default_columns
 		);
 	}
@@ -434,9 +434,9 @@ class List_Table extends \WP_List_Table {
 			}
 		}
 
-		// Apply custom filters
+		// Apply custom filters.
 		$filter_data = apply_filters(
-			$this->id . '_where_clause_filter',
+			$this->id . '_table_where_clause_filter',
 			array(
 				'conditions' => array(),
 				'params'     => array(),
@@ -458,7 +458,7 @@ class List_Table extends \WP_List_Table {
 
 		$where_clause = implode( ' AND ', $where_conditions );
 
-		// Get data
+		// Get data.
 		$query = "SELECT * FROM `$table` WHERE $where_clause ORDER BY id DESC";
 
 		$results = empty( $where_params )
@@ -497,13 +497,12 @@ class List_Table extends \WP_List_Table {
 						$value = call_user_func( array( $this, 'column_' . $column_key ), $row );
 
 						$csv_row[] = wp_strip_all_tags( $value );
-					} elseif ( isset( $row[ $column_key ] ) ) {
-						$csv_row[] = $row[ $column_key ];
-					} else {
-						// Use column_default method.
+					} elseif ( $this->column_default( $row, $column_key ) ) {
 						$value = $this->column_default( $row, $column_key );
 
 						$csv_row[] = wp_strip_all_tags( $value );
+					} elseif ( isset( $row[ $column_key ] ) ) {
+						$csv_row[] = $row[ $column_key ];
 					}
 				}
 

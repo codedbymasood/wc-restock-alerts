@@ -39,7 +39,6 @@ class Frontend {
 	 * Plugin constructor.
 	 */
 	private function __construct() {
-
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		add_filter( 'wp_mail_from', array( $this, 'mail_from' ) );
@@ -241,7 +240,7 @@ The {site_name} Team"
 
 		$product_type = $product->get_type();
 
-		if ( 'simple' === $product_type && $product->is_purchasable() && ! $product->is_in_stock() ) {
+		if ( 'simple' === $product_type && $product->is_purchasable() && ( ! $product->is_in_stock() || apply_filters( 'restaler_show_notify_form', false, $product ) ) ) {
 			restaler()->templates->include_template(
 				'notify-form.php',
 				array(

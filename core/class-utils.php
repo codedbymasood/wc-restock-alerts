@@ -47,6 +47,30 @@ class Utils {
 	}
 
 	/**
+	 * Converts a string (e.g. 'yes' or 'no') to a bool.
+	 *
+	 * @param string|bool $string String to convert. If a bool is passed it will be returned as-is.
+	 * @return bool
+	 */
+	public static function string_to_bool( $string ) {
+		$string = $string ?? '';
+		return is_bool( $string ) ? $string : ( 'yes' === strtolower( $string ) || 1 === $string || 'true' === strtolower( $string ) || '1' === $string );
+	}
+
+	/**
+	 * Converts a bool to a 'yes' or 'no'.
+	 *
+	 * @param bool|string $bool Bool to convert. If a string is passed it will first be converted to a bool.
+	 * @return string
+	 */
+	public static function bool_to_string( $bool ) {
+		if ( ! is_bool( $bool ) ) {
+			$bool = wc_string_to_bool( $bool );
+		}
+		return true === $bool ? 'yes' : 'no';
+	}
+
+	/**
 	 * Generate random string.
 	 *
 	 * @param integer $length Length.

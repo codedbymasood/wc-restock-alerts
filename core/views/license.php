@@ -17,7 +17,7 @@ $product_lists = apply_filters( 'stobokit_product_lists', array() );
 	<span class="license-notice"></span>
 	<h2><?php esc_html_e( 'License', 'plugin-slug' ); ?></h2>
 	<?php wp_nonce_field( 'stobokit_license', 'stobokit_license_nonce' ); ?>
-	<table>
+	<table class="widefat">
 		<thead>
 			<tr>
 				<th class="product"><?php esc_html_e( 'Product', 'plugin-slug' ); ?></th>
@@ -47,6 +47,12 @@ $product_lists = apply_filters( 'stobokit_product_lists', array() );
 					</tr>
 					<?php
 				}
+			} else {
+				?>
+				<tr>
+					<td class="no-items" colspan="5"><?php esc_html_e( 'None of the Pro versions are activated.', 'plugin-slug' ); ?></td>
+				</tr>
+				<?php
 			}
 			?>
 		</tbody>

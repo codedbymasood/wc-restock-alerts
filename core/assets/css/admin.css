@@ -169,6 +169,17 @@ body[class*="stobokit"] div.error {
   font-weight: 400;
 }
 
+.stobokit-wrapper th.sortable a,
+.stobokit-wrapper th.sorted a {
+  padding: 0;
+}
+
+.stobokit-wrapper th.sortable a:focus,
+.stobokit-wrapper th.sorted a:focus {
+  box-shadow: none;
+  outline: 0;
+}
+
 .stobokit-wrapper table .product,
 .stobokit-wrapper table .license,
 .stobokit-wrapper table .expires {

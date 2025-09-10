@@ -10,6 +10,7 @@
 namespace RESTALER;
 
 use Pelago\Emogrifier\CssInliner;
+use STOBOKIT\Utils as Core_Utils;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,10 +24,29 @@ class Hooks_Pro {
 	 */
 	public function __construct() {
 		$this->register_mail_tags();
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_filter( 'plugin-slug_is_pro_active', '__return_true' );
+
+		add_filter( 'restaler_show_notify_form', array( $this, 'show_notify_form' ), 10, 2 );
 
 		add_action( 'restaler_alert_email_sent', array( $this, 'alert_email_sent' ), 10, 2 );
 		add_action( 'woocommerce_variable_add_to_cart', array( $this, 'append_notify_form' ), 35 );
+	}
+
+	public function enqueue_scripts() {
+		$enable_stock_threshold = get_option( 'restaler_enable_stock_threshold', '' );
+		$stock_threshold_count  = get_option( 'restaler_stock_threshold_count', 3 );
+
+		wp_localize_script(
+			'jquery',
+			'restaler',
+			array(
+				'enable_stock_threshold' => $enable_stock_threshold,
+				'stock_threshold_count'  => $stock_threshold_count,
+			)
+		);
+
+		wp_enqueue_script( 'restaler-pro', plugin_dir_url( __FILE__ ) . 'assets/js/pro.js', array( 'jquery' ), '1.0', true );
 	}
 
 	public function register_mail_tags() {
@@ -207,6 +227,20 @@ The {site_name} Team"
 				'coupon_expires_in' => $coupon_expires_in,
 			)
 		);
+	}
+
+	public function show_notify_form( $show = false, $product = null ) {
+		$enable_stock_threshold = get_option( 'restaler_enable_stock_threshold', '' );
+		$stock_threshold_count  = get_option( 'restaler_stock_threshold_count', 3 );
+
+		if ( Core_Utils::string_to_bool( $enable_stock_threshold ) ) {
+			$stock_quantity = $product->get_stock_quantity();
+
+			if ( $stock_quantity <= $stock_threshold_count ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
