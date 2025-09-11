@@ -382,7 +382,7 @@ class Metabox {
 			if ( isset( $_POST[ $field_id ] ) ) {
 				// phpcs:ignore WordPress.Security.NonceVerification.Missing
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				$sanitized_value = $this->sanitize_field_value( wp_unslash( $_POST[ $field_id ] ) );
+				$sanitized_value = $this->sanitize_field_value( $_POST[ $field_id ] );
 				update_post_meta( $post_id, $field_id, $sanitized_value );
 			} else {
 				// For non-repeater fields, delete meta if field is not present (for checkboxes, etc.)
@@ -434,6 +434,9 @@ class Metabox {
 	}
 
 	private function sanitize_field_value( $value ) {
+
+		$value = wp_unslash( $value );
+
 		if ( is_array( $value ) ) {
 			return array_map( array( $this, 'sanitize_field_value' ), $value );
 		}

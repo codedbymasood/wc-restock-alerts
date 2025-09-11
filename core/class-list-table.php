@@ -9,7 +9,7 @@
  *  function filter_active_items_only( $filter_data ) {
  *    // Only show active items
  *    $filter_data['conditions'][] = array(
- *      'clause' => '`status` = %s',
+ *      'sql' => '`status` = %s',
  *      'params' => array( 'active' )
  *    );
  *
@@ -21,7 +21,7 @@
  *  function filter_by_date_range( $filter_data ) {
  *    // Filter items created in the last 30 days
  *    $filter_data['conditions'][] = array(
- *      'clause' => '`created_date` >= %s',
+ *      'sql' => '`created_date` >= %s',
  *      'params' => array( date( 'Y-m-d', strtotime( '-30 days' ) ) )
  *    );
  *
@@ -187,12 +187,12 @@ class List_Table extends \WP_List_Table {
 
 	private function process_bulk_actions() {
 
-		$current_action = $this->current_action();
-
 		// Verify nonce before processing any bulk actions.
-		if ( ! empty( $current_action ) ) {
+		if ( ! empty( $_REQUEST['action'] ) || ! empty( $_REQUEST['action2'] ) ) {
 			check_admin_referer( $this->get_nonce_action(), $this->get_nonce_field() );
 		}
+
+		$current_action = $this->current_action();
 
 		global $wpdb;
 
@@ -215,7 +215,12 @@ class List_Table extends \WP_List_Table {
 		}
 
 		if ( 'export_csv' === $current_action ) {
-			$this->export_selected_to_csv();
+			if ( empty( $_REQUEST[ $this->singular ] ) ) {
+				return;
+			}
+
+			$ids = array_map( 'absint', $_REQUEST[ $this->singular ] );
+			$this->generate_csv_export( $ids );
 		}
 
 		do_action( $this->id . '_table_process_bulk_action', $current_action, $table, $this );
@@ -282,7 +287,7 @@ class List_Table extends \WP_List_Table {
 		if ( ! empty( $filter_data['conditions'] ) && is_array( $filter_data['conditions'] ) ) {
 			foreach ( $filter_data['conditions'] as $condition ) {
 				if ( $this->is_valid_filter_condition( $condition ) ) {
-					$where_conditions[] = $condition['clause'];
+					$where_conditions[] = $condition['sql'];
 					if ( ! empty( $condition['params'] ) ) {
 						$where_params = array_merge( $where_params, $condition['params'] );
 					}
@@ -335,9 +340,9 @@ class List_Table extends \WP_List_Table {
 
 	private function is_valid_filter_condition( $condition ) {
 		return is_array( $condition )
-			&& isset( $condition['clause'] )
-			&& is_string( $condition['clause'] )
-			&& ! empty( $condition['clause'] );
+			&& isset( $condition['sql'] )
+			&& is_string( $condition['sql'] )
+			&& ! empty( $condition['sql'] );
 	}
 
 	/**
@@ -375,18 +380,6 @@ class List_Table extends \WP_List_Table {
 			$this->id . '_table_csv_export_columns',
 			$default_columns
 		);
-	}
-
-	/**
-	 * Export selected items to CSV
-	 */
-	private function export_selected_to_csv() {
-		if ( empty( $_REQUEST[ $this->singular ] ) ) {
-			return;
-		}
-
-		$ids = array_map( 'absint', $_REQUEST[ $this->singular ] );
-		$this->generate_csv_export( $ids );
 	}
 
 	/**
@@ -448,7 +441,7 @@ class List_Table extends \WP_List_Table {
 		if ( ! empty( $filter_data['conditions'] ) && is_array( $filter_data['conditions'] ) ) {
 			foreach ( $filter_data['conditions'] as $condition ) {
 				if ( $this->is_valid_filter_condition( $condition ) ) {
-					$where_conditions[] = $condition['clause'];
+					$where_conditions[] = $condition['sql'];
 					if ( ! empty( $condition['params'] ) ) {
 						$where_params = array_merge( $where_params, $condition['params'] );
 					}
