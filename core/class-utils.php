@@ -78,11 +78,20 @@ class Utils {
 	 */
 	public static function generate_random_string( $length = 8 ) {
 		$random_string = '';
-		$characters    = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$characters    = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 		for ( $i = 0; $i < $length; $i++ ) {
 			$random_string .= $characters[ random_int( 0, strlen( $characters ) - 1 ) ];
 		}
 		return $random_string;
+	}
+
+	/**
+	 * Generate unique ID
+	 *
+	 * @return string
+	 */
+	public static function uid() {
+		return self::generate_random_string( 4 ) . '-' . self::generate_random_string( 4 );
 	}
 }

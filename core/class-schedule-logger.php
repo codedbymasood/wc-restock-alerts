@@ -281,6 +281,65 @@ class Schedule_Logger {
 	}
 
 	/**
+	 * Delete a log entry by ID
+	 *
+	 * @param int $id Log entry ID.
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete_log( $id = 0 ) {
+		if ( empty( $id ) ) {
+			return false;
+		}
+
+		$result = $this->wpdb->delete(
+			$this->table_name,
+			array( 'id' => $id ),
+			array( '%d' )
+		);
+
+		return false !== $result;
+	}
+
+	/**
+	 * Delete a log entry by UID
+	 *
+	 * @param string $uid Unique identifier.
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete_log_by_uid( $uid = '' ) {
+		if ( empty( $uid ) ) {
+			return false;
+		}
+
+		$result = $this->wpdb->delete(
+			$this->table_name,
+			array( 'uid' => $uid ),
+			array( '%s' )
+		);
+
+		return false !== $result;
+	}
+
+	/**
+	 * Delete log entries by hook name
+	 *
+	 * @param string $hook_name Hook name to delete logs for.
+	 * @return int|false Number of rows deleted or false on failure.
+	 */
+	public function delete_logs_by_hook( $hook_name = '' ) {
+		if ( empty( $hook_name ) ) {
+			return false;
+		}
+
+		return $this->wpdb->query(
+			$this->wpdb->prepare(
+				"DELETE FROM {$this->table_name} WHERE hook_name = %s",
+				$hook_name
+			)
+		);
+	}
+
+	/**
 	 * Delete old log entries
 	 *
 	 * @param int $days Delete logs older than this many days.

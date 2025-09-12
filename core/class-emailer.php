@@ -142,7 +142,7 @@ class Emailer {
 	/**
 	 * Schedule single email with individual cron job
 	 */
-	public function send_later( $to, $subject, $message, $days_later, $args = array() ) {
+	public function send_later( $to, $subject, $message, $days_later, $args = array(), $name = '' ) {
 		$base_time   = current_time( 'timestamp' );
 		// $send_time = $base_time + ( $days_later * DAY_IN_SECONDS );
 		$send_time = $base_time + ( 1 * MINUTE_IN_SECONDS );
@@ -164,7 +164,16 @@ class Emailer {
 		// Schedule individual cron job for this specific email.
 		wp_schedule_single_event( $send_time, 'stobokit_emailer_send_single', array( $email_id ) );
 
-		$this->scheduler->insert_log( $email_id, 'stobokit_emailer_send_single', array( $email_id ), $send_time, null, 'scheduled' );
+		$log_name = ( $name ) ? 'stobokit_emailer_' . $name : 'stobokit_emailer';
+
+		$this->scheduler->insert_log(
+			$email_id,
+			$log_name,
+			$args,
+			$send_time,
+			null,
+			'scheduled'
+		);
 
 		return $email_id;
 	}
@@ -172,16 +181,38 @@ class Emailer {
 	/**
 	 * Create follow-up sequence with individual cron jobs
 	 */
-	public function create_followup_sequence( $to, $sequence = array(), $args = array() ) {
-		$sequence_id = 'seq_' . uniqid();
+	public function create_followup_sequence( $to, $sequence = array(), $args = array(), $uid = '', $name = '' ) {
+		$sequence_id = 'seq_' . Utils::uid();
 		$email_ids   = array();
 		$base_time   = current_time( 'timestamp' );
 
-		foreach ( $sequence as $index => $email ) {
-			// $send_time = $base_time + ( $email['days'] * DAY_IN_SECONDS );
-			$send_time = $base_time + ( 1 * MINUTE_IN_SECONDS );
+		// Check if sequence has a custom uid.
+		$sequence_id = ! empty( $uid ) ? $uid : $sequence_id;
 
-			$email_id = $sequence_id . '_' . $index;
+		// Cancel existing sequence if it exists.
+		$existing_sequence = get_option( 'stobokit_emailer_sequence_' . $sequence_id, array() );
+		if ( ! empty( $existing_sequence ) ) {
+			$this->cancel_sequence( $sequence_id );
+		}
+
+		foreach ( $sequence as $index => $email ) {
+			$send_time = $base_time + ( $email['days'] * DAY_IN_SECONDS );
+			// $send_time = $base_time + ( 1 * MINUTE_IN_SECONDS );
+
+			// Check if individual email has a uid - if so, cancel that specific email.
+			if ( isset( $email['uid'] ) ) {
+				$individual_email_id = $email['uid'];
+
+				// Cancel the individual email if it exists.
+				$individual_email_data = get_option( 'stobokit_emailer_data_' . $individual_email_id );
+				if ( $individual_email_data ) {
+					$this->cancel_email( $individual_email_id );
+				}
+
+				$email_id = $individual_email_id;
+			} else {
+				$email_id = $sequence_id . '_' . $index;
+			}
 
 			// Create email data.
 			$email_data = array(
@@ -199,7 +230,28 @@ class Emailer {
 			// Schedule individual cron job.
 			wp_schedule_single_event( $send_time, 'stobokit_emailer_send_single', array( $email_id ) );
 
-			$this->scheduler->insert_log( $sequence_id, 'stobokit_emailer_send_single', array( $email_id ), $send_time, null, 'scheduled' );
+			$log_exists = $this->scheduler->get_log_by_uid( $email_id );
+
+			$log_name = ( $name ) ? 'stobokit_emailer_' . $name : 'stobokit_emailer';
+
+			if ( ! $log_exists ) {
+				$this->scheduler->insert_log(
+					$email_id,
+					$log_name,
+					$args,
+					$send_time,
+					null,
+					'scheduled'
+				);
+			} elseif ( $log_exists && $log_exists->id ) {
+				$this->scheduler->update_log(
+					$log_exists->id,
+					array(
+						'schedule' => $send_time,
+						'status'   => 'scheduled',
+					)
+				);
+			}
 
 			$email_ids[] = $email_id;
 		}
@@ -244,6 +296,8 @@ class Emailer {
 		// Remove the cron job.
 		wp_clear_scheduled_hook( 'stobokit_emailer_send_single', array( $email_id ) );
 
+		$this->scheduler->update_status_by_uid( $email_id, 'canceled' );
+
 		// Remove email data.
 		delete_option( 'stobokit_emailer_data_' . $email_id );
 
@@ -258,7 +312,11 @@ class Emailer {
 
 		foreach ( $email_ids as $email_id ) {
 			$this->cancel_email( $email_id );
+
+			$this->scheduler->delete_log_by_uid( $email_id );
 		}
+
+		// update log to cancelled.
 
 		// Remove sequence info.
 		delete_option( 'stobokit_emailer_sequence_' . $sequence_id );
