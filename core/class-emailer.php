@@ -61,10 +61,10 @@ class Emailer {
 	 * @var array
 	 */
 	private $defaults = array(
-		'from_name' => '',
-		'from_email' => '',
+		'from_name'    => '',
+		'from_email'   => '',
 		'content_type' => 'text/html',
-		'charset' => 'UTF-8',
+		'charset'      => 'UTF-8',
 	);
 
 	/**
@@ -143,9 +143,9 @@ class Emailer {
 	 * Schedule single email with individual cron job
 	 */
 	public function send_later( $to, $subject, $message, $days_later, $args = array(), $name = '' ) {
-		$base_time   = current_time( 'timestamp' );
+		$base_time   = time();
 		// $send_time = $base_time + ( $days_later * DAY_IN_SECONDS );
-		$send_time = $base_time + ( 1 * MINUTE_IN_SECONDS );
+		$send_time = $base_time + ( 2 * MINUTE_IN_SECONDS );
 		$email_id  = 'email_' . uniqid();
 
 		// Create email data.
@@ -184,7 +184,7 @@ class Emailer {
 	public function create_followup_sequence( $to, $sequence = array(), $args = array(), $uid = '', $name = '' ) {
 		$sequence_id = 'seq_' . Utils::uid();
 		$email_ids   = array();
-		$base_time   = current_time( 'timestamp' );
+		$base_time   = time();
 
 		// Check if sequence has a custom uid.
 		$sequence_id = ! empty( $uid ) ? $uid : $sequence_id;
@@ -196,8 +196,8 @@ class Emailer {
 		}
 
 		foreach ( $sequence as $index => $email ) {
-			$send_time = $base_time + ( $email['days'] * DAY_IN_SECONDS );
-			// $send_time = $base_time + ( 1 * MINUTE_IN_SECONDS );
+			// $send_time = $base_time + ( $email['days'] * DAY_IN_SECONDS );
+			$send_time = $base_time + ( ( $index + 1 ) * 2 * MINUTE_IN_SECONDS );
 
 			// Check if individual email has a uid - if so, cancel that specific email.
 			if ( isset( $email['uid'] ) ) {
