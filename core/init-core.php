@@ -19,6 +19,7 @@ define( 'STOBOKIT_PATH', __DIR__ );
 define( 'STOBOKIT_URL', plugin_dir_url( __FILE__ ) );
 
 require_once STOBOKIT_PATH . '/class-utils.php';
+require_once STOBOKIT_PATH . '/class-logger.php';
 require_once STOBOKIT_PATH . '/class-license.php';
 require_once STOBOKIT_PATH . '/class-list-table.php';
 require_once STOBOKIT_PATH . '/class-schedule-logger.php';
@@ -26,7 +27,6 @@ require_once STOBOKIT_PATH . '/class-cron-scheduler.php';
 require_once STOBOKIT_PATH . '/class-cron-logs-table.php';
 require_once STOBOKIT_PATH . '/class-admin.php';
 require_once STOBOKIT_PATH . '/class-emailer.php';
-require_once STOBOKIT_PATH . '/class-logger.php';
 require_once STOBOKIT_PATH . '/class-settings.php';
 require_once STOBOKIT_PATH . '/class-metabox.php';
 require_once STOBOKIT_PATH . '/class-plugin-updater.php';

@@ -68,8 +68,8 @@ class Admin {
 		$sql = "CREATE TABLE {$table} (
 			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			uid varchar(64) NOT NULL,
-			hook_name varchar(255) NOT NULL,
-			args varchar(32) NOT NULL,
+			hook_name varchar(128) NOT NULL,
+			args varchar(255) NOT NULL,
 			schedule varchar(50) DEFAULT NULL,
 			next_run datetime DEFAULT NULL,
 			status varchar(20) NOT NULL DEFAULT 'scheduled',

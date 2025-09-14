@@ -54,7 +54,7 @@ class Logger {
 
 		// Create new log entry.
 		$log_entry = array(
-			'id'        => uniqid(),
+			'id'        => Utils::uid(),
 			'timestamp' => current_time( 'mysql' ),
 			'level'     => strtoupper( $level ),
 			'message'   => $message,

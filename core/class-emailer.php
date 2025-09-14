@@ -146,7 +146,7 @@ class Emailer {
 		$base_time   = time();
 		// $send_time = $base_time + ( $days_later * DAY_IN_SECONDS );
 		$send_time = $base_time + ( 2 * MINUTE_IN_SECONDS );
-		$email_id  = 'email_' . uniqid();
+		$email_id  = 'email_' . Utils::uid();
 
 		// Create email data.
 		$email_data = array(

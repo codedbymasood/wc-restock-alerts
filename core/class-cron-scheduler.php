@@ -20,6 +20,8 @@ class Cron_Scheduler {
 	 * Constructor - Register the universal cron handler
 	 */
 	public function __construct() {
+		$this->logger = new Logger();
+
 		$this->scheduler = new Schedule_Logger();
 		// Register a single action that handles all our cron jobs.
 		add_action( 'stobokit_cron_execute', array( $this, 'execute_cron_job' ), 10, 3 );
@@ -45,6 +47,7 @@ class Cron_Scheduler {
 			'callback'      => '',
 			'timestamp'     => time() + 3600, // 1 hour default
 			'callback_args' => array(),
+			'override'      => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -62,7 +65,7 @@ class Cron_Scheduler {
 
 		$unique_hook = $args['override']
 			? 'stobokit_cron_' . $args['hook_name']
-			: 'stobokit_cron_' . $args['hook_name'] . '_' . uniqid();
+			: 'stobokit_cron_' . $args['hook_name'] . '_' . Utils::uid();
 
 		// Handle override logic.
 		if ( $args['override'] ) {
@@ -167,6 +170,9 @@ class Cron_Scheduler {
 	 * @param string $unique_hook The unique hook identifier.
 	 */
 	public function execute_cron_job( $unique_hook ) {
+
+		$this->logger->info( 'Cron running - is_admin(): ' . ( is_admin() ? 'true' : 'false' ) );
+
 		// Retrieve the callback data.
 		$callback_data = get_option( $unique_hook . '_data' );
 
@@ -200,8 +206,10 @@ class Cron_Scheduler {
 		$execution_time = microtime( true ) - $start_time;
 
 		if ( $success ) {
+			$this->logger->info( 'Successfully scheduled', array( 'execution_time' => $execution_time ) );
 			$this->scheduler->update_status_by_uid( $unique_hook, 'completed' );
 		} else {
+			$this->logger->error( $error, array( 'execution_time' => $execution_time ) );
 			$this->scheduler->update_status_by_uid( $unique_hook, 'failed' );
 		}
 
@@ -217,31 +225,66 @@ class Cron_Scheduler {
 	 */
 	private function reconstruct_callback( $callback_data ) {
 		if ( ! is_array( $callback_data ) || ! isset( $callback_data['type'] ) ) {
+			$this->logger->error( 'Invalid callback data' );
 			return false;
 		}
 
 		switch ( $callback_data['type'] ) {
 			case 'function':
-				return $callback_data['callback'];
+				if ( function_exists( $callback_data['callback'] ) ) {
+					return $callback_data['callback'];
+				} else {
+					$this->logger->error( 'Function does not exist: ' . $callback_data['callback'] );
+					return false;
+				}
 
 			case 'static_method':
 				if ( isset( $callback_data['class'] ) && isset( $callback_data['method'] ) ) {
+					if ( ! class_exists( $callback_data['class'] ) ) {
+						$this->logger->error( 'Class does not exist: ' . $callback_data['class'] );
+						return false;
+					}
+
+					if ( ! method_exists( $callback_data['class'], $callback_data['method'] ) ) {
+						$this->logger->error( 'Method does not exist: ' . $callback_data['class'] . '::' . $callback_data['method'] );
+						return false;
+					}
+
 					return array( $callback_data['class'], $callback_data['method'] );
+				} else {
+					$this->logger->error( 'Missing class or method in static callback data' );
+					return false;
 				}
-				break;
 
 			case 'object_method':
 				if ( isset( $callback_data['class'] ) && isset( $callback_data['method'] ) ) {
+					if ( ! class_exists( $callback_data['class'] ) ) {
+						$this->logger->error( 'Class does not exist: ' . $callback_data['class'] );
+						return false;
+					}
+
 					// Try to get a singleton instance or create new instance.
 					$instance = $this->get_class_instance( $callback_data['class'] );
 					if ( $instance ) {
-						return array( $instance, $callback_data['method'] );
+						if ( method_exists( $instance, $callback_data['method'] ) ) {
+							return array( $instance, $callback_data['method'] );
+						} else {
+							$this->logger->error( 'Method does not exist on instance: ' . $callback_data['class'] . '->' . $callback_data['method'] );
+							return false;
+						}
+					} else {
+						$this->logger->error( 'Could not instantiate class: ' . $callback_data['class'] );
+						return false;
 					}
+				} else {
+					$this->logger->error( 'Missing class or method in object callback data' );
+					return false;
 				}
-				break;
-		}
 
-		return false;
+			default:
+				$this->logger->error( 'Unknown callback type: ' . $callback_data['type'] );
+				return false;
+		}
 	}
 
 	/**
@@ -264,7 +307,7 @@ class Cron_Scheduler {
 				return new $class_name();
 			}
 		} catch ( Exception $e ) {
-			error_log( "Could not instantiate class {$class_name}: " . $e->getMessage() );
+			$this->logger->error( 'Could not instantiate class ' . $class_name . ':' . $e->getMessage() );
 		}
 
 		return false;
