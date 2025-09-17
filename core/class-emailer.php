@@ -281,7 +281,7 @@ class Emailer {
 			$email_data['args']
 		);
 
-		$this->scheduler->update_status_by_uid( $email_data['sequence_id'], 'completed' );
+		$this->scheduler->update_status_by_uid( $email_id, 'completed' );
 
 		// Clean up - delete the email data.
 		delete_option( 'stobokit_emailer_data_' . $email_id );
