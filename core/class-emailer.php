@@ -1,42 +1,53 @@
 <?php
 /**
- * Emailer class.
+ * Emailer class with validation callback support.
  *
  * Usage Examples:
  * ==============
- * // See what's scheduled
- * $pending = $emailer->get_pending_emails();
-
- * // Cancel specific email
- * $emailer->cancel_email($email_id);
-
- * // Cancel entire sequence
- * $emailer->cancel_sequence($sequence_id);
- *
- * // Create a follow up sequence
- * $sequence_id = $emailer->create_followup_sequence(
- *   $customer_email,
- *   array(
- *     array('days' => 1, 'subject' => 'Thank you!', 'message' => '...'),
- *     array('days' => 3, 'subject' => 'How is it?', 'message' => '...'),
- *     array('days' => 7, 'subject' => 'Review?', 'message' => '...'),
- *     array('days' => 14, 'subject' => 'Special offer', 'message' => '...')
- *   ),
- *   array('customer_name' => $customer_name, 'order_id' => $order_id)
- * );
- *
- * // Thank you email in 1 day
+ * // Send later with validation
  * $emailer->send_later(
  *   $customer_email,
  *   'Thanks for your purchase!',
  *   '<h1>Thank you {customer_name}!</h1>',
  *   1,
- *   array('customer_name' => $customer_name)
+ *   array('customer_name' => $customer_name),
+ *   'thank_you_email',
+ *   function($email_data, $args) {
+ *     // Only send if order status is still 'completed'
+ *     $order_id = isset($args['order_id']) ? $args['order_id'] : null;
+ *     if ($order_id) {
+ *       $order = wc_get_order($order_id);
+ *       return $order && $order->get_status() === 'completed';
+ *     }
+ *     return true;
+ *   }
  * );
  *
- * @package plugin-slug\core\
- * @author Store Boost Kit <storeboostkit@gmail.com>
- * @version 1.0
+ * // Create sequence with validation
+ * $sequence_id = $emailer->create_followup_sequence(
+ *   $customer_email,
+ *   array(
+ *     array(
+ *       'days' => 1,
+ *       'subject' => 'Thank you!',
+ *       'message' => '...',
+ *       'validation_callback' => function($email_data, $args) {
+ *         // Custom validation for this specific email
+ *         return some_condition_check($args);
+ *       }
+ *     ),
+ *     array('days' => 3, 'subject' => 'How is it?', 'message' => '...'),
+ *   ),
+ *   array('customer_name' => $customer_name, 'order_id' => $order_id),
+ *   '',
+ *   'follow_up_sequence',
+ *   function($email_data, $args) {
+ *     // Global validation for the entire sequence
+ *     $customer_email = $email_data['to'];
+ *     $user = get_user_by('email', $customer_email);
+ *     return $user && $user->ID; // Only send if user still exists
+ *   }
+ * );
  */
 
 namespace STOBOKIT;
@@ -44,7 +55,7 @@ namespace STOBOKIT;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Emailer class.
+ * Emailer class with validation support.
  */
 class Emailer {
 
@@ -78,6 +89,7 @@ class Emailer {
 	 * Constructor.
 	 */
 	private function __construct() {
+		$this->logger = new Logger();
 
 		$this->scheduler = new Schedule_Logger();
 		$this->init();
@@ -140,12 +152,11 @@ class Emailer {
 	}
 
 	/**
-	 * Schedule single email with individual cron job
+	 * Schedule single email with individual cron job and optional validation
 	 */
-	public function send_later( $to, $subject, $message, $days_later, $args = array(), $name = '' ) {
+	public function send_later( $to, $subject, $message, $days_later, $args = array(), $name = '', $validation_callback = null ) {
 		$base_time   = time();
-		// $send_time = $base_time + ( $days_later * DAY_IN_SECONDS );
-		$send_time = $base_time + ( 2 * MINUTE_IN_SECONDS );
+		$send_time = $base_time + ( 1 * MINUTE_IN_SECONDS );
 		$email_id  = 'email_' . Utils::uid();
 
 		// Create email data.
@@ -157,6 +168,14 @@ class Emailer {
 			'email_id'    => $email_id,
 			'sequence_id' => $email_id,
 		);
+
+		if ( $validation_callback ) {
+			if ( is_string( $validation_callback ) || ( is_array( $validation_callback ) && is_string( $validation_callback[0] ) ) ) {
+				$email_data['validation_callback'] = $validation_callback;
+			} else {
+				error_log( 'Emailer: Validation callback must be a string or array reference, closures cannot be serialized.' );
+			}
+		}
 
 		// Store email data.
 		update_option( 'stobokit_emailer_data_' . $email_id, $email_data );
@@ -179,9 +198,9 @@ class Emailer {
 	}
 
 	/**
-	 * Create follow-up sequence with individual cron jobs
+	 * Create follow-up sequence with individual cron jobs and optional validation
 	 */
-	public function create_followup_sequence( $to, $sequence = array(), $args = array(), $uid = '', $name = '' ) {
+	public function create_followup_sequence( $to, $sequence = array(), $args = array(), $uid = '', $name = '', $global_validation_callback = null ) {
 		$sequence_id = 'seq_' . Utils::uid();
 		$email_ids   = array();
 		$base_time   = time();
@@ -196,7 +215,6 @@ class Emailer {
 		}
 
 		foreach ( $sequence as $index => $email ) {
-			// $send_time = $base_time + ( $email['days'] * DAY_IN_SECONDS );
 			$send_time = $base_time + ( ( $index + 1 ) * 2 * MINUTE_IN_SECONDS );
 
 			// Check if individual email has a uid - if so, cancel that specific email.
@@ -223,6 +241,18 @@ class Emailer {
 				'email_id'    => $email_id,
 				'sequence_id' => $sequence_id,
 			);
+
+			// Store validation callbacks (only serializable ones)
+			// Individual email validation takes priority over global validation
+			if ( isset( $email['validation_callback'] ) ) {
+				if ( is_string( $email['validation_callback'] ) || ( is_array( $email['validation_callback'] ) && is_string( $email['validation_callback'][0] ) ) ) {
+					$email_data['validation_callback'] = $email['validation_callback'];
+				}
+			} elseif ( $global_validation_callback ) {
+				if ( is_string( $global_validation_callback ) || ( is_array( $global_validation_callback ) && is_string( $global_validation_callback[0] ) ) ) {
+					$email_data['validation_callback'] = $global_validation_callback;
+				}
+			}
 
 			// Store email data.
 			update_option( 'stobokit_emailer_data_' . $email_id, $email_data );
@@ -263,7 +293,7 @@ class Emailer {
 	}
 
 	/**
-	 * Send scheduled email (called by individual cron job)
+	 * Send scheduled email with validation check
 	 */
 	public function send_scheduled_email( $email_id ) {
 		// Get email data.
@@ -271,6 +301,44 @@ class Emailer {
 
 		if ( ! $email_data ) {
 			return false;
+		}
+
+		if ( $email_data['validation_callback'] ) {
+			// Process the callback for storage.
+			$callback_data = Utils::process_callback( $email_data['validation_callback'] );
+			if ( ! $callback_data ) {
+				return false;
+			}
+
+			try {
+				$callback = Utils::reconstruct_callback( $callback_data );
+
+				if ( $callback && is_callable( $callback ) ) {
+					if ( ! empty( $email_data['args'] ) ) {
+						$validation_result = call_user_func( $callback, $email_data, $email_data['args'] );
+					} else {
+						$validation_result = call_user_func( $callback );
+					}
+					$success = true;
+				} else {
+					$error = 'Callback is not callable';
+				}
+			} catch ( Exception $e ) {
+				$error = $e->getMessage();
+			} catch ( Error $e ) {
+				$error = $e->getMessage();
+			}
+
+			if ( ! $validation_result ) {
+				$this->scheduler->update_status_by_uid( $email_id, 'skipped' );
+
+				$this->log_email( $email_data, -1 );
+
+				// Clean up - delete the email data.
+				delete_option( 'stobokit_emailer_data_' . $email_id );
+
+				return false;
+			}
 		}
 
 		// Send the email.
@@ -312,11 +380,8 @@ class Emailer {
 
 		foreach ( $email_ids as $email_id ) {
 			$this->cancel_email( $email_id );
-
 			$this->scheduler->delete_log_by_uid( $email_id );
 		}
-
-		// update log to cancelled.
 
 		// Remove sequence info.
 		delete_option( 'stobokit_emailer_sequence_' . $sequence_id );
@@ -347,6 +412,7 @@ class Emailer {
 							'subject'        => $email_data['subject'],
 							'send_time'      => gmdate( 'Y-m-d H:i:s', $timestamp ),
 							'days_remaining' => ceil( ( $timestamp - time() ) / DAY_IN_SECONDS ),
+							'has_validation' => isset( $email_data['validation_callback'] ),
 						);
 					}
 				}
@@ -430,13 +496,20 @@ class Emailer {
 	private function log_email( $email_data, $sent ) {
 		$logs = get_option( 'stobokit_emailer_logs', array() );
 
-		$logs[] = array(
+		$log_entry = array(
 			'to'       => $email_data['to'],
 			'subject'  => $email_data['subject'],
 			'email_id' => isset( $email_data['email_id'] ) ? $email_data['email_id'] : '',
 			'sent'     => $sent,
 			'sent_at'  => current_time( 'mysql' ),
 		);
+
+		// Add skip reason if provided.
+		if ( isset( $email_data['skip_reason'] ) ) {
+			$log_entry['skip_reason'] = $email_data['skip_reason'];
+		}
+
+		$logs[] = $log_entry;
 
 		// Keep only last 100 logs.
 		if ( count( $logs ) > 40 ) {

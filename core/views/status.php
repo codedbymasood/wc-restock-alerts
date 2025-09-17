@@ -217,7 +217,17 @@ $theme = wp_get_theme();
 									<tr>
 										<td><?php echo esc_html( $log['to'] ); ?></td>
 										<td><?php echo esc_html( $log['subject'] ); ?></td>
-										<td><?php echo esc_html( $log['sent'] ); ?></td>
+										<td>
+											<?php
+											if ( -1 === $log['sent'] ) {
+												echo esc_html__( 'Skipped', 'plugin-slug' );
+											} elseif ( $log['sent'] ) {
+												echo esc_html__( 'Sent', 'plugin-slug' );
+											} else {
+												echo esc_html__( 'Failed', 'plugin-slug' );
+											}
+											?>
+										</td>
 										<td><?php echo esc_html( $log['sent_at'] ); ?></td>
 									</tr>
 									<?php

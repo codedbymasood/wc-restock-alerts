@@ -58,7 +58,7 @@ class Cron_Scheduler {
 		}
 
 		// Process the callback for storage.
-		$callback_data = $this->process_callback( $args['callback'] );
+		$callback_data = Utils::process_callback( $args['callback'] );
 		if ( ! $callback_data ) {
 			return false;
 		}
@@ -123,48 +123,6 @@ class Cron_Scheduler {
 	}
 
 	/**
-	 * Process callback for storage
-	 *
-	 * @param mixed $callback The callback to process.
-	 * @return array|false Processed callback data or false on failure.
-	 */
-	private function process_callback( $callback ) {
-		// Handle string callbacks.
-		if ( is_string( $callback ) ) {
-			return array(
-				'type'     => 'function',
-				'callback' => $callback,
-			);
-		}
-
-		// Handle array callbacks (object methods or static methods).
-		if ( is_array( $callback ) && count( $callback ) === 2 ) {
-			$object_or_class = $callback[0];
-			$method          = $callback[1];
-
-			// Handle object method.
-			if ( is_object( $object_or_class ) ) {
-				return array(
-					'type'   => 'object_method',
-					'class'  => get_class( $object_or_class ),
-					'method' => $method,
-				);
-			}
-
-			// Handle static method.
-			if ( is_string( $object_or_class ) ) {
-				return array(
-					'type'   => 'static_method',
-					'class'  => $object_or_class,
-					'method' => $method,
-				);
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * Execute the cron job
 	 *
 	 * @param string $unique_hook The unique hook identifier.
@@ -185,7 +143,7 @@ class Cron_Scheduler {
 		$error      = '';
 
 		try {
-			$callback = $this->reconstruct_callback( $callback_data['callback'] );
+			$callback = Utils::reconstruct_callback( $callback_data['callback'] );
 
 			if ( $callback && is_callable( $callback ) ) {
 				if ( ! empty( $callback_data['callback_args'] ) ) {
@@ -215,101 +173,5 @@ class Cron_Scheduler {
 
 		// Clean up the stored data after execution.
 		delete_option( $unique_hook . '_data' );
-	}
-
-	/**
-	 * Reconstruct callback from stored data
-	 *
-	 * @param array $callback_data Stored callback data.
-	 * @return mixed Reconstructed callback or false.
-	 */
-	private function reconstruct_callback( $callback_data ) {
-		if ( ! is_array( $callback_data ) || ! isset( $callback_data['type'] ) ) {
-			$this->logger->error( 'Invalid callback data' );
-			return false;
-		}
-
-		switch ( $callback_data['type'] ) {
-			case 'function':
-				if ( function_exists( $callback_data['callback'] ) ) {
-					return $callback_data['callback'];
-				} else {
-					$this->logger->error( 'Function does not exist: ' . $callback_data['callback'] );
-					return false;
-				}
-
-			case 'static_method':
-				if ( isset( $callback_data['class'] ) && isset( $callback_data['method'] ) ) {
-					if ( ! class_exists( $callback_data['class'] ) ) {
-						$this->logger->error( 'Class does not exist: ' . $callback_data['class'] );
-						return false;
-					}
-
-					if ( ! method_exists( $callback_data['class'], $callback_data['method'] ) ) {
-						$this->logger->error( 'Method does not exist: ' . $callback_data['class'] . '::' . $callback_data['method'] );
-						return false;
-					}
-
-					return array( $callback_data['class'], $callback_data['method'] );
-				} else {
-					$this->logger->error( 'Missing class or method in static callback data' );
-					return false;
-				}
-
-			case 'object_method':
-				if ( isset( $callback_data['class'] ) && isset( $callback_data['method'] ) ) {
-					if ( ! class_exists( $callback_data['class'] ) ) {
-						$this->logger->error( 'Class does not exist: ' . $callback_data['class'] );
-						return false;
-					}
-
-					// Try to get a singleton instance or create new instance.
-					$instance = $this->get_class_instance( $callback_data['class'] );
-					if ( $instance ) {
-						if ( method_exists( $instance, $callback_data['method'] ) ) {
-							return array( $instance, $callback_data['method'] );
-						} else {
-							$this->logger->error( 'Method does not exist on instance: ' . $callback_data['class'] . '->' . $callback_data['method'] );
-							return false;
-						}
-					} else {
-						$this->logger->error( 'Could not instantiate class: ' . $callback_data['class'] );
-						return false;
-					}
-				} else {
-					$this->logger->error( 'Missing class or method in object callback data' );
-					return false;
-				}
-
-			default:
-				$this->logger->error( 'Unknown callback type: ' . $callback_data['type'] );
-				return false;
-		}
-	}
-
-	/**
-	 * Get class instance for callback execution
-	 *
-	 * @param string $class_name Class name.
-	 * @return object|false Class instance or false.
-	 */
-	private function get_class_instance( $class_name ) {
-		if ( method_exists( $class_name, 'get_instance' ) ) {
-			return call_user_func( array( $class_name, 'get_instance' ) );
-		}
-
-		try {
-			$reflection  = new \ReflectionClass( $class_name );
-			$constructor = $reflection->getConstructor();
-
-			// Only create if constructor has no required parameters.
-			if ( ! $constructor || $constructor->getNumberOfRequiredParameters() === 0 ) {
-				return new $class_name();
-			}
-		} catch ( Exception $e ) {
-			$this->logger->error( 'Could not instantiate class ' . $class_name . ':' . $e->getMessage() );
-		}
-
-		return false;
 	}
 }
