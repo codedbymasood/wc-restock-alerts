@@ -129,7 +129,14 @@ class Cron_Scheduler {
 	 */
 	public function execute_cron_job( $unique_hook ) {
 
-		$this->logger->info( 'Cron running - is_admin(): ' . ( is_admin() ? 'true' : 'false' ) );
+		if ( is_admin() ) {
+			$this->logger->info(
+				'Cron running from admin',
+				array(
+					'id' => $unique_hook,
+				)
+			);
+		}
 
 		// Retrieve the callback data.
 		$callback_data = get_option( $unique_hook . '_data' );
@@ -164,10 +171,22 @@ class Cron_Scheduler {
 		$execution_time = microtime( true ) - $start_time;
 
 		if ( $success ) {
-			$this->logger->info( 'Successfully scheduled', array( 'execution_time' => $execution_time ) );
+			$this->logger->info(
+				'Successfully scheduled',
+				array(
+					'id'             => $unique_hook,
+					'execution_time' => $execution_time,
+				)
+			);
 			$this->scheduler->update_status_by_uid( $unique_hook, 'completed' );
 		} else {
-			$this->logger->error( $error, array( 'execution_time' => $execution_time ) );
+			$this->logger->error(
+				$error,
+				array(
+					'id'             => $unique_hook,
+					'execution_time' => $execution_time,
+				)
+			);
 			$this->scheduler->update_status_by_uid( $unique_hook, 'failed' );
 		}
 

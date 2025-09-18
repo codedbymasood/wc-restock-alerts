@@ -242,8 +242,6 @@ class Emailer {
 				'sequence_id' => $sequence_id,
 			);
 
-			// Store validation callbacks (only serializable ones)
-			// Individual email validation takes priority over global validation
 			if ( isset( $email['validation_callback'] ) ) {
 				if ( is_string( $email['validation_callback'] ) || ( is_array( $email['validation_callback'] ) && is_string( $email['validation_callback'][0] ) ) ) {
 					$email_data['validation_callback'] = $email['validation_callback'];
@@ -303,7 +301,7 @@ class Emailer {
 			return false;
 		}
 
-		if ( $email_data['validation_callback'] ) {
+		if ( isset( $email_data['validation_callback'] ) && $email_data['validation_callback'] ) {
 			// Process the callback for storage.
 			$callback_data = Utils::process_callback( $email_data['validation_callback'] );
 			if ( ! $callback_data ) {
@@ -341,6 +339,8 @@ class Emailer {
 			}
 		}
 
+		$log_exists = $this->scheduler->get_log_by_uid( $email_id );
+
 		// Send the email.
 		$sent = $this->send_now(
 			$email_data['to'],
@@ -348,6 +348,11 @@ class Emailer {
 			$email_data['message'],
 			$email_data['args']
 		);
+
+		if ( $log_exists && $log_exists->hook_name ) {
+			$args = ( $log_exists->args ) ? (array) json_decode( $log_exists->args ) : array();
+			do_action( $log_exists->hook_name, $args, $sent );
+		}
 
 		$this->scheduler->update_status_by_uid( $email_id, 'completed' );
 
