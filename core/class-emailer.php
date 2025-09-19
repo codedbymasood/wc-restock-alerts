@@ -123,6 +123,14 @@ class Emailer {
 
 		// Hook for individual email sending.
 		add_action( 'stobokit_emailer_send_single', array( $this, 'send_scheduled_email' ), 10, 1 );
+
+		add_action( 'wp_mail_failed', array( $this, 'mail_failed' ) );
+	}
+
+	public function mail_failed( $error ) {
+		if ( is_wp_error( $error ) ) {
+			$this->logger->error( $error->get_error_message() );
+		}
 	}
 
 	/**
@@ -484,6 +492,10 @@ class Emailer {
 	}
 
 	private function process_mail_tags( $content, $args = array() ) {
+		// Process conditional blocks.
+		$content = $this->process_conditional_blocks( $content, $args );
+
+		// Process regular mail tags.
 		foreach ( $this->mail_tags as $name => $callback ) {
 			$pattern = '/\{' . preg_quote( $name, '/' ) . '(?:\:([^}]*))?\}/';
 
@@ -496,6 +508,56 @@ class Emailer {
 			);
 		}
 		return $content;
+	}
+
+	private function process_conditional_blocks( $content, $args = array() ) {
+		// Pattern to match conditional blocks: {% condition_name %}content{%}.
+		$pattern = '/\{\%\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\%\}(.*?)\{\%\}/s';
+
+		return preg_replace_callback(
+			$pattern,
+			function ( $matches ) use ( $args ) {
+				$condition_name = trim( $matches[1] );
+				$block_content  = $matches[2];
+
+				// Check if condition is met.
+				if ( $this->evaluate_condition( $condition_name, $args ) ) {
+					return $block_content;
+				}
+
+				return ''; // Remove block if condition not met.
+			},
+			$content
+		);
+	}
+
+	/**
+	 * Evaluate a condition based on args
+	 */
+	private function evaluate_condition( $condition_name, $args = array() ) {
+		// Check if condition exists in args and is truthy.
+		if ( isset( $args[ $condition_name ] ) ) {
+			$value = $args[ $condition_name ];
+
+			// Handle different types of truthy values.
+			if ( is_bool( $value ) ) {
+				return $value;
+			}
+
+			if ( is_string( $value ) ) {
+				return ! empty( trim( $value ) );
+			}
+
+			if ( is_numeric( $value ) ) {
+					return $value > 0;
+			}
+
+			if ( is_array( $value ) ) {
+					return ! empty( $value );
+			}
+
+			return ! empty( $value );
+		}
 	}
 
 	private function log_email( $email_data, $sent ) {

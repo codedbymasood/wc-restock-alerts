@@ -226,6 +226,11 @@ class Settings {
 					case 'richtext_editor':
 						update_option( $id, $value );
 						break;
+					case 'multiselect':
+						if ( isset( $_POST[ $id ] ) && is_array( $_POST[ $id ] ) ) {
+							update_option( $id, array_map( 'sanitize_text_field', wp_unslash( $_POST[ $id ] ) ) );
+						}
+						break;
 					default:
 						update_option( $id, sanitize_text_field( $value ) );
 						break;
@@ -356,6 +361,22 @@ class Settings {
 					foreach ( $field['options'] as $opt_val => $opt_label ) {
 						$selected = selected( $value, $opt_val, false );
 						echo '<option value="' . esc_attr( $opt_val ) . '"' . esc_attr( $selected ) . '>' . esc_html( $opt_label ) . '</option>';
+					}
+					echo '</select>';
+					break;
+
+				case 'multiselect':
+					$disabled = $is_pro && ! $this->pro ? ' disabled' : '';
+
+					$selected_values = is_array( $value ) ? $value : array();
+
+					echo '<select id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '[]" multiple' . esc_attr( $disabled ) . ' class="multiselect-field">';
+
+					if ( isset( $field['options'] ) && is_array( $field['options'] ) ) {
+						foreach ( $field['options'] as $opt_val => $opt_label ) {
+							$selected = in_array( $opt_val, $selected_values ) ? ' selected="selected"' : '';
+							echo '<option value="' . esc_attr( $opt_val ) . '"' . esc_attr( $selected ) . '>' . esc_html( $opt_label ) . '</option>';
+						}
 					}
 					echo '</select>';
 					break;
