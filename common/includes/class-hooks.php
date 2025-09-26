@@ -77,6 +77,24 @@ class Hooks {
 				return '';
 			}
 		);
+
+		restaler()->emailer->register_shortcode(
+			'variation',
+			function ( $args ) {
+				$variation_id = isset( $args['variation_id'] ) ? $args['variation_id'] : 0;
+				$variation    = wc_get_product( $variation_id );
+
+				if ( $variation && $variation->is_type( 'variation' ) ) {
+					// Get variation attributes.
+					$attributes = $variation->get_variation_attributes();
+
+					// Get formatted variation name.
+					$variation_name = wc_get_formatted_variation( $attributes, true );
+				}
+
+				return ( $variation_name ) ? sprintf( ' Variation: %s', esc_html( $variation_name ) ) : '';
+			}
+		);
 	}
 }
 

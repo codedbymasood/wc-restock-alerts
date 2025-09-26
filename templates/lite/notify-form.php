@@ -9,6 +9,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use STOBOKIT\Utils as Core_Utils;
+
 $product      = $args['product'];
 $product_type = $args['type'];
 $hide         = ( $args['hide'] ) ? 'hidden' : '';
@@ -23,7 +25,7 @@ if ( Core_Utils::string_to_bool( $show_signup_message ) ) {
 	$form .= '<p id="restaler-stock-threshold-message" class="hidden">' . esc_html( $signup_message ) . '</p>';
 }
 
-$form .= '<form id="restaler-notify-form" class="form-product-type-' . esc_attr( $product_type ) . ' ' . esc_attr( $hide ) . '" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-product-type="' . esc_attr( $product_type ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
+$form .= '<form id="restaler-notify-form" class="form-product-type-' . esc_attr( $product_type ) . ' ' . esc_attr( $hide ) . '" method="POST" data-product-id="' . esc_attr( $product->get_id() ) . '" data-variation-id data-product-type="' . esc_attr( $product_type ) . '" data-nonce="' . esc_attr( $nonce ) . '">';
 $form .= '<input name="email" type="text" placeholder="' . esc_attr__( 'Enter your email address', 'plugin-slug' ) . '">';
 $form .= '<button type="submit">' . esc_html__( 'Notify Me', 'plugin-slug' ) . '</button>';
 $form .= '</form>';
@@ -35,6 +37,7 @@ $allowed_tags = array(
 		'method'            => true,
 		'data-product-id'   => true,
 		'data-product-type' => true,
+		'data-variation-id' => true,
 		'data-nonce'        => true,
 	),
 	'input'  => array(
@@ -45,6 +48,10 @@ $allowed_tags = array(
 	),
 	'button' => array(
 		'type' => true,
+	),
+	'p'      => array(
+		'id'    => true,
+		'class' => true,
 	),
 );
 

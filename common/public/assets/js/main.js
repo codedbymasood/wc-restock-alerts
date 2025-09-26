@@ -9,10 +9,7 @@
     const email = $form.find('input[name="email"]').val();
     const product = $form.data('product-id');
     const product_type = $form.data('productType');
-    const variation_id = $form.data('variationId');
-
-    console.log(variation_id);
-    
+    const variation_id = $form.data('variationId');    
 
     var data = {
       email,
@@ -36,5 +33,32 @@
         }, 2000 );
       }
     });
+  });
+
+  const $form = $('form.variations_form');
+  const $notifyContainer = $('#restaler-notify-form');
+  const $thresholdMessage = $('#restaler-stock-threshold-message');
+  
+  // When a variation is found/selected
+  $form.on('found_variation', function(event, variation) {
+    event.preventDefault();
+
+    $notifyContainer.data( 'variation-id', variation.variation_id );    
+    
+    if (variation.is_in_stock === false || ( restaler && '1' === restaler.enable_stock_threshold && variation.max_qty <= parseInt( restaler.stock_threshold_count ) ) ) {
+      if ( $thresholdMessage.length ) {
+        $thresholdMessage.removeClass('hidden');
+      }
+      $notifyContainer.removeClass('hidden');
+    } else {
+      if ( $thresholdMessage.length ) {
+        $thresholdMessage.addClass('hidden');
+      }
+      $notifyContainer.addClass('hidden');
+    }
+  });
+
+  $form.on('reset_data', function() {
+    $notifyContainer.addClass('hidden');
   });
 })(jQuery);

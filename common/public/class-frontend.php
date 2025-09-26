@@ -48,10 +48,24 @@ class Frontend {
 		add_action( 'wp_ajax_restaler_save_notify_email', array( $this, 'save_notify_email' ) );
 		add_action( 'wp_ajax_nopriv_restaler_save_notify_email', array( $this, 'save_notify_email' ) );
 
+		add_filter( 'restaler_show_notify_form', array( $this, 'show_notify_form' ), 10, 2 );
+
 		add_action( 'woocommerce_simple_add_to_cart', array( $this, 'append_notify_form' ), 35 );
+		add_action( 'woocommerce_variable_add_to_cart', array( $this, 'append_notify_form' ), 35 );
 	}
 
 	public function enqueue_scripts() {
+		$enable_stock_threshold = get_option( 'restaler_enable_stock_threshold', '' );
+		$stock_threshold_count  = get_option( 'restaler_stock_threshold_count', 3 );
+
+		wp_localize_script(
+			'jquery',
+			'restaler',
+			array(
+				'enable_stock_threshold' => $enable_stock_threshold,
+				'stock_threshold_count'  => $stock_threshold_count,
+			)
+		);
 		wp_enqueue_style( 'restaler-main', RESTALER_URL . '/common/public/assets/css/main.css', array(), '1.0', 'all' );
 		wp_enqueue_script( 'restaler-main', RESTALER_URL . '/common/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
 	}
@@ -230,6 +244,20 @@ The {site_name} Team"
 		}
 	}
 
+	public function show_notify_form( $show = false, $product = null ) {
+		$enable_stock_threshold = get_option( 'restaler_enable_stock_threshold', '' );
+		$stock_threshold_count  = get_option( 'restaler_stock_threshold_count', 3 );
+
+		if ( Core_Utils::string_to_bool( $enable_stock_threshold ) ) {
+			$stock_quantity = $product->get_stock_quantity();
+
+			if ( $stock_quantity <= $stock_threshold_count ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Append notify form fields after the `out of stock` notice.
 	 *
@@ -240,13 +268,31 @@ The {site_name} Team"
 
 		$product_type = $product->get_type();
 
-		if ( 'simple' === $product_type && $product->is_purchasable() && ( ! $product->is_in_stock() || apply_filters( 'restaler_show_notify_form', false, $product ) ) ) {
+		$hide = true;
+
+		if ( 'simple' === $product_type ) {
+			if ( $product->is_purchasable() && ( ! $product->is_in_stock() || apply_filters( 'restaler_show_notify_form', false, $product ) ) ) {
+				restaler()->templates->include_template(
+					'notify-form.php',
+					array(
+						'product' => $product,
+						'type'    => $product_type,
+						'hide'    => false,
+					)
+				);
+			}
+		} elseif ( 'variable' === $product_type ) {
+			$available_variations = $product->get_available_variations();
+			if ( empty( $available_variations ) && false !== $available_variations ) {
+				$hide = false;
+			}
+
 			restaler()->templates->include_template(
 				'notify-form.php',
 				array(
 					'product' => $product,
 					'type'    => $product_type,
-					'hide'    => false,
+					'hide'    => $hide,
 				)
 			);
 		}

@@ -89,63 +89,68 @@ $plugin_header = '<?php
 
 defined( \'ABSPATH\' ) || exit;
 
-if ( ! defined( \'RESTALER_PLUGIN_FILE\' ) ) {
-	define( \'RESTALER_PLUGIN_FILE\', __FILE__ );
-}
+if ( ! did_action( \'restaler_initialized\' ) ) {
 
-if ( ! defined( \'RESTALER_VERSION\' ) ) {
-	define( \'RESTALER_VERSION\', \'' . $version . '\' );
-}
+	if ( ! defined( \'RESTALER_PLUGIN_FILE\' ) ) {
+		define( \'RESTALER_PLUGIN_FILE\', __FILE__ );
+	}
 
-if ( ! defined( \'RESTALER_PATH\' ) ) {
-	define( \'RESTALER_PATH\', plugin_dir_path( __FILE__ ) );
-}
+	if ( ! defined( \'RESTALER_VERSION\' ) ) {
+		define( \'RESTALER_VERSION\', \'' . $version . '\' );
+	}
 
-if ( ! defined( \'RESTALER_URL\' ) ) {
-	define( \'RESTALER_URL\', plugin_dir_url( __FILE__ ) );
-}
+	if ( ! defined( \'RESTALER_PATH\' ) ) {
+		define( \'RESTALER_PATH\', plugin_dir_path( __FILE__ ) );
+	}
 
-require_once __DIR__ . \'/includes/class-restaler.php\';
+	if ( ! defined( \'RESTALER_URL\' ) ) {
+		define( \'RESTALER_URL\', plugin_dir_url( __FILE__ ) );
+	}
 
-/**
- * Returns the main instance of RESTALER.
- *
- * @since  1.0
- * @return RESTALER
- */
-function restaler() {
-	return \\RESTALER\\RESTALER::instance();
-}
+	if ( ! class_exists( \'\\RESTALER\\RESTALER\' ) ) {
+		require_once __DIR__ . \'/includes/class-restaler.php\';
 
-// Global for backwards compatibility.
-$GLOBALS[\'restaler\'] = restaler();
+		/**
+		 * Returns the main instance of RESTALER.
+		 *
+		 * @since  1.0
+		 * @return RESTALER
+		 */
+		function restaler() {
+			return \\RESTALER\\RESTALER::instance();
+		}
 
-/**
- * ==========================
- *  Onborading
- * ==========================
- */
+		// Global for backwards compatibility.
+		$GLOBALS[\'restaler\'] = restaler();
 
-// Include the onboarding class.
-if ( ! class_exists( \'\\STOBOKIT\\Onboarding\' ) ) {
-	include_once dirname( RESTALER_PLUGIN_FILE ) . \'/core/class-onboarding.php\';
-}
+		/**
+		 * ==========================
+		 *  Onborading
+		 * ==========================
+		 */
 
-register_activation_hook( __FILE__, \'restaler_on_plugin_activation\' );
+		// Include the onboarding class.
+		if ( ! class_exists( \'\\STOBOKIT\\Onboarding\' ) ) {
+			include_once dirname( RESTALER_PLUGIN_FILE ) . \'/core/class-onboarding.php\';
+		}
 
-/**
- * Handle plugin activation.
- */
-function restaler_on_plugin_activation() {
-	// Set flag that plugin was just activated.
-	set_transient( \'restaler_onboarding_activation_redirect\', true, 60 );
+		register_activation_hook( __FILE__, \'restaler_on_plugin_activation\' );
 
-	// Set onboarding as pending.
-	update_option( \'restaler_onboarding_completed\', false );
-	update_option( \'restaler_onboarding_started\', current_time( \'timestamp\' ) );
+		/**
+		 * Handle plugin activation.
+		 */
+		function restaler_on_plugin_activation() {
+			// Set flag that plugin was just activated.
+			set_transient( \'restaler_onboarding_activation_redirect\', true, 60 );
 
-	// Clear any existing onboarding progress.
-	delete_option( \'restaler_onboarding_current_step\' );
+			// Set onboarding as pending.
+			update_option( \'restaler_onboarding_completed\', false );
+			update_option( \'restaler_onboarding_started\', current_time( \'timestamp\' ) );
+
+			// Clear any existing onboarding progress.
+			delete_option( \'restaler_onboarding_current_step\' );
+		}
+	}
 }
 ';
 

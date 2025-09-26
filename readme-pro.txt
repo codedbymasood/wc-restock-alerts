@@ -14,6 +14,8 @@ A lightweight WooCommerce addon that allows customers to subscribe for notificat
 - Store user email and product info in a custom table
 - Send **automatic email** when the product is back in stock
 - **Track purchases** to prevent unnecessary emails
+- Customize email templates
+- Works with all product types.
 
 == Installation ==
 

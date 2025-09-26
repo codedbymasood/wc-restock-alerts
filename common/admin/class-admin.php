@@ -130,6 +130,23 @@ class Admin {
 					 * After restock alert email sent.
 					 */
 					do_action( 'restaler_alert_email_sent', $row, $product );
+				} elseif ( 'variable' === $product_type ) {
+
+					$variation_id = isset( $row['variation_id'] ) ? $row['variation_id'] : 0;
+
+					$variations = wc_get_product( $variation_id );
+
+					$stock_status = $variations->get_stock_status();
+
+					if ( 'instock' === $stock_status ) {
+						$this->send_notify_emails( $row );
+						$this->change_status_to_email_sent( $row );
+
+						/**
+						 * After restock alert email sent.
+						 */
+						do_action( 'restaler_alert_email_sent', $row, $product );
+					}
 				}
 			}
 		}

@@ -7,8 +7,6 @@
  * @version 1.0
  */
 
-namespace PRODEXMA;
-
 defined( 'ABSPATH' ) || exit;
 ?>
 <div>

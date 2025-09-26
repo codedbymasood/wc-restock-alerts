@@ -45,14 +45,12 @@ add_action(
 					'label'   => esc_html__( 'Stock Threshold', 'plugin-slug' ),
 					'type'    => 'checkbox',
 					'default' => '0',
-					'pro'     => true,
 				),
 				array(
 					'id'      => 'restaler_stock_threshold_count',
 					'label'   => esc_html__( 'Stock Threshold Count', 'plugin-slug' ),
 					'type'    => 'number',
 					'default' => 3,
-					'pro'     => true,
 				),
 			),
 			esc_html__( 'Followup Email Settings', 'plugin-slug' ) => array(

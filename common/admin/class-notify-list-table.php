@@ -34,12 +34,13 @@ class Notify_List_Table extends \STOBOKIT\List_Table {
 	 */
 	public function custom_columns() {
 		return array(
-			'cb'         => '<input type="checkbox" />',
-			'id'         => esc_html__( 'ID', 'plugin-slug' ),
-			'email'      => esc_html__( 'Email', 'plugin-slug' ),
-			'product_id' => esc_html__( 'Product', 'plugin-slug' ),
-			'status'     => esc_html__( 'Status', 'plugin-slug' ),
-			'created_at' => esc_html__( 'Created At', 'plugin-slug' ),
+			'cb'           => '<input type="checkbox" />',
+			'id'           => esc_html__( 'ID', 'plugin-slug' ),
+			'email'        => esc_html__( 'Email', 'plugin-slug' ),
+			'product_id'   => esc_html__( 'Product', 'plugin-slug' ),
+			'variation_id' => esc_html__( 'Variation', 'plugin-slug' ),
+			'status'       => esc_html__( 'Status', 'plugin-slug' ),
+			'created_at'   => esc_html__( 'Created At', 'plugin-slug' ),
 		);
 	}
 
@@ -88,6 +89,29 @@ class Notify_List_Table extends \STOBOKIT\List_Table {
 
 		$product = wc_get_product( $product_id );
 		return ( null !== $product ) ? $product->get_name() : '';
+	}
+
+	/**
+	 * Variation ID column.
+	 *
+	 * @param array $item Table row item.
+	 * @return string
+	 */
+	public function column_variation_id( $item = array() ) {
+		$variation_id = $item['variation_id'] ? $item['variation_id'] : 0;
+
+		$variation_name = '';
+
+		$variation = wc_get_product( $variation_id );
+
+		if ( $variation && $variation->is_type( 'variation' ) ) {
+			// Get variation attributes.
+			$attributes = $variation->get_variation_attributes();
+
+			// Get formatted variation name.
+			$variation_name = wc_get_formatted_variation( $attributes, true );
+		}
+		return ( $variation_name ) ? sprintf( 'Variation: %s', esc_html( $variation_name ) ) : '';
 	}
 
 	/**

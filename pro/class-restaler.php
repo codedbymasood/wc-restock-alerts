@@ -17,11 +17,25 @@ defined( 'ABSPATH' ) || exit;
 final class RESTALER {
 
 	/**
+	 * Emailer class
+	 *
+	 * @var \StoboKit\Emailer
+	 */
+	public $emailer;
+
+	/**
 	 * Logger class
 	 *
 	 * @var \StoboKit\Logger
 	 */
 	public $logger;
+
+	/**
+	 * Cron class
+	 *
+	 * @var \StoboKit\Cron_Scheduler
+	 */
+	public $cron;
 
 	/**
 	 * Schedule logger class
@@ -83,6 +97,8 @@ final class RESTALER {
 
 		$this->load_dependencies();
 		$this->init_hooks();
+
+		do_action( 'restaler_initialized' );
 	}
 
 	/**
@@ -102,6 +118,7 @@ final class RESTALER {
 		require_once RESTALER_PATH . '/common/public/class-frontend.php';
 
 		if ( is_admin() ) {
+			include_once RESTALER_PATH . '/common/admin/view/email-templates.php';
 			include_once RESTALER_PATH . '/common/admin/view/settings-page.php';
 			require_once RESTALER_PATH . '/common/admin/class-admin.php';
 			require_once RESTALER_PATH . '/common/admin/class-notify-list-table.php';
@@ -118,7 +135,6 @@ final class RESTALER {
 
 		require_once plugin_dir_path( __FILE__ ) . '/class-hooks.php';
 		require_once plugin_dir_path( __FILE__ ) . '/class-admin.php';
-		require_once plugin_dir_path( __FILE__ ) . '/views/email-templates.php';
 		require_once plugin_dir_path( __FILE__ ) . '/class-notify-list-table-pro.php';
 	}
 

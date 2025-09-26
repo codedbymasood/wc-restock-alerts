@@ -17,6 +17,20 @@ defined( 'ABSPATH' ) || exit;
 class Cron_Scheduler {
 
 	/**
+	 * Logger class
+	 *
+	 * @var \StoboKit\Logger
+	 */
+	public $logger;
+
+	/**
+	 * Schedule logger class
+	 *
+	 * @var \StoboKit\Schedule_Logger
+	 */
+	public $scheduler;
+
+	/**
 	 * Constructor - Register the universal cron handler
 	 */
 	public function __construct() {

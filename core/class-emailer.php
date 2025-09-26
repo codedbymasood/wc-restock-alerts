@@ -67,6 +67,20 @@ class Emailer {
 	private static $instance = null;
 
 	/**
+	 * Logger class
+	 *
+	 * @var \StoboKit\Logger
+	 */
+	public $logger;
+
+	/**
+	 * Schedule logger class
+	 *
+	 * @var \StoboKit\Schedule_Logger
+	 */
+	public $scheduler;
+
+	/**
 	 * Mail defaults
 	 *
 	 * @var array

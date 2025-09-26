@@ -24,6 +24,13 @@ class Settings {
 	private $direct;
 
 	/**
+	 * Plugin slug.
+	 *
+	 * @var string
+	 */
+	private $plugin_slug;
+
+	/**
 	 * Parent slug.
 	 *
 	 * @var string
