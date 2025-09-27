@@ -156,7 +156,7 @@ if ( ! did_action( \'restaler_initialized\' ) ) {
 
 file_put_contents( $build_dir . '/' . $plugin_slug . '.php', $plugin_header );
 
-$zip_file = $source_dir . '/builds/' . $plugin_slug . '-lite-' . $version . '.zip';
+$zip_file = $source_dir . '/builds/' . $plugin_slug . '-' . $version . '.zip';
 create_zip_archive( $build_dir, $zip_file );
 
 echo 'Lite version built: ' . $zip_file . "\n";

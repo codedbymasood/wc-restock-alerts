@@ -33,6 +33,16 @@ Manual installation method requires downloading the WooCommerce plugin and uploa
 
 This external service usage is solely for displaying informational content and does not affect the core functionality of the plugin. All communications use secure HTTPS connections.
 
+== Screenshots ==
+
+1. General settings panel where you configure the plugin.
+2. Subscription table that tracks user activity: subscribed status, purchased items, emails sent, and product/variation details.
+3. Frontend view of how notifications are displayed to customers.
+4. Admin email template settings to customize outgoing messages.
+5. Email logs with status details showing whether emails were sent or failed.
+6. Onboarding process that guides users through initial setup.
+7. Debug logs section showing tracked issues, errors, and warnings.
+
 = Updating =
 
 Automatic updates should work smoothly, but we still recommend you back up your site.

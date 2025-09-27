@@ -9,6 +9,8 @@
 
 namespace RESTALER;
 
+use STOBOKIT\Utils as Core_Utils;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -230,7 +232,7 @@ The {site_name} Team"
 			'email/email-content.php',
 			array(
 				'heading'     => $heading,
-				'content'     => $content,
+				'content'     => $content['html'],
 				'footer_text' => $footer_text,
 			)
 		);

@@ -59,7 +59,7 @@ class Admin {
 			// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->update(
 				$wpdb->prefix . 'restaler_restock_alerts',
-				array( 'status' => 'completed' ),
+				array( 'status' => 'purchased' ),
 				array(
 					'email'      => $customer_email,
 					'product_id' => $product_id,

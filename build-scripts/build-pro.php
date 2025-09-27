@@ -1,8 +1,9 @@
 <?php
 $version = '1.0.0';
 
+$entry_file  = 'restock-alerts-pro-for-woocommerce';
 $plugin_slug = 'restock-alerts-for-woocommerce';
-$plugin_name = 'Restock Alerts for WooCommerce';
+$plugin_name = 'Restock Alerts Pro for WooCommerce';
 
 $source_dir = dirname( __DIR__ );
 $build_dir  = $source_dir . '/builds/pro';
@@ -123,9 +124,9 @@ if ( did_action( \'restaler_initialized\' ) ) {
 }
 ';
 
-file_put_contents( $build_dir . '/' . $plugin_slug . '.php', $plugin_header );
+file_put_contents( $build_dir . '/' . $entry_file . '.php', $plugin_header );
 
-$zip_file = $source_dir . '/builds/' . $plugin_slug . '-pro-' . $version . '.zip';
+$zip_file = $source_dir . '/builds/' . $entry_file . '-' . $version . '.zip';
 create_zip_archive( $build_dir, $zip_file );
 
 echo 'Pro version built: ' . $zip_file . "\n";

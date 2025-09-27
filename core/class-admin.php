@@ -100,12 +100,15 @@ class Admin {
 			);
 		}
 
-		$inputs = isset( $_POST['inputs'] ) && ! empty( $_POST['inputs'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['inputs'] ) ) : array();
+    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$inputs = isset( $_POST['inputs'] ) && ! empty( $_POST['inputs'] ) ? wp_unslash( $_POST['inputs'] ) : array();
 
 		if ( ! empty( $inputs ) ) {
 			foreach ( $inputs as $index => $field ) {
 				if ( '_wp_http_referer' !== $index && 'stobokit_save_settings_nonce' !== $index ) {
-					update_option( $field['name'], $field['value'] );
+					$name  = sanitize_text_field( $field['name'] );
+					$value = sanitize_text_field( $field['value'] );
+					update_option( $name, $value );
 				}
 			}
 		}

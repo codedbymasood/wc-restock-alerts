@@ -19,10 +19,11 @@ defined( 'ABSPATH' ) || exit;
 	<div class="section">
 		<h3><?php esc_html_e( 'Why you\'ll love this?', 'plugin-slug' ); ?></h3>
 		<ul>
-			<li><strong><?php esc_html_e( 'Smart expiry rules', 'plugin-slug' ); ?></strong><?php esc_html_e( ' - Set once, automate forever', 'plugin-slug' ); ?></li>
-			<li><strong><?php esc_html_e( 'Instant product updates', 'plugin-slug' ); ?></strong><?php esc_html_e( ' - Hide expired items automatically', 'plugin-slug' ); ?></li>
-			<li><strong><?php esc_html_e( 'Proactive alerts', 'plugin-slug' ); ?></strong><?php esc_html_e( ' - Get notified before expiration', 'plugin-slug' ); ?></li>
-			<li><strong><?php esc_html_e( 'Happy customers', 'plugin-slug' ); ?></strong><?php esc_html_e( ' - Always show fresh, available products.', 'plugin-slug' ); ?></li>
+			<li><strong><?php esc_html_e( 'Automatic restock alerts', 'plugin-slug' ); ?></strong><?php esc_html_e( ' - Notify customers instantly when items are back in stock', 'plugin-slug' ); ?></li>
+			<li><strong><?php esc_html_e( 'Smart stock monitoring', 'plugin-slug' ); ?></strong><?php esc_html_e( ' - CRON scheduling & threshold alerts ensure no restock goes unnoticed', 'plugin-slug' ); ?></li>
+			<li><strong><?php esc_html_e( 'Beautiful email campaigns', 'plugin-slug' ); ?></strong><?php esc_html_e( ' - Customizable templates with professional designs & dynamic mail tags', 'plugin-slug' ); ?></li>
+			<li><strong><?php esc_html_e( 'Subscriber & email logs', 'plugin-slug' ); ?></strong><?php esc_html_e( ' - Track alerts, manage subscribers, and export lists in CSV', 'plugin-slug' ); ?></li>
+			<li><strong><?php esc_html_e( 'Seamless WooCommerce integration', 'plugin-slug' ); ?></strong><?php esc_html_e( ' - Works with simple & variable products, no third-party services required', 'plugin-slug' ); ?></li>
 		</ul>
 	</div>
 	<p><?php esc_html_e( 'In just a few steps, you\'ll be ready to set expiry rules for your products.', 'plugin-slug' ); ?></p>
