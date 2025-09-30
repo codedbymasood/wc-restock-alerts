@@ -226,7 +226,7 @@ class Utils {
 	 */
 	public static function bool_to_string( $bool ) {
 		if ( ! is_bool( $bool ) ) {
-			$bool = wc_string_to_bool( $bool );
+			$bool = self::string_to_bool( $bool );
 		}
 		return true === $bool ? 'yes' : 'no';
 	}
