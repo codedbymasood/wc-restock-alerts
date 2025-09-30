@@ -177,8 +177,8 @@ class Emailer {
 	 * Schedule single email with individual cron job and optional validation
 	 */
 	public function send_later( $to, $subject, $message, $days_later, $args = array(), $name = '', $validation_callback = null ) {
-		$base_time   = time();
-		$send_time = $base_time + ( 1 * MINUTE_IN_SECONDS );
+		$base_time = time();
+		$send_time = $base_time + ( $days_later * DAY_IN_SECONDS );
 		$email_id  = 'email_' . Utils::uid();
 
 		// Create email data.
@@ -237,7 +237,7 @@ class Emailer {
 		}
 
 		foreach ( $sequence as $index => $email ) {
-			$send_time = $base_time + ( ( $index + 1 ) * 2 * MINUTE_IN_SECONDS );
+			$send_time = $base_time + ( $email['days'] * DAY_IN_SECONDS );
 
 			// Check if individual email has a uid - if so, cancel that specific email.
 			if ( isset( $email['uid'] ) ) {

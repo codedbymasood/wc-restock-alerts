@@ -1,5 +1,5 @@
 <?php
-$version = '1.0.0';
+$version = '1.1.0';
 
 $entry_file  = 'restock-alerts-pro-for-woocommerce';
 $plugin_slug = 'restock-alerts-for-woocommerce';

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Restock Alerts Development
  * Description: Development version - switches between Lite and Pro versions for testing
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Store Boost Kit
  * Text Domain: restock-alerts-dev
  * Requires PHP: 7.4

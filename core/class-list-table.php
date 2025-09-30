@@ -2,32 +2,6 @@
 /**
  * Table holds all the notify details.
  *
- * Usage Examples:
- * ==============
- *  // Basic filter for active status
- *  add_filter( '{table_id}_table_where_clause_filter', 'filter_active_items_only', 10, 1 );
- *  function filter_active_items_only( $filter_data ) {
- *    // Only show active items
- *    $filter_data['conditions'][] = array(
- *      'sql' => '`status` = %s',
- *      'params' => array( 'active' )
- *    );
- *
- *    return $filter_data;
- *  }
- *
- *  // Date range filter
- *  add_filter( '{table_id}_table_where_clause_filter', 'filter_by_date_range', 10, 1 );
- *  function filter_by_date_range( $filter_data ) {
- *    // Filter items created in the last 30 days
- *    $filter_data['conditions'][] = array(
- *      'sql' => '`created_date` >= %s',
- *      'params' => array( date( 'Y-m-d', strtotime( '-30 days' ) ) )
- *    );
- *
- *    return $filter_data;
- *  }
- *
  * @package plugin-slug\core\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
@@ -272,29 +246,6 @@ class List_Table extends \WP_List_Table {
 			}
 		}
 
-		// Apply custom filter with validation.
-		$filter_data = apply_filters(
-			$this->id . '_table_where_clause_filter',
-			array(
-				'conditions' => array(),
-				'params'     => array(),
-				'table'      => $table,
-				'search'     => $search,
-			)
-		);
-
-		// Process filter conditions securely.
-		if ( ! empty( $filter_data['conditions'] ) && is_array( $filter_data['conditions'] ) ) {
-			foreach ( $filter_data['conditions'] as $condition ) {
-				if ( $this->is_valid_filter_condition( $condition ) ) {
-					$where_conditions[] = $condition['sql'];
-					if ( ! empty( $condition['params'] ) ) {
-						$where_params = array_merge( $where_params, $condition['params'] );
-					}
-				}
-			}
-		}
-
 		$where_clause = implode( ' AND ', $where_conditions );
 
 		$count_query = "SELECT COUNT(*) FROM `$table` WHERE $where_clause";
@@ -336,13 +287,6 @@ class List_Table extends \WP_List_Table {
 		}
 
 		do_action( $this->id . '_table_extra_tablenav', $which );
-	}
-
-	private function is_valid_filter_condition( $condition ) {
-		return is_array( $condition )
-			&& isset( $condition['sql'] )
-			&& is_string( $condition['sql'] )
-			&& ! empty( $condition['sql'] );
 	}
 
 	/**
@@ -427,28 +371,6 @@ class List_Table extends \WP_List_Table {
 			}
 		}
 
-		// Apply custom filters.
-		$filter_data = apply_filters(
-			$this->id . '_table_where_clause_filter',
-			array(
-				'conditions' => array(),
-				'params'     => array(),
-				'table'      => $table,
-				'search'     => $search,
-			)
-		);
-
-		if ( ! empty( $filter_data['conditions'] ) && is_array( $filter_data['conditions'] ) ) {
-			foreach ( $filter_data['conditions'] as $condition ) {
-				if ( $this->is_valid_filter_condition( $condition ) ) {
-					$where_conditions[] = $condition['sql'];
-					if ( ! empty( $condition['params'] ) ) {
-						$where_params = array_merge( $where_params, $condition['params'] );
-					}
-				}
-			}
-		}
-
 		$where_clause = implode( ' AND ', $where_conditions );
 
 		// Get data.
@@ -478,7 +400,7 @@ class List_Table extends \WP_List_Table {
 		foreach ( $columns as $key => $label ) {
 			$csv_headers[] = wp_strip_all_tags( $label );
 		}
-		fputcsv( $output, $csv_headers );
+		fputcsv( $output, $csv_headers, ',', '"', '\\' );
 
 		// Add data rows.
 		if ( ! empty( $results ) ) {
@@ -499,7 +421,7 @@ class List_Table extends \WP_List_Table {
 					}
 				}
 
-				fputcsv( $output, $csv_row );
+				fputcsv( $output, $csv_row, ',', '"', '\\' );
 			}
 		}
 

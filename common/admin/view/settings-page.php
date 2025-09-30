@@ -59,21 +59,18 @@ add_action(
 					'label'   => esc_html__( 'Enable Followup', 'plugin-slug' ),
 					'type'    => 'checkbox',
 					'default' => '0',
-					'pro'     => true,
 				),
 				array(
 					'id'      => 'restaler_first_followup_days',
 					'label'   => esc_html__( 'First Followup Days', 'plugin-slug' ),
 					'type'    => 'number',
 					'default' => 2,
-					'pro'     => true,
 				),
 				array(
 					'id'      => 'restaler_second_followup_days',
 					'label'   => esc_html__( 'Second Followup Days', 'plugin-slug' ),
 					'type'    => 'number',
 					'default' => 3,
-					'pro'     => true,
 				),
 				array(
 					'id'      => 'restaler_discount_type',
@@ -83,21 +80,18 @@ add_action(
 						'percent'    => esc_html__( 'Percentage discount', 'plugin-slug' ),
 						'fixed_cart' => esc_html__( 'Fixed cart discount', 'plugin-slug' ),
 					),
-					'pro'     => true,
 				),
 				array(
 					'id'      => 'restaler_discount_amount',
 					'label'   => esc_html__( 'Discount Amount', 'plugin-slug' ),
 					'type'    => 'number',
 					'default' => 20,
-					'pro'     => true,
 				),
 				array(
 					'id'      => 'restaler_coupon_expires_in',
 					'label'   => esc_html__( 'Coupon Expires In', 'plugin-slug' ),
 					'type'    => 'number',
 					'default' => 3,
-					'pro'     => true,
 				),
 			),
 		);

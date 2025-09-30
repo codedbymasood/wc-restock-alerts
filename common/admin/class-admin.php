@@ -44,6 +44,27 @@ class Admin {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'wp_insert_post', array( $this, 'save_product' ), 99, 3 );
 		add_action( 'woocommerce_order_status_completed', array( $this, 'order_completed' ) );
+
+		// It should run before initialize table.
+		add_filter( 'restock_alerts_table_allow_export_csv', '__return_true' );
+		add_filter( 'restock_alerts_table_csv_export_columns', array( $this, 'csv_export_columns' ), 99 );
+		add_filter( 'restock_alerts_table_bulk_actions', array( $this, 'bulk_actions' ), 99 );
+	}
+
+	public function bulk_actions( $actions = array() ) {
+		$actions['export_csv'] = esc_html__( 'Export to CSV', 'plugin-slug' );
+		return $actions;
+	}
+
+	public function csv_export_columns() {
+		return array(
+			'id'           => esc_html__( 'ID', 'plugin-slug' ),
+			'email'        => esc_html__( 'Email', 'plugin-slug' ),
+			'product_id'   => esc_html__( 'Product', 'plugin-slug' ),
+			'variation_id' => esc_html__( 'Variation', 'plugin-slug' ),
+			'status'       => esc_html__( 'Status', 'plugin-slug' ),
+			'created_at'   => esc_html__( 'Created At', 'plugin-slug' ),
+		);
 	}
 
 	public function order_completed( $order_id = 0 ) {

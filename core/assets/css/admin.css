@@ -111,6 +111,12 @@ body[class*="stobokit"] div.error {
   width: 100%;
 }
 
+.stobokit-wrapper .tablenav {
+	height: 40px;
+	margin: 12px 0;
+	padding-top: 0;
+}
+
 .stobokit-widgets {
   display: flex;
   gap: 24px;    

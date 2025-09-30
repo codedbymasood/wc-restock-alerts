@@ -132,10 +132,6 @@ final class RESTALER {
 	 */
 	private function load_dependencies() {
 		$this->load_common();
-
-		require_once plugin_dir_path( __FILE__ ) . '/class-hooks.php';
-		require_once plugin_dir_path( __FILE__ ) . '/class-admin.php';
-		require_once plugin_dir_path( __FILE__ ) . '/class-notify-list-table-pro.php';
 	}
 
 	/**
