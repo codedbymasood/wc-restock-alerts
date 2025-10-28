@@ -37,19 +37,49 @@ class Admin {
 	public function maybe_create_table() {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'stobokit_scheduler_logs';
+		$scheduler_logs = $wpdb->prefix . 'stobokit_scheduler_logs';
 
     // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
     // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$table_exists = $wpdb->get_var(
+		$scheduler_logs_table_exists = $wpdb->get_var(
 			$wpdb->prepare(
 				'SHOW TABLES LIKE %s',
-				$table
+				$scheduler_logs
 			)
 		);
 
-		if ( $table_exists !== $table ) {
+		if ( $scheduler_logs_table_exists !== $scheduler_logs ) {
 			$this->create_scheduler_logs_table();
+		}
+
+		$email_queue = $wpdb->prefix . 'stobokit_email_queue';
+
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$email_queue_table_exists = $wpdb->get_var(
+			$wpdb->prepare(
+				'SHOW TABLES LIKE %s',
+				$email_queue
+			)
+		);
+
+		if ( $email_queue_table_exists !== $email_queue ) {
+			$this->create_email_queue_table();
+		}
+
+		$email_logs = $wpdb->prefix . 'stobokit_email_logs';
+
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$email_logs_table_exists = $wpdb->get_var(
+			$wpdb->prepare(
+				'SHOW TABLES LIKE %s',
+				$email_logs
+			)
+		);
+
+		if ( $email_logs_table_exists !== $email_logs ) {
+			$this->create_email_logs_table();
 		}
 	}
 
@@ -67,7 +97,7 @@ class Admin {
 
 		$sql = "CREATE TABLE {$table} (
 			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-			uid varchar(64) NOT NULL,
+			uid varchar(128) NOT NULL,
 			hook_name varchar(128) NOT NULL,
 			args varchar(255) NOT NULL,
 			schedule varchar(50) DEFAULT NULL,
@@ -84,6 +114,80 @@ class Admin {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
+	}
+
+	/**
+	 * Create email queue table
+	 *
+	 * @return void
+	 */
+	public static function create_email_queue_table() {
+		global $wpdb;
+
+		$charset_collate = $wpdb->get_charset_collate();
+
+		// Email queue table.
+		$table_name = $wpdb->prefix . 'stobokit_email_queue';
+
+		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			email_id varchar(100) NOT NULL,
+			sequence_id varchar(100) DEFAULT NULL,
+			to_email varchar(255) NOT NULL,
+			subject varchar(500) NOT NULL,
+			message longtext NOT NULL,
+			args longtext DEFAULT NULL,
+			validation_callback longtext DEFAULT NULL,
+			status varchar(20) NOT NULL DEFAULT 'scheduled',
+			retry_count int(11) NOT NULL DEFAULT 0,
+			daily_retry_count int(11) NOT NULL DEFAULT 0,
+			max_retries int(11) NOT NULL DEFAULT 3,
+			scheduled_time datetime NOT NULL,
+			last_attempt_time datetime DEFAULT NULL,
+			last_error_message text DEFAULT NULL,
+			notes text DEFAULT NULL,
+			created_at datetime NOT NULL,
+			updated_at datetime NOT NULL,
+			PRIMARY KEY (id),
+			KEY email_id (email_id),
+			KEY status (status),
+			KEY scheduled_time (scheduled_time),
+			KEY sequence_id (sequence_id),
+			KEY to_email (to_email)
+		) {$charset_collate};";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+	}
+
+	/**
+	 * Create email queue table
+	 *
+	 * @return void
+	 */
+	public static function create_email_logs_table() {
+		global $wpdb;
+
+		$charset_collate = $wpdb->get_charset_collate();
+
+		// Email logs table.
+		$log_table_name = $wpdb->prefix . 'stobokit_email_logs';
+		$sql_logs = "CREATE TABLE IF NOT EXISTS {$log_table_name} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			email_id varchar(100) DEFAULT NULL,
+			to_email varchar(255) NOT NULL,
+			subject varchar(500) NOT NULL,
+			sent tinyint(1) NOT NULL DEFAULT 0,
+			skip_reason text DEFAULT NULL,
+			sent_at datetime NOT NULL,
+			PRIMARY KEY (id),
+			KEY email_id (email_id),
+			KEY to_email (to_email),
+			KEY sent_at (sent_at)
+		) {$charset_collate};";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql_logs );
 	}
 
 	/**

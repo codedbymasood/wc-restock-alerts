@@ -41,6 +41,14 @@ class Admin {
 	 * Plugin constructor.
 	 */
 	private function __construct() {
+		add_filter(
+			'stobokit_plugins',
+			function ( $plugins = array() ) {
+				$plugins[] = 'restock-alerts-development';
+
+				return $plugins;
+			}
+		);
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'wp_insert_post', array( $this, 'save_product' ), 99, 3 );
 		add_action( 'woocommerce_order_status_completed', array( $this, 'order_completed' ) );

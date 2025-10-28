@@ -239,22 +239,37 @@ class Schedule_Logger {
 					case 'schedule':
 					case 'status':
 						$update_data[ $field ] = sanitize_text_field( $value );
-						$format[] = '%s';
+						$format[]              = '%s';
 						break;
 					case 'args':
-						$update_data[ $field ] = is_array( $value ) ? wp_json_encode( $value ) : sanitize_text_field( $value );
+						if ( is_array( $value ) ) {
+							$encoded = wp_json_encode( $value );
+							$update_data[ $field ] = ( false !== $encoded ) ? $encoded : '[]';
+						} else {
+							$update_data[ $field ] = sanitize_text_field( $value );
+						}
 						$format[] = '%s';
 						break;
 					case 'attempts':
 						$update_data[ $field ] = absint( $value );
-						$format[] = '%d';
+						$format[]              = '%d';
 						break;
 					case 'next_run':
-						$update_data[ $field ] = $value;
-						$format[] = '%s';
+						// Validate datetime format
+						$sanitized_value = sanitize_text_field( $value );
+						// Optional: Add stricter datetime validation
+						if ( strtotime( $sanitized_value ) !== false ) {
+							$update_data[ $field ] = $sanitized_value;
+							$format[]              = '%s';
+						}
 						break;
 				}
 			}
+		}
+
+		// If no valid fields to update, return false
+		if ( empty( $update_data ) ) {
+			return false;
 		}
 
 		// Always update the updated_at timestamp.

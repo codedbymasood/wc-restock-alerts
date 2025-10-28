@@ -187,69 +187,21 @@ $theme = wp_get_theme();
 
 		<!-- Email Logs -->
 		<div class="nav-tab-content <?php echo 'email-logs' === $current_tab ? 'active' : ''; ?>">
-			
-			<div class="stobokit-wrapper no-spacing">
+			<div class="status-table wrap">
 				<?php
-				$logs = array_reverse( get_option( 'stobokit_emailer_logs', array() ) );
+				if ( 'email-logs' === $current_tab ) {
+					$args = array(
+						'title'      => esc_html__( 'Email Logs', 'plugin-slug' ),
+						'singular'   => 'email_log',
+						'plural'     => 'email_logs',
+						'table_name' => 'stobokit_email_logs',
+						'id'         => 'email_logs',
+					);
 
-				if ( isset( $_POST['action'] ) && 'clear_email_logs' === $_POST['action'] && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'clear_email_logs' ) ) {
-					update_option( 'stobokit_emailer_logs', array() );
-					wp_safe_redirect( admin_url( 'admin.php?page=stobokit-status&tab=email-logs' ) );
+					$email_logs_table = new \STOBOKIT\Email_Logs( $args );
+					$email_logs_table->display_table();
 				}
 				?>
-				<div class="wrap">
-					<h1><?php esc_html_e( 'Email Logs', 'plugin-slug' ); ?></h1>
-					<table class="wp-list-table widefat fixed striped table-view-list email-logs">
-						<thead>
-							<tr>
-								<th><?php esc_html_e( 'Email', 'plugin-slug' ); ?></th>
-								<th><?php esc_html_e( 'Subject', 'plugin-slug' ); ?></th>
-								<th><?php esc_html_e( 'Sent', 'plugin-slug' ); ?></th>
-								<th><?php esc_html_e( 'Sent At', 'plugin-slug' ); ?></th>
-							</tr>
-						</thead>
-
-						<tbody id="the-list">
-							<?php
-							if ( ! empty( $logs ) ) {
-								foreach ( $logs as $log ) {
-									?>
-									<tr>
-										<td><?php echo esc_html( $log['to'] ); ?></td>
-										<td><?php echo esc_html( $log['subject'] ); ?></td>
-										<td>
-											<?php
-											if ( -1 === $log['sent'] ) {
-												echo esc_html__( 'Skipped', 'plugin-slug' );
-											} elseif ( $log['sent'] ) {
-												echo esc_html__( 'Sent', 'plugin-slug' );
-											} else {
-												echo esc_html__( 'Failed', 'plugin-slug' );
-											}
-											?>
-										</td>
-										<td><?php echo esc_html( $log['sent_at'] ); ?></td>
-									</tr>
-									<?php
-								}
-							} else {
-								?>
-								<tr>
-									<td colspan="4"><?php esc_html_e( 'No email logs found.', 'plugin-slug' ); ?></td>
-								</tr>
-								<?php
-							}
-							?>
-						</tbody>
-
-					</table>					
-
-					<form method="post">
-						<?php wp_nonce_field( 'clear_email_logs' ); ?>
-						<input type="hidden" name="action" value="clear_email_logs">
-						<button type="submit" class="button button-primary"><?php esc_html_e( 'Clear Logs', 'plugin-slug' ); ?></button>
-					</form>
-				</div>
 			</div>
 		</div>
 
@@ -258,16 +210,18 @@ $theme = wp_get_theme();
 		<div class="nav-tab-content <?php echo 'scheduled-actions' === $current_tab ? 'active' : ''; ?>">
 			<div class="status-table wrap">
 				<?php
-				$args = array(
-					'title'      => esc_html__( 'Scheduled Actions', 'plugin-slug' ),
-					'singular'   => 'scheduler_log',
-					'plural'     => 'scheduler_logs',
-					'table_name' => 'stobokit_scheduler_logs',
-					'id'         => 'scheduler_logs',
-				);
+				if ( 'scheduled-actions' === $current_tab ) {
+					$args = array(
+						'title'      => esc_html__( 'Scheduled Actions', 'plugin-slug' ),
+						'singular'   => 'scheduler_log',
+						'plural'     => 'scheduler_logs',
+						'table_name' => 'stobokit_scheduler_logs',
+						'id'         => 'scheduler_logs',
+					);
 
-				$notify_table = new \STOBOKIT\Cron_Logs_Table( $args );
-				$notify_table->display_table();
+					$cron_logs_table = new \STOBOKIT\Cron_Logs_Table( $args );
+					$cron_logs_table->display_table();
+				}
 				?>
 			</div>
 		</div>

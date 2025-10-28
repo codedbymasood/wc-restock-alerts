@@ -184,6 +184,9 @@ class Settings {
 
 		foreach ( $this->fields as $tab_fields ) {
 			foreach ( $tab_fields as $field ) {
+
+				$old_value = get_option( $field['id'] );
+
 				$id     = $field['id'];
 				$type   = isset( $field['type'] ) ? $field['type'] : 'text';
 				$is_pro = isset( $field['pro'] ) ? $field['pro'] : false;
@@ -242,6 +245,8 @@ class Settings {
 						update_option( $id, sanitize_text_field( $value ) );
 						break;
 				}
+
+				do_action( $id . '_setting_saved', $id, $old_value );
 			}
 		}
 
