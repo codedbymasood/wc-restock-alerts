@@ -224,18 +224,21 @@ class Emailer {
 	 * @param string   $to Recipient email.
 	 * @param string   $subject Email subject.
 	 * @param string   $message Email message.
-	 * @param int      $days_later Days to wait before sending.
+	 * @param int      $send_time Days/Timestamp to wait before sending.
 	 * @param array    $args Additional arguments.
 	 * @param string   $name Email name for logging.
 	 * @param callable $validation_callback Optional validation callback.
 	 * @return int|bool Email ID (auto-increment) or false on failure.
 	 */
-	public function send_later( $to, $subject, $message, $days_later, $args = array(), $name = '', $validation_callback = null ) {
+	public function send_later( $to, $subject, $message, $send_time, $args = array(), $name = '', $validation_callback = null ) {
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . 'stobokit_email_queue';
 		$base_time  = time();
-		$send_time  = $base_time + ( $days_later * DAY_IN_SECONDS );
+
+		if ( ! Utils::is_timestamp( $send_time ) ) {
+			$send_time = $base_time + ( $send_time * DAY_IN_SECONDS );
+		}
 
 		// Prepare validation callback for storage.
 		$validation_callback_data = null;
@@ -348,9 +351,19 @@ class Emailer {
 		}
 
 		foreach ( $sequence as $index => $email ) {
-			$send_time = $base_time + ( $email['days'] * MINUTE_IN_SECONDS );
+			$send_time = false;
 
-			// Check if we need to cancel existing email by uid
+			if ( isset( $email['days'] ) ) {
+				$send_time = $base_time + ( $email['days'] * DAY_IN_SECONDS );
+			} elseif ( isset( $email['timestamp'] ) ) {
+				$send_time = $email['timestamp'];
+			}
+
+			if ( ! $send_time ) {
+				continue;
+			}
+
+			// Check if we need to cancel existing email by uid.
 			if ( isset( $email['uid'] ) ) {
 				$this->cancel_email( $email['uid'] );
 			}

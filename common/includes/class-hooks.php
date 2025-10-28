@@ -22,8 +22,18 @@ class Hooks {
 	 * Plugin constructor.
 	 */
 	public function __construct() {
+		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
+
 		$this->register_mail_tags();
-		add_action( 'restaler_alert_email_sent', array( $this, 'alert_email_sent' ), 10, 2 );
+		add_action( 'restaler_alert_email_sent', array( $this, 'schedule_follow_up_sequences' ), 10, 2 );
+	}
+
+	public function add_query_vars( $vars = array() ) {
+		$vars[] = 'verify_email';
+		$vars[] = 'email';
+		$vars[] = 'token';
+
+		return $vars;
 	}
 
 	public function register_mail_tags() {
@@ -43,7 +53,7 @@ class Hooks {
 				$verify_url = isset( $args['verify_url'] ) ? $args['verify_url'] : '';
 
 				if ( $verify_url ) {
-					return sprintf( '<a href="%s" class="button">%s</a>', esc_url( $verify_url ), esc_html( $verify_btn_text ) );
+					return sprintf( '<a href="%s" class="btn-primary">%s</a>', esc_url( $verify_url ), esc_html( $verify_btn_text ) );
 				}
 				return '';
 			}
@@ -126,7 +136,7 @@ class Hooks {
 		);
 	}
 
-	public function alert_email_sent( $row = array(), $product = array() ) {
+	public function schedule_follow_up_sequences( $row = array(), $product = array() ) {
 
 		$enable_followup = get_option( 'restaler_enable_followup', '' );
 
@@ -242,14 +252,14 @@ The {site_name} Team"
 			$row['email'],
 			array(
 				array(
-					'days'    => $first_followup,
-					'subject' => $first_follow_up_subject,
-					'message' => $first_followup_html,
+					'timestamp' => $first_followup,
+					'subject'   => $first_follow_up_subject,
+					'message'   => $first_followup_html,
 				),
 				array(
-					'days'    => $second_followup,
-					'subject' => $second_follow_up_subject,
-					'message' => $second_followup_html,
+					'timestamp' => $second_followup,
+					'subject'   => $second_follow_up_subject,
+					'message'   => $second_followup_html,
 				),
 			),
 			array(

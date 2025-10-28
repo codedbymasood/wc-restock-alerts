@@ -115,34 +115,9 @@ function restaler_development_init() {
  */
 add_action( 'plugins_loaded', 'restaler_development_init', 0 );
 
+require_once dirname( RESTALER_PLUGIN_FILE ) . '/install.php';
 
-/**
- * ==========================
- *  Onborading
- * ==========================
- */
-
-// Include the onboarding class.
-if ( ! class_exists( '\STOBOKIT\Onboarding' ) ) {
-	include_once dirname( RESTALER_PLUGIN_FILE ) . '/core/class-onboarding.php';
-}
-
-register_activation_hook( __FILE__, 'restaler_on_plugin_activation' );
-
-/**
- * Handle plugin activation.
- */
-function restaler_on_plugin_activation() {
-	// Set flag that plugin was just activated.
-	set_transient( 'restaler_onboarding_activation_redirect', true, 60 );
-
-	// Set onboarding as pending.
-	update_option( 'restaler_onboarding_completed', false );
-	update_option( 'restaler_onboarding_started', current_time( 'timestamp' ) );
-
-	// Clear any existing onboarding progress.
-	delete_option( 'restaler_onboarding_current_step' );
-}
+register_activation_hook( __FILE__, array( 'RESTALER\Install', 'init' ) );
 
 /**
  * Add development tools to admin bar

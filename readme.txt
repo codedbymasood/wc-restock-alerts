@@ -3,33 +3,109 @@ Tags: online store, ecommerce, shop, shopping cart, sell online
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 Add a `Notify Me` button for out-of-stock items. Store owner gets the list, user gets email when back in stock.
 
 == Description ==
-Even when products run out of stock, Restock Alert for WooCommerce helps you still make sales. To ensure that you never lose customers to rivals, customers can sign up to receive an email as soon as a product becomes available again. It helps you convert lost opportunities into additional income and provides customers with an easy way to stay informed. Our Restock Alert plugin easily integrates with your WooCommerce store and is simple to set up and maintain.
 
-= Features Of Restock Alert for WooCommerce =
-1. **Customize Name and Email:** Add a Custom sender name and email address in your email to match your store’s identity. This way, customers will always recognize who the message is from.
-2. **Custom Message on Stock Page:** Place a custom message over the product page, where customers can join the waitlist. A good, short line can make a huge impact, informing users to set restock alert emails
-3. **Option To Set Stock Threshold:** Set a stock threshold by choosing how many items must be in stock before you start sending alerts. This feature avoids sending emails when the inventory is still low, making sure that when you send emails, you are fully prepared.
-4. **Verification Email Template:** Send confirmation emails when users subscribe to restock alerts. This keeps your email list clean and makes sure that only valid addresses are stored in your mailing list.
-5. **Back in Stock Email Template:** Use a custom template that is included with the plugin to quickly notify customers when products are back in stock. This template is also fully customizable to reflect your brand style.
-6. **Detailed Reports Of Subscribers:** Get detailed reports of subscribers, informing you who subscribed and for which products. These types of insights will show which items your customers are eager to buy again, helping you make better product-related decisions.
-7. **Detailed Info Of Plugin and Server Status:** Always stay informed with the technical details about the plugin and your server in a single view. A detailed tab is added to provide this information, which helps you quickly spot issues before they affect your email service
-8. **Logs With Option To Download and Clear:** Every action is logged, and you can download or clear these records whenever you want. These features keep the system tidy and transparent.
-9. **Detailed Logs Of Email Status:** You get a dedicated tab to review the full history of each email sent through the plugin, which is helpful in letting you know what emails have gone through and what are left. It also shows the messages that are sent successfully and those that fail
-10. **Detailed Overview of Scheduled Actions:** See all the scheduled email tasks and upcoming emails in one place, giving you a clear picture of what’s running behind the scenes
+= Why Choose Restock Alert? =
 
-== Benefits Of Restock Alerts For WooCommerce ==
-**Recover Lost Sales:** Instead of losing customers when products go out of stock, you can bring them back the moment items are available again.
-**Build Customer Loyalty:** Shoppers trust your store more when they know they won’t miss out and these restock alerts keep them engaged without extra effort.
-**Better Branding:** Improve Store Branding With custom sender names, emails, and templates this way every notification feels professional and matched with your brand.
-**Track Customer Demand:** Detailed subscriber reports show which products are most loved by customers, so you can make smarter restock and inventory decisions.
-**Easy to Use and Manage:** Our plugin integrates very easily with WooCommerce, in fact it is specifically made for woocommerce, it offers ready-made templates, and gives you clear reports, saving time while boosting results.
+**Recover Lost Sales** – Automatically bring customers back the moment products restock instead of losing them to competitors.
+**Build Customer Loyalty** – Keep shoppers engaged and create urgency. Show them you value their interest.
+**Understand Customer Demand** – See which products customers want most to make smarter inventory and purchasing decisions.
+**Professional Branding** – Fully customize emails, sender details, and templates to match your store's identity.
+**Simple Setup** – No complex configuration, just install and go.
+
+= How It Works =
+
+1. **Customer subscribes** – Subscription form appears on out-of-stock product pages
+2. **Email verification** – Confirmation email keeps your list clean
+3. **Instant notification** – Customer gets alerted when product restocks
+4. **Follow-up reminders** – Send up to 3 additional emails if they haven't purchased
+5. **Track & optimize** – Monitor which products are most in-demand
+
+= Features =
+
+- **Variable product support** – Works with simple and variable products
+- **Automated alerts** when products come back in stock
+- **Email verification** to maintain a clean subscriber list
+- **Customizable timing** for follow-up emails (e.g., day 3, 7)
+- **Unique discount codes** – Automatically generate personalized discount codes for each subscriber
+- **User-specific coupons** – Each discount code is tied to the subscriber and can only be used by them
+- **Flexible discounts** – Choose fixed amount or percentage-based offers
+- **Stock threshold settings** – Control when the subscription form appears (out of stock or low stock)
+- **Downloadable reports** – Export subscriber data anytime
+- **Follow-up campaigns** – Send up to 3 reminder emails to re-engage customers
+- **Custom email templates** – Modify all email templates with your branding
+- **Custom messages** – Personalize the subscription form message on product pages
+- **Subscriber reports** – See who subscribed and for which products
+- **Email delivery logs** – Track successful sends, failures, and full history
+- **Scheduled actions dashboard** – Monitor all upcoming email tasks
+
+== Frequently Asked Questions ==
+
+= How do customers sign up for alerts? =
+
+A subscription form automatically appears on product pages based on your stock settings. Customers enter their email and receive a confirmation to verify their subscription.
+
+= Can I customize the email templates? =
+
+Yes. All four email types (verification, back-in-stock, follow-up, and incentive) are fully customizable with your branding, colors, and messaging.
+
+= What happens if customers don't purchase after the first alert? =
+
+You can configure up to 2 follow-up emails with custom timing intervals (e.g., 3 days, 7 days later) to gently remind them.
+
+= How do discount codes work? =
+
+The plugin automatically generates unique discount codes for each subscriber when they receive a restock alert. Each code is bound to that specific user's email address, preventing sharing or unauthorized use. You can set the discount as either a fixed amount or percentage.
+
+= Can discount codes be shared or reused? =
+
+No. Each discount code is tied to the subscriber's email address and can only be used by them. This prevents discount code abuse and ensures your promotions stay controlled.
+
+= What is the stock threshold feature? =
+
+Stock threshold controls when the subscription form appears. Show it only when products are completely out of stock, or display it when stock falls below a number you define (e.g., show when fewer than 5 items remain).
+
+= How do I know which products are most wanted? =
+
+Detailed subscriber reports show exactly which products have the most signups, helping you prioritize restocking and identify popular items.
+
+= Are email addresses verified? =
+
+Yes. A double opt-in confirmation email is sent when customers subscribe, ensuring only valid, interested customers are added to your notification list.
+
+= Can I see my email history? =
+
+Absolutely. View comprehensive logs of all sent emails including delivery status (successful, pending, failed). Download or clear these records anytime.
+
+= Does it work with variable products? =
+
+Yes. The plugin fully supports both simple and variable WooCommerce products, including different sizes, colors, and variations.
+
+= What email services does it support? =
+
+It works with any WordPress email setup including WordPress default mail, SMTP plugins (WP Mail SMTP, Easy WP SMTP).
+
+= Will it slow down my site? =
+
+No. The plugin is lightweight and optimized for performance. Email sending is handled in the background using scheduled tasks.
+
+= Is there a limit to subscribers? =
+
+No subscriber limits. Handle unlimited subscribers and products.
+
+= How long are discount codes valid? =
+
+You can set the expiration period for discount codes in the plugin settings (e.g., 7 days).
+
+= How do I get support? =
+
+Visit our support page or contact us directly. We typically respond within 24 hours on business days.
 
 == Installation ==
 
@@ -63,11 +139,16 @@ If you encounter issues with the pages after an update, flush the permalinks by 
 
 == Changelog ==
 
+= 1.2.0 2025-10-28 =
+* Add - Email queue table added for performance.
+* Add - Added email retries and daily check to improve the deliverability.
+* Add - Email verification feature added.
+
 = 1.1.0 2025-09-29 =
 * Add - Export feature added.
 * Add - Follow-up email sequence added.
-* Add - Can able to generate and send unique discount on finl follow-up email.
-* Add - Email templates added follow-up emails.
+* Add - Can able to generate and send unique discount on final follow-up email.
+* Add - Email templates added for follow-up emails.
 * Add - Conditional tags added in email templates.
 * Fix - Security issue resolved in notification list table.
 

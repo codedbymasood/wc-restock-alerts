@@ -1,5 +1,5 @@
 <?php
-$version = '1.1.0';
+$version = '1.2.0';
 
 $entry_file  = 'restock-alerts-pro-for-woocommerce';
 $plugin_slug = 'restock-alerts-for-woocommerce';
@@ -91,35 +91,11 @@ if ( did_action( \'restaler_initialized\' ) ) {
 		}
 
 		// Global for backwards compatibility.
-		$GLOBALS[\'restaler\'] = restaler();
+		$GLOBALS[\'restaler\'] = restaler();		
 
-		/**
-		 * ==========================
-		 *  Onborading
-		 * ==========================
-		 */
+		require_once dirname( RESTALER_PLUGIN_FILE ) . \'/install.php\';
 
-		// Include the onboarding class.
-		if ( ! class_exists( \'\\STOBOKIT\\Onboarding\' ) ) {
-			include_once dirname( RESTALER_PLUGIN_FILE ) . \'/core/class-onboarding.php\';
-		}
-
-		register_activation_hook( __FILE__, \'restaler_on_plugin_activation\' );
-
-		/**
-		 * Handle plugin activation.
-		 */
-		function restaler_on_plugin_activation() {
-			// Set flag that plugin was just activated.
-			set_transient( \'restaler_onboarding_activation_redirect\', true, 60 );
-
-			// Set onboarding as pending.
-			update_option( \'restaler_onboarding_completed\', false );
-			update_option( \'restaler_onboarding_started\', current_time( \'timestamp\' ) );
-
-			// Clear any existing onboarding progress.
-			delete_option( \'restaler_onboarding_current_step\' );
-		}
+		register_activation_hook( RESTALER_PLUGIN_FILE, array( \'RESTALER\\Install\', \'init\' ) );
 	}
 }
 ';

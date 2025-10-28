@@ -67,11 +67,10 @@ class Utils {
 
 		$verify_url = add_query_arg(
 			array(
-				'verify_email' => 1,
-				'email'        => rawurlencode( $email ),
-				'token'        => $token,
+				'email' => rawurlencode( $email ),
+				'token' => $token,
 			),
-			home_url()
+			home_url( '/verify-email/' )
 		);
 
 		return $verify_url;

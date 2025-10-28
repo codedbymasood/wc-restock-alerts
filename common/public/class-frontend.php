@@ -45,7 +45,7 @@ class Frontend {
 
 		add_filter( 'wp_mail_from', array( $this, 'mail_from' ) );
 		add_filter( 'wp_mail_from_name', array( $this, 'mail_from_name' ) );
-		add_action( 'init', array( $this, 'handle_email_verification_link' ) );
+		add_action( 'template_redirect', array( $this, 'handle_email_verification_link' ) );
 
 		add_action( 'wp_ajax_restaler_save_notify_email', array( $this, 'save_notify_email' ) );
 		add_action( 'wp_ajax_nopriv_restaler_save_notify_email', array( $this, 'save_notify_email' ) );
@@ -87,14 +87,15 @@ class Frontend {
 	}
 
 	public function handle_email_verification_link() {
+		$email = get_query_var( 'email' ) ? sanitize_text_field( get_query_var( 'email' ) ) : false;
+		$token = get_query_var( 'token' ) ? sanitize_text_field( get_query_var( 'token' ) ) : false;
+
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( ! isset( $_GET['verify_email'] ) || ! isset( $_GET['email'] ) || ! isset( $_GET['token'] ) ) {
+		if ( ! $email || ! $token ) {
 			return;
 		}
 
 		global $wpdb;
-		$email = sanitize_email( wp_unslash( $_GET['email'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$token = sanitize_text_field( wp_unslash( $_GET['token'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( ! is_email( $email ) ) {
 			wp_die( 'Invalid email format.', 'Verification Error', array( 'response' => 400 ) );

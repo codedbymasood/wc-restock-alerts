@@ -123,8 +123,6 @@ final class RESTALER {
 			require_once RESTALER_PATH . '/common/admin/class-admin.php';
 			require_once RESTALER_PATH . '/common/admin/class-notify-list-table.php';
 		}
-
-		require RESTALER_PATH . '/common/admin/init-update.php';
 	}
 
 	/**
@@ -138,11 +136,7 @@ final class RESTALER {
 	 * Hook into WordPress.
 	 */
 	private function init_hooks() {
-		add_action( 'plugins_loaded', array( $this, 'ensure_table_exists' ) );
 		add_action( 'init', array( $this, 'init_onboarding' ) );
-
-		// Create a table when activate the plugin.
-		register_activation_hook( RESTALER_PLUGIN_FILE, array( $this, 'maybe_create_table' ) );
 		add_action( 'before_woocommerce_init', array( $this, 'enable_hpos' ) );
 	}
 
@@ -172,58 +166,6 @@ final class RESTALER {
 				'option_prefix' => 'restaler_onboarding',
 			)
 		);
-	}
-
-	/**
-	 * Make sure the table exists, otherwise create the required table.
-	 *
-	 * @return void
-	 */
-	public function ensure_table_exists() {
-		global $wpdb;
-
-		$table = $wpdb->prefix . 'restaler_restock_alerts';
-
-    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$table_exists = $wpdb->get_var(
-			$wpdb->prepare(
-				'SHOW TABLES LIKE %s',
-				$table
-			)
-		);
-
-		if ( $table_exists !== $table ) {
-			$this->maybe_create_table();
-		}
-	}
-
-	/**
-	 * Create a alert table.
-	 *
-	 * @return void
-	 */
-	public function maybe_create_table() {
-		global $wpdb;
-
-		$table = $wpdb->prefix . 'restaler_restock_alerts';
-
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$sql = "CREATE TABLE $table (
-			id INT(11) NOT NULL AUTO_INCREMENT,
-			email VARCHAR(255) NOT NULL,
-			product_id INT(11) NOT NULL,
-			variation_id INT(11) NOT NULL,
-			status VARCHAR(50) DEFAULT 'pending',
-			token VARCHAR(255) NOT NULL,
-			token_expires TIMESTAMP NOT NULL,			
-			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-			PRIMARY KEY (id)
-		) $charset_collate;";
-
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta( $sql );
 	}
 
 	/**

@@ -17,6 +17,27 @@ defined( 'ABSPATH' ) || exit;
 class Utils {
 
 	/**
+	 * Check is valid timestamp.
+	 *
+	 * @param string $timestamp Timestamp.
+	 * @return boolean
+	 */
+	public static function is_timestamp( $timestamp = '' ) {
+		// Check if it's numeric.
+		if ( ! is_numeric( $timestamp ) ) {
+			return false;
+		}
+
+		// Try to create a DateTime object.
+		try {
+			$date = new DateTime( '@' . $timestamp );
+			return true;
+		} catch ( Exception $e ) {
+			return false;
+		}
+	}
+
+	/**
 	 * Static logger instance
 	 *
 	 * @var Logger
