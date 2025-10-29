@@ -37,10 +37,10 @@ replace_multiple_strings_in_directory( $build_dir, $replacements );
 
 $plugin_header = '<?php
 /**
- * Plugin Name: ' . $plugin_name . '
+ * Plugin Name: ' . $plugin_name . ' | Back In Stock Notify
  * Requires Plugins: woocommerce
  * Plugin URI: https://storeboostkit.com/product/' . $plugin_slug . '/
- * Description: Add a Notify Me When Available button for out-of-stock items. Store owner gets the list, user gets email when back in stock.
+ * Description: Add a Notify Me button for out of stock items. Store owner gets the list, user gets email when back in stock.
  * Version: ' . $version . '
  * Author: Store Boost Kit
  * Author URI: https://storeboostkit.com/
@@ -49,7 +49,7 @@ $plugin_header = '<?php
  * Requires at least: 6.6
  * Requires PHP: 7.4
  * WC requires at least: 6.0
- * WC tested up to: 9.6
+ * WC tested up to: 10.3.0
  *
  * @package ' . $plugin_slug . '
  */
