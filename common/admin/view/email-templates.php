@@ -210,7 +210,7 @@ If you didn\'t request this, please ignore it.',
 			'stobokit-restaler-email-templates', // menu slug.
 			esc_html__( 'Email Templates', 'plugin-slug' ),
 			esc_html__( 'Email Templates', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			'',
 			0,
 			apply_filters( 'restaler_email_templates_settings', $fields ),

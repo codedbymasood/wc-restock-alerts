@@ -58,6 +58,7 @@ copy_directory( $source_dir . '/languages', $build_dir . '/languages' );
 copy( $source_dir . '/CHANGELOG-LITE.md', $build_dir . '/CHANGELOG.md' );
 copy( $source_dir . '/README.md', $build_dir . '/README.md' );
 copy( $source_dir . '/readme.txt', $build_dir . '/readme.txt' );
+copy( $source_dir . '/install.php', $build_dir . '/install.php' );
 
 $replacements = array(
 	'plugin-slug' => $plugin_slug,

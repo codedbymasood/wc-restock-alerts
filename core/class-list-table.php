@@ -297,7 +297,7 @@ class List_Table extends \WP_List_Table {
 			return;
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html__( 'You do not have permission to export data.', 'plugin-slug' ) );
 		}
 

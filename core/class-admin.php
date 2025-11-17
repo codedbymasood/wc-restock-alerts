@@ -253,7 +253,7 @@ class Admin {
 		add_menu_page(
 			esc_html__( 'Store Boost Kit', 'plugin-slug' ),
 			esc_html__( 'Store Boost Kit', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			'stobokit-dashboard',
 			array( $this, 'dashboard' ),
 			$icon,
@@ -264,7 +264,7 @@ class Admin {
 			'stobokit-dashboard',
 			esc_html__( 'Dashboard', 'plugin-slug' ),
 			esc_html__( 'Dashboard', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			'stobokit-dashboard',
 			array( $this, 'dashboard' )
 		);
@@ -273,19 +273,25 @@ class Admin {
 			'stobokit-dashboard',
 			esc_html__( 'Status', 'plugin-slug' ),
 			esc_html__( 'Status', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			'stobokit-status',
 			array( $this, 'status' )
 		);
 
-		add_submenu_page(
-			'stobokit-dashboard',
-			esc_html__( 'License', 'plugin-slug' ),
-			esc_html__( 'License', 'plugin-slug' ),
-			'manage_options',
-			'stobokit-license',
-			array( $this, 'license' )
-		);
+		$product_lists = apply_filters( 'stobokit_product_lists', array() );
+
+		if ( ! empty( $product_lists ) ) {
+			add_submenu_page(
+				'stobokit-dashboard',
+				esc_html__( 'License', 'plugin-slug' ),
+				esc_html__( 'License', 'plugin-slug' ),
+				'manage_woocommerce',
+				'stobokit-license',
+				array( $this, 'license' )
+			);
+		}
+
+		do_action( 'stobokit_admin_menu_registered' );
 	}
 
 	/**

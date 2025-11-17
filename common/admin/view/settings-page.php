@@ -102,7 +102,7 @@ add_action(
 			'stobokit-restaler-notify-list-settings', // menu slug.
 			esc_html__( 'Settings', 'plugin-slug' ),
 			esc_html__( 'Settings', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			'',
 			0,
 			$fields

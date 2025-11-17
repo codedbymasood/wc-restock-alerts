@@ -68,8 +68,15 @@ if ( false === $announcement_cached_posts ) {
 					</ul>
 			</div>
 
-			<!-- Licenses Widget -->
-			<div class="stobokit-widget">
+			
+			
+			<?php
+			$product_lists = apply_filters( 'stobokit_product_lists', array() );
+
+			if ( ! empty( $product_lists ) ) {
+				?>
+				<!-- Licenses Widget -->
+				<div class="stobokit-widget">
 					<h3><?php esc_html_e( 'Licenses', 'plugin-slug' ); ?></h3>
 					<?php
 					$inactive_count = 0;
@@ -85,15 +92,19 @@ if ( false === $announcement_cached_posts ) {
 					}
 					?>
 					<p>
-						<?php echo sprintf( '<span>You have <strong>%1$s</strong> inactive licenses</span>', esc_html( $inactive_count ) ); ?>
+						<?php printf( '<span>You have <strong>%1$s</strong> inactive licenses</span>', esc_html( $inactive_count ) ); ?>
 						<?php
 						if ( $expired_count ) {
-							echo sprintf( '<span>and<strong>%1$s</strong> expired</span>', esc_html( $expired_count ) );
+							printf( '<span>and<strong>%1$s</strong> expired</span>', esc_html( $expired_count ) );
 						}
 						?>
 					</p>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=stobokit-license' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Manage Licenses', 'plugin-slug' ); ?></a>
-			</div>
+				</div>
+				<?php
+			}
+			?>
+
 			<?php if ( ! empty( $recent_posts ) ) : ?>
 				<div class="stobokit-widget">
 					<h3><?php esc_html_e( 'News & Updates', 'plugin-slug' ); ?></h3>

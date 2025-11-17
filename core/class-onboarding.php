@@ -118,7 +118,7 @@ class Onboarding {
 			'stobokit',
 			esc_html__( 'Onboarding', 'plugin-slug' ),
 			esc_html__( 'Onboarding', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			$this->page_slug,
 			array( $this, 'render_page' )
 		);
@@ -323,7 +323,7 @@ class Onboarding {
 			return;
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			return;
 		}
 

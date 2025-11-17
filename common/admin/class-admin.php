@@ -44,7 +44,7 @@ class Admin {
 		add_filter(
 			'stobokit_plugins',
 			function ( $plugins = array() ) {
-				$plugins[] = 'restock-alerts-development';
+				$plugins[] = 'plugin-slug';
 
 				return $plugins;
 			}
@@ -101,7 +101,7 @@ class Admin {
 		add_menu_page(
 			esc_html__( 'Restock Alerts', 'plugin-slug' ),
 			esc_html__( 'Restock Alerts', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			'stobokit-restaler-notify-list',
 			array( $this, 'render_notify_list_page' ),
 			'dashicons-bell',
