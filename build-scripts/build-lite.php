@@ -1,5 +1,5 @@
 <?php
-$version = '1.2.0';
+$version = '1.3.1';
 
 $plugin_slug = 'restock-alerts-for-woocommerce';
 $plugin_name = 'Restock Alerts for WooCommerce';
@@ -56,7 +56,6 @@ copy( $source_dir . '/onboarding/step-settings-lite.php', $build_dir . '/onboard
 copy_directory( $source_dir . '/templates/lite', $build_dir . '/templates' );
 copy_directory( $source_dir . '/languages', $build_dir . '/languages' );
 copy( $source_dir . '/CHANGELOG-LITE.md', $build_dir . '/CHANGELOG.md' );
-copy( $source_dir . '/README.md', $build_dir . '/README.md' );
 copy( $source_dir . '/readme.txt', $build_dir . '/readme.txt' );
 copy( $source_dir . '/install.php', $build_dir . '/install.php' );
 
@@ -82,8 +81,8 @@ $plugin_header = '<?php
  * Domain Path: /languages/
  * Requires at least: 6.6
  * Requires PHP: 7.4
- * WC requires at least: 6.0
- * WC tested up to: 10.3.0
+ * WC requires at least: 9.6
+ * WC tested up to: 10.4.0
  *
  * @package ' . $plugin_slug . '
  */

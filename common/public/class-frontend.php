@@ -213,7 +213,8 @@ If you didn\'t request this, please ignore it.',
 
 		$content = get_option(
 			'restaler_verification_email_content',
-			"Hi {customer_name},
+			array(
+				'html' => "Hi {customer_name},
 
 Thanks for signing up. Please confirm your email address by clicking the button below:
 
@@ -226,7 +227,8 @@ If the button doesn't work, copy and paste this link into your browser:
 This verification link will expire soon. If you did not request this, please ignore this email.
 
 Warmly,
-The {site_name} Team"
+The {site_name} Team",
+			)
 		);
 
 		$html = restaler()->templates->get_template(
@@ -251,7 +253,7 @@ The {site_name} Team"
 		$enable_stock_threshold = get_option( 'restaler_enable_stock_threshold', '' );
 		$stock_threshold_count  = get_option( 'restaler_stock_threshold_count', 3 );
 
-		if ( Core_Utils::string_to_bool( $enable_stock_threshold ) ) {
+		if ( Core_Utils::string_to_bool( $enable_stock_threshold ) && $product->managing_stock() ) {
 			$stock_quantity = $product->get_stock_quantity();
 
 			if ( $stock_quantity <= $stock_threshold_count ) {

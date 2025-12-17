@@ -9,7 +9,7 @@
 
 namespace RESTALER;
 
-use Pelago\Emogrifier\CssInliner;
+use STOBOKIT\Utils as Core_Utils;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -180,7 +180,8 @@ If you didn\'t request this, please ignore it.',
 
 		$first_follow_up_content = get_option(
 			'restaler_first_follow_up_email_content',
-			"Hi{customer_name},
+			array(
+				'html' => "Hi{customer_name},
 
 We just wanted to check in - did you get a chance to explore {product_name}?
 
@@ -191,7 +192,8 @@ If you're still thinking it over, no rush! We're here if you have any questions 
 Sometimes all it takes is a second look.
 
 Warmly,
-The {site_name} Team"
+The {site_name} Team",
+			)
 		);
 
 		$second_follow_up_heading     = get_option( 'restaler_second_follow_up_email_heading', esc_html__( 'Confirm your email', 'plugin-slug' ) );
@@ -207,7 +209,8 @@ If you didn\'t request this, please ignore it.',
 
 		$second_follow_up_content = get_option(
 			'restaler_second_follow_up_email_content',
-			"Hi{customer_name},
+			array(
+				'html' => "Hi{customer_name},
 
 Just a quick reminder - your {discount} off discount code is expiring in {coupon_expires} days
 
@@ -221,7 +224,8 @@ Expires in: {coupon_expires} days
 Don't miss out - after this, it's back to full price.
 
 Warmly,
-The {site_name} Team"
+The {site_name} Team",
+			)
 		);
 
 		$first_followup_content = restaler()->templates->get_template(
@@ -234,7 +238,7 @@ The {site_name} Team"
 		);
 
 		// CssInliner loads from WooCommerce.
-		$first_followup_html = CssInliner::fromHtml( $first_followup_content )->inlineCss()->render();
+		$first_followup_html = Core_Utils::css_inliner( $first_followup_content );
 
 		$second_followup_content = restaler()->templates->get_template(
 			'email/email-content.php',
@@ -246,7 +250,7 @@ The {site_name} Team"
 		);
 
 		// CssInliner loads from WooCommerce.
-		$second_followup_html = CssInliner::fromHtml( $second_followup_content )->inlineCss()->render();
+		$second_followup_html = Core_Utils::css_inliner( $second_followup_content );
 
 		$sequence_id = restaler()->emailer->create_followup_sequence(
 			$row['email'],

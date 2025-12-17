@@ -1,9 +1,9 @@
 === Restock Alerts for WooCommerce ===
 Tags: online store, ecommerce, shop, shopping cart, sell online
 Requires at least: 6.6
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPL-3.0+
 License URI: https://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -138,6 +138,13 @@ Automatic updates should work smoothly, but we still recommend you back up your 
 If you encounter issues with the pages after an update, flush the permalinks by going to WordPress > Settings > Permalinks and hitting "Save." That should return things to normal.
 
 == Changelog ==
+
+= 1.3.1 2025-12-15 =
+* Fix - CSS Inliner raises error on WooCommerce older version.
+
+= 1.3.0 2025-12-12 =
+* Fix - Always show notify form, if stock threshold is enabled.
+* Fix - Email CSS Inliner issue fixed.
 
 = 1.2.0 2025-10-28 =
 * Add - Email queue table added for performance.

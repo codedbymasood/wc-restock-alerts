@@ -1,5 +1,5 @@
 <?php
-$version = '1.2.0';
+$version = '1.3.1';
 
 $entry_file  = 'restock-alerts-pro-for-woocommerce';
 $plugin_slug = 'restock-alerts-for-woocommerce';
@@ -49,8 +49,8 @@ $plugin_header = '<?php
  * Domain Path: /languages/
  * Requires at least: 6.6
  * Requires PHP: 7.4
- * WC requires at least: 6.0
- * WC tested up to: 10.3.0
+ * WC requires at least: 9.6
+ * WC tested up to: 10.4.0
  *
  * @package ' . $plugin_slug . '
  */

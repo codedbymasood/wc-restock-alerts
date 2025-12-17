@@ -2,7 +2,7 @@
 /**
  * Utils class.
  *
- * @package plugin-slug\core\
+ * @package restock-alerts-for-woocommerce\core\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -15,6 +15,22 @@ defined( 'ABSPATH' ) || exit;
  * Utils class.
  */
 class Utils {
+
+	/**
+	 * CSS Inliner.
+	 *
+	 * @param string $html Email content.
+	 * @return string
+	 */
+	public static function css_inliner( $html ) {
+		if ( class_exists( 'Automattic\WooCommerce\Vendor\Pelago\Emogrifier\CssInliner' ) ) {
+			return \Automattic\WooCommerce\Vendor\Pelago\Emogrifier\CssInliner::fromHtml( $html )->inlineCss()->render();
+		} elseif ( class_exists( 'Pelago\Emogrifier\CssInliner' ) ) {
+			return \Pelago\Emogrifier\CssInliner::fromHtml( $html )->inlineCss()->render();
+		}
+
+		return $html;
+	}
 
 	/**
 	 * Check is valid timestamp.

@@ -9,7 +9,7 @@
 
 namespace RESTALER;
 
-use Pelago\Emogrifier\CssInliner;
+use STOBOKIT\Utils as Core_Utils;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -214,7 +214,8 @@ class Admin {
 
 		$content = get_option(
 			'restaler_back_in_stock_email_content',
-			"The product you were waiting for is now back in stock
+			array(
+				'html' => "The product you were waiting for is now back in stock
 
 {product_name}{variation}
 {buy_now}
@@ -222,7 +223,8 @@ class Admin {
 Don't wait too long, popular products sell out quickly!
 
 Warmly,
-The {site_name} Team"
+The {site_name} Team",
+			)
 		);
 
 		$html = restaler()->templates->get_template(
@@ -235,7 +237,7 @@ The {site_name} Team"
 		);
 
 		// CssInliner loads from WooCommerce.
-		$html = CssInliner::fromHtml( $html )->inlineCss()->render();
+		$html = Core_Utils::css_inliner( $html );
 
 		$result = restaler()->emailer->send_now(
 			$email,
